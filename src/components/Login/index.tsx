@@ -44,7 +44,6 @@ export default function LogIn() {
       component="main"
       maxWidth="xs"
       sx={{
-        height: "100vh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

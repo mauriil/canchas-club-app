@@ -1,3 +1,8 @@
+@font-face {
+  font-family: sportFont;
+  src: url("./assets/fonts/sportFont.ttf");
+}
+
 *{
   box-sizing: border-box;
   margin: 0px;
