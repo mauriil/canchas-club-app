@@ -2,8 +2,6 @@ import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -11,6 +9,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { NavLink } from "react-router-dom";
+import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { useState } from "react";
 
 function Copyright(props: any) {
   return (
@@ -30,17 +30,25 @@ function Copyright(props: any) {
   );
 }
 
-export default function LogIn() {
+export default function SignIn() {
+  const [role, setRole] = useState("");
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setRole(event.target.value);
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const user = {
       email: data.get("email"),
       password: data.get("password"),
+      role: data.get("role"),
+      name: data.get("name"),
     };
     console.log(user);
 
-    const response = await fetch(`http://localhost:3000/auth/signIn`, {
+    const response = await fetch(`http://localhost:3000/auth/signUp`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(user),
@@ -76,9 +84,43 @@ export default function LogIn() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Log in
+          Sign in
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="name"
+            label="Name and lastname"
+            name="name"
+            autoComplete="name"
+            autoFocus
+            sx={{ background: "transparent" }}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="phoneNumber"
+            label="Phone Number"
+            name="phoneNumber"
+            autoComplete="phoneNumber"
+            autoFocus
+            sx={{ background: "transparent" }}
+          />
+          <Select
+            color="primary"
+            labelId="roleLabel"
+            id="role"
+            name="role"
+            value={role}
+            label="Role"
+            onChange={handleChange}
+          >
+            <MenuItem value={"owner"}>Owner</MenuItem>
+            <MenuItem value={"client"}>Client</MenuItem>
+          </Select>
           <TextField
             margin="normal"
             required
@@ -100,10 +142,6 @@ export default function LogIn() {
             autoComplete="current-password"
             type="password"
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
           <Button
             color="primary"
             type="submit"
@@ -111,22 +149,11 @@ export default function LogIn() {
             variant="contained"
             sx={{ mt: 0, mb: 1 }}
           >
-            LogIn
+            SignIn
           </Button>
-          <NavLink to={"/index/signIn"}>
-            <Button
-              color="primary"
-              type="button"
-              fullWidth
-              variant="outlined"
-              sx={{ mt: 1, mb: 0 }}
-            >
-              Sign In
-            </Button>
-          </NavLink>
           <Grid container sx={{ mt: 1, mb: 0 }}>
             <Grid item xs>
-              <NavLink to={"/index/forgotPassword"}>Forgot password?</NavLink>
+              <NavLink to={"/index/logIn"}>Do you have an account?</NavLink>
             </Grid>
           </Grid>
         </Box>
