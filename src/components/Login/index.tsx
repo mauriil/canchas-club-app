@@ -11,6 +11,9 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { NavLink } from "react-router-dom";
+import jwt_decode from "jwt-decode";
+import { ThreeDots } from "react-loader-spinner"
+import { useState } from "react";
 
 function Copyright(props: any) {
   return (
@@ -31,14 +34,24 @@ function Copyright(props: any) {
 }
 
 export default function LogIn() {
+  const [loading, setLoading] = useState(false);
+  interface LoginResponse {
+    access_token: string;
+    statusCode: number;
+  }
+  interface DecodedToken {
+    username: string;
+    sub: string;
+  }
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const user = {
       email: data.get("email"),
       password: data.get("password"),
     };
-    console.log(user);
 
     const response = await fetch(`http://localhost:3000/auth/signIn`, {
       method: "POST",
@@ -46,7 +59,19 @@ export default function LogIn() {
       body: JSON.stringify(user),
     });
 
-    console.log(response);
+    void response.json().then((data: LoginResponse) => {
+      setLoading(false);
+      if (data.statusCode === 400) {
+        alert("Usuario o contraseña incorrectos");
+        return;
+      } else {
+        const decoded: DecodedToken = jwt_decode(data.access_token);
+        localStorage.setItem("userToken", data.access_token);
+        localStorage.setItem("userName", decoded.username);
+        localStorage.setItem("userId", decoded.sub);
+      }
+    });
+
   };
 
   return (
@@ -78,58 +103,71 @@ export default function LogIn() {
         <Typography component="h1" variant="h5">
           Log in
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            sx={{ background: "transparent" }}
+
+        {loading ?
+          <ThreeDots
+            height="80"
+            width="80"
+            radius="9"
+            color="#9dbfaf"
+            ariaLabel="three-dots-loading"
+            wrapperStyle={{}}
+            wrapperClass="spinner-wrapper"
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="password"
-            label="Password"
-            name="password"
-            autoComplete="current-password"
-            type="password"
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-          <Button
-            color="primary"
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 0, mb: 1 }}
-          >
-            LogIn
-          </Button>
-          <NavLink to={"/index/signIn"}>
+          :
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              sx={{ background: "transparent" }}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="password"
+              label="Password"
+              name="password"
+              autoComplete="current-password"
+              type="password"
+            />
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
             <Button
               color="primary"
-              type="button"
+              type="submit"
               fullWidth
-              variant="outlined"
-              sx={{ mt: 1, mb: 0 }}
+              variant="contained"
+              sx={{ mt: 0, mb: 1 }}
             >
-              Sign In
+              LogIn
             </Button>
-          </NavLink>
-          <Grid container sx={{ mt: 1, mb: 0 }}>
-            <Grid item xs>
-              <NavLink to={"/index/forgotPassword"}>Forgot password?</NavLink>
+            <NavLink to={"/index/signIn"}>
+              <Button
+                color="primary"
+                type="button"
+                fullWidth
+                variant="outlined"
+                sx={{ mt: 1, mb: 0 }}
+              >
+                Sign In
+              </Button>
+            </NavLink>
+            <Grid container sx={{ mt: 1, mb: 0 }}>
+              <Grid item xs>
+                <NavLink to={"/index/forgotPassword"}>Forgot password?</NavLink>
+              </Grid>
             </Grid>
-          </Grid>
-        </Box>
+          </Box>
+        }
         <Copyright sx={{ mt: 4, mb: 3 }} />
       </Box>
     </Container>
