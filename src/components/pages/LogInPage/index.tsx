@@ -13,7 +13,7 @@ const LogInPage = () => {
         flexDirection: { md: "row", xs: "column" },
       }}
       display="flex"
-      justifyContent="center"
+      justifyContent="space-around"
       alignItems="center"
       height="100vh"
       width="100vw"
