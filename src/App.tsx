@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import "./App.css";
 import LogInPage from "./pages/LogInPage";
+import OwnerDashboard from "./pages/OwnerDashboard";
 import LogIn from "./components/Login";
 import SignIn from "./components/SignIn";
 import ForgotPassword from "./components/ForgotPassword";
@@ -21,6 +22,8 @@ function App() {
             <Route path="signIn" element={<SignIn />} />
             <Route path="forgotPassword" element={<ForgotPassword />} />
           </Route>
+          <Route path="/dashboard" element={<OwnerDashboard />} />
+
         </Routes>
       </UserContext.Provider>
     </>

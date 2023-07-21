@@ -52,13 +52,13 @@ export default function LogIn() {
       email: data.get("email"),
       password: data.get("password"),
     };
-
+    
     const response = await fetch(`http://localhost:3000/auth/signIn`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(user),
     });
-
+    
     void response.json().then((data: LoginResponse) => {
       setLoading(false);
       if (data.statusCode === 400) {
@@ -69,6 +69,7 @@ export default function LogIn() {
         localStorage.setItem("userToken", data.access_token);
         localStorage.setItem("userName", decoded.username);
         localStorage.setItem("userId", decoded.sub);
+        window.location.href = "/dashboard";        
       }
     });
 
