@@ -89,7 +89,7 @@ export default function LogIn() {
         padding="2rem"
         sx={{
           marginTop: "0px",
-          backgroundColor: "#edebc9",
+          backgroundColor: "background.default",
           boxShadow: "0px 0px 25px 1px rgb(0,0,0)",
           borderRadius: "15px",
           display: "flex",
@@ -97,7 +97,7 @@ export default function LogIn() {
           alignItems: "center",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.dark" }}>
+        <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">

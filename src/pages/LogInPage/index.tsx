@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
-import useScreenSize from "../../../customHooks/screenSize";
-import Title from "../../Title";
-import logo from "../../../assets/logo1.png";
+import useScreenSize from "../../customHooks/screenSize";
+import Title from "../../components/Title";
+import logo from "../../assets/images/canchasCubLogo.png";
 import { Outlet } from "react-router-dom";
 
 const LogInPage = () => {
@@ -21,8 +21,9 @@ const LogInPage = () => {
       <Box
         sx={{
           boxShadow: { md: "0px 0px 25px 1px rgb(0,0,0)" },
+          animation: { md: "fadeIn 1s ease-in-out" },
           width: { md: "40%", xs: "100%" },
-          backgroundColor: { md: "secondary.light" },
+          backgroundColor: { md: "background.default" },
           height: { md: "100%" },
         }}
         display="flex"

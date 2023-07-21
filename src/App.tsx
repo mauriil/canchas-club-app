@@ -3,7 +3,7 @@ import { UserContext } from "./contexts/userContext";
 import { useState } from "react";
 import { useEffect } from "react";
 import "./App.css";
-import LogInPage from "./components/pages/LogInPage";
+import LogInPage from "./pages/LogInPage";
 import LogIn from "./components/Login";
 import SignIn from "./components/SignIn";
 import ForgotPassword from "./components/ForgotPassword";
