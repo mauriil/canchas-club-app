@@ -8,8 +8,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { NavLink, useNavigate } from "react-router-dom";
-import { MenuItem, Select } from "@mui/material";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useAuth } from "../../customHooks/useAuth";
 import { User } from "../../contexts/userContext";
 import { useEffect } from "react";
@@ -34,7 +33,6 @@ function Copyright(props: any) {
 
 export default function SignIn() {
   const {
-    control,
     register,
     handleSubmit,
     formState: { errors },
@@ -47,6 +45,7 @@ export default function SignIn() {
   }, [isAuthenticated, navigate]);
 
   const onSubmit = handleSubmit((values) => {
+    values.role = "owner";
     signUp(values as User);
   });
 
@@ -96,9 +95,10 @@ export default function SignIn() {
           {errors.name && (
             <Typography color="red"> Name is required </Typography>
           )}
-          {/* <TextField
+          <TextField
             type="tel"
             margin="normal"
+            required
             fullWidth
             id="phoneNumber"
             label="Phone Number"
@@ -106,31 +106,9 @@ export default function SignIn() {
             autoFocus
             sx={{ background: "transparent" }}
             {...register("phoneNumber", { required: true })}
-          /> */}
-          {/* {errors.phoneNumber && (
-            <Typography color="red"> Phone Number is required </Typography>
-          )} */}
-          <Controller
-            name="role"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <Select
-                color="primary"
-                required
-                labelId="roleLabel"
-                id="role"
-                defaultValue=""
-                label="Role"
-                {...field}
-              >
-                <MenuItem value={"owner"}>Owner</MenuItem>
-                <MenuItem value={"client"}>Client</MenuItem>
-              </Select>
-            )}
           />
-          {errors.role && (
-            <Typography color="red"> Role is required </Typography>
+          {errors.phoneNumber && (
+            <Typography color="red"> Phone Number is required </Typography>
           )}
           <TextField
             required

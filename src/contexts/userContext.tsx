@@ -1,4 +1,4 @@
-import { createContext, useState, useContext } from "react";
+import { createContext, useState } from "react";
 import { registerRequest } from "../api/auth";
 import jwt_decode from "jwt-decode";
 
@@ -21,6 +21,7 @@ export interface User {
   email: string;
   password: string;
   role: string;
+  phone: string;
 }
 
 interface AuthProviderProps {
