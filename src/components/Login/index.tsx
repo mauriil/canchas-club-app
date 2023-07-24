@@ -1,4 +1,3 @@
-import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -12,8 +11,11 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { NavLink } from "react-router-dom";
 import jwt_decode from "jwt-decode";
-import { ThreeDots } from "react-loader-spinner"
+import { ThreeDots } from "react-loader-spinner";
 import { useState } from "react";
+import { logInRequest } from "../../api/auth";
+import { useForm } from "react-hook-form";
+import { User } from "../../contexts/userContext";
 
 function Copyright(props: any) {
   return (
@@ -35,6 +37,7 @@ function Copyright(props: any) {
 
 export default function LogIn() {
   const [loading, setLoading] = useState(false);
+  const { register, handleSubmit } = useForm();
   interface LoginResponse {
     access_token: string;
     statusCode: number;
@@ -44,21 +47,10 @@ export default function LogIn() {
     sub: string;
   }
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = handleSubmit(async (values) => {
     setLoading(true);
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const user = {
-      email: data.get("email"),
-      password: data.get("password"),
-    };
-    
-    const response = await fetch(`http://localhost:3000/auth/signIn`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(user),
-    });
-    
+    const response = await logInRequest(values as User);
+
     void response.json().then((data: LoginResponse) => {
       setLoading(false);
       if (data.statusCode === 400) {
@@ -66,14 +58,13 @@ export default function LogIn() {
         return;
       } else {
         const decoded: DecodedToken = jwt_decode(data.access_token);
-        localStorage.setItem("userToken", data.access_token);
-        localStorage.setItem("userName", decoded.username);
-        localStorage.setItem("userId", decoded.sub);
-        window.location.href = "/dashboard";        
+        sessionStorage.setItem("userToken", data.access_token);
+        sessionStorage.setItem("userName", decoded.username);
+        sessionStorage.setItem("userId", decoded.sub);
+        window.location.href = "/dashboard";
       }
     });
-
-  };
+  });
 
   return (
     <Container
@@ -105,7 +96,7 @@ export default function LogIn() {
           Log in
         </Typography>
 
-        {loading ?
+        {loading ? (
           <ThreeDots
             height="80"
             width="80"
@@ -115,18 +106,18 @@ export default function LogIn() {
             wrapperStyle={{}}
             wrapperClass="spinner-wrapper"
           />
-          :
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        ) : (
+          <Box component="form" onSubmit={onSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
               fullWidth
               id="email"
               label="Email Address"
-              name="email"
               autoComplete="email"
               autoFocus
               sx={{ background: "transparent" }}
+              {...register("email", { required: true })}
             />
             <TextField
               margin="normal"
@@ -134,9 +125,9 @@ export default function LogIn() {
               fullWidth
               id="password"
               label="Password"
-              name="password"
               autoComplete="current-password"
               type="password"
+              {...register("password", { required: true })}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -168,7 +159,7 @@ export default function LogIn() {
               </Grid>
             </Grid>
           </Box>
-        }
+        )}
         <Copyright sx={{ mt: 4, mb: 3 }} />
       </Box>
     </Container>

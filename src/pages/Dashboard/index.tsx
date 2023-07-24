@@ -1,12 +1,11 @@
 import { Box } from "@mui/material";
-import useScreenSize from "../../customHooks/screenSize";
+import { useAuth } from "../../customHooks/useAuth";
 import Title from "../../components/Title";
 import logo from "../../assets/images/canchasCubLogo.png";
-import { Outlet } from "react-router-dom";
 
-const LogInPage = () => {
-  const screenSize = useScreenSize().width;
-
+const Dashboard = () => {
+  const { user } = useAuth();
+  console.log(user);
   return (
     <Box
       sx={{
@@ -14,13 +13,14 @@ const LogInPage = () => {
       }}
       display="flex"
       justifyContent="space-around"
-      bgcolor={"background.default"}
+      bgcolor={"primary.dark"}
       alignItems="center"
       height="100vh"
       width="100vw"
     >
+      <Title firtLineTitle={user ? user.userName : ""} />
     </Box>
   );
 };
 
-export default LogInPage;
+export default Dashboard;

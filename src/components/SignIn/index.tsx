@@ -1,4 +1,3 @@
-import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -8,9 +7,12 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { NavLink } from "react-router-dom";
-import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { MenuItem, Select } from "@mui/material";
+import { Controller, useForm } from "react-hook-form";
+import { useAuth } from "../../customHooks/useAuth";
+import { User } from "../../contexts/userContext";
+import { useEffect } from "react";
 
 function Copyright(props: any) {
   return (
@@ -31,31 +33,22 @@ function Copyright(props: any) {
 }
 
 export default function SignIn() {
-  const [role, setRole] = useState("");
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const { signUp, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setRole(event.target.value);
-  };
+  useEffect(() => {
+    if (isAuthenticated) navigate("/dashboard");
+  }, [isAuthenticated, navigate]);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const user = {
-      email: data.get("email"),
-      password: data.get("password"),
-      role: data.get("role"),
-      name: data.get("name"),
-    };
-    console.log(user);
-
-    const response = await fetch(`http://localhost:3000/auth/signUp`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(user),
-    });
-
-    console.log(response);
-  };
+  const onSubmit = handleSubmit((values) => {
+    signUp(values as User);
+  });
 
   return (
     <Container
@@ -78,6 +71,7 @@ export default function SignIn() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          minWidth: "340px",
         }}
       >
         <Avatar sx={{ m: 1, bgcolor: "secondary.dark" }}>
@@ -86,62 +80,89 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={onSubmit}>
           <TextField
+            type="text"
             margin="normal"
             required
             fullWidth
             id="name"
             label="Name and lastname"
-            name="name"
             autoComplete="name"
             autoFocus
-            sx={{ background: "transparent" }}
+            sx={{ background: "transparent", minWidth: "340px" }}
+            {...register("name", { required: true })}
           />
-          <TextField
+          {errors.name && (
+            <Typography color="red"> Name is required </Typography>
+          )}
+          {/* <TextField
+            type="tel"
             margin="normal"
-            required
             fullWidth
             id="phoneNumber"
             label="Phone Number"
-            name="phoneNumber"
             autoComplete="phoneNumber"
             autoFocus
             sx={{ background: "transparent" }}
-          />
-          <Select
-            color="primary"
-            labelId="roleLabel"
-            id="role"
+            {...register("phoneNumber", { required: true })}
+          /> */}
+          {/* {errors.phoneNumber && (
+            <Typography color="red"> Phone Number is required </Typography>
+          )} */}
+          <Controller
             name="role"
-            value={role}
-            label="Role"
-            onChange={handleChange}
-          >
-            <MenuItem value={"owner"}>Owner</MenuItem>
-            <MenuItem value={"client"}>Client</MenuItem>
-          </Select>
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <Select
+                color="primary"
+                required
+                labelId="roleLabel"
+                id="role"
+                defaultValue=""
+                label="Role"
+                {...field}
+              >
+                <MenuItem value={"owner"}>Owner</MenuItem>
+                <MenuItem value={"client"}>Client</MenuItem>
+              </Select>
+            )}
+          />
+          {errors.role && (
+            <Typography color="red"> Role is required </Typography>
+          )}
           <TextField
-            margin="normal"
             required
+            type="email"
+            margin="normal"
             fullWidth
             id="email"
             label="Email Address"
-            name="email"
             autoComplete="email"
             autoFocus
             sx={{ background: "transparent" }}
+            {...register("email", {
+              required: true,
+              pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+            })}
           />
+          {errors.email && (
+            <Typography color="red"> Email is required </Typography>
+          )}
           <TextField
             margin="normal"
+            type="password"
             required
             fullWidth
             id="password"
             label="Password"
-            name="password"
             autoComplete="current-password"
-            type="password"
+            {...register("password", { required: true, minLength: 6 })}
           />
+          {errors.password && (
+            <Typography color="red"> Password is required </Typography>
+          )}
           <Button
             color="primary"
             type="submit"
