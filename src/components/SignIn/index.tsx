@@ -48,7 +48,6 @@ export default function SignIn() {
   }, [isAuthenticated, navigate]);
 
   const onSubmit = handleSubmit((values) => {
-    values.role = "owner";
     signUp(values as User);
   });
 
