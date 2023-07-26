@@ -8,6 +8,8 @@ export const registerRequest = async (values: User) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
+        credentials: 'include',
+        mode: 'cors'
     });
 }
 
@@ -16,5 +18,7 @@ export const logInRequest = async (values: LogInUser) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
+        credentials: 'include',
+        mode: 'cors'
     });
 }

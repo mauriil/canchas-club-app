@@ -1,9 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { registerRequest, logInRequest } from "../api/auth";
-import jwt_decode from "jwt-decode";
 
 export interface UserResp {
-  userToken: string;
   userName: string;
   userId: string;
 }
@@ -35,12 +33,14 @@ interface AuthProviderProps {
 }
 
 interface LoginResponse {
-  access_token: string;
+  name: string;
+  id: string;
   statusCode: number;
   message: string[];
 }
 interface SigninResponse {
-  access_token: string;
+  name: string;
+  id: string;
   statusCode: number;
   message: string[];
 }
@@ -51,7 +51,6 @@ interface DecodedToken {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<{
-    userToken: string;
     userName: string;
     userId: string;
   } | null>(null);
@@ -60,7 +59,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const signUp = async (user: User) => {
     const res = await registerRequest(user);
-    console.log(res);
     void res.json().then((data: SigninResponse) => {
       console.log("DATA: ", data);
       if (data.statusCode === 400) {
@@ -70,13 +68,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         });
         return;
       } else {
-        const decoded: DecodedToken = jwt_decode(data.access_token);
-        const userData = {
-          userToken: data.access_token,
-          userName: decoded.username,
-          userId: decoded.sub,
-        };
-        setUser(userData);
+        setUser({
+          userName: data.name,
+          userId: data.id,
+        });
         setIsAuthenticated(true);
       }
     });
@@ -84,8 +79,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const signIn = async (user: LogInUser) => {
     const res = await logInRequest(user);
-    console.log(res);
-
     void res.json().then((data: LoginResponse) => {
       if (data.statusCode === 400) {
         setErrors(data.message);
@@ -94,13 +87,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         });
         return;
       } else {
-        const decoded: DecodedToken = jwt_decode(data.access_token);
-        const userData = {
-          userToken: data.access_token,
-          userName: decoded.username,
-          userId: decoded.sub,
-        };
-        setUser(userData);
+        setUser({
+          userName: data.name,
+          userId: data.id,
+        });
         setIsAuthenticated(true);
       }
     });
