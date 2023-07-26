@@ -8,6 +8,7 @@ interface TitleProps {
 const Title = (props: TitleProps) => {
   return (
     <Box
+      sx={{ marginTop: { xs: "5rem" } }}
       display="flex"
       justifyContent="center"
       alignItems="center"

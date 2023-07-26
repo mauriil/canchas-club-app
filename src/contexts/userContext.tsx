@@ -1,5 +1,5 @@
-import { createContext, useState } from "react";
-import { registerRequest } from "../api/auth";
+import { createContext, useEffect, useState } from "react";
+import { registerRequest, logInRequest } from "../api/auth";
 import jwt_decode from "jwt-decode";
 
 export interface UserResp {
@@ -10,8 +10,10 @@ export interface UserResp {
 
 interface AuthContextType {
   signUp: (user: User) => void;
+  signIn: (user: LogInUser) => void;
   user: UserResp | null;
   isAuthenticated: boolean;
+  errors: string[];
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -23,13 +25,24 @@ export interface User {
   phone: string;
 }
 
+export interface LogInUser {
+  email: string;
+  password: string;
+}
+
 interface AuthProviderProps {
   children: React.ReactNode;
 }
 
+interface LoginResponse {
+  access_token: string;
+  statusCode: number;
+  message: string[];
+}
 interface SigninResponse {
   access_token: string;
   statusCode: number;
+  message: string[];
 }
 interface DecodedToken {
   username: string;
@@ -43,38 +56,64 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     userId: string;
   } | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [errors, setErrors] = useState<string[]>([]);
 
   const signUp = async (user: User) => {
-    try {
-      const res = await registerRequest(user);
-      console.log(res);
-      void res.json().then((data: SigninResponse) => {
-        console.log("DATA: ", data);
-        if (data.statusCode === 400) {
-          alert("Usuario o contraseña incorrectos");
-          return;
-        } else {
-          const decoded: DecodedToken = jwt_decode(data.access_token);
-          const userData = {
-            userToken: data.access_token,
-            userName: decoded.username,
-            userId: decoded.sub,
-          };
-          setUser(userData);
-          setIsAuthenticated(true);
-        }
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    const res = await registerRequest(user);
+    console.log(res);
+    void res.json().then((data: SigninResponse) => {
+      console.log("DATA: ", data);
+      if (data.statusCode === 400) {
+        setErrors(data.message);
+        errors.forEach((error) => {
+          alert(error);
+        });
+        return;
+      } else {
+        const decoded: DecodedToken = jwt_decode(data.access_token);
+        const userData = {
+          userToken: data.access_token,
+          userName: decoded.username,
+          userId: decoded.sub,
+        };
+        setUser(userData);
+        setIsAuthenticated(true);
+      }
+    });
+  };
+
+  const signIn = async (user: LogInUser) => {
+    const res = await logInRequest(user);
+    console.log(res);
+
+    void res.json().then((data: LoginResponse) => {
+      if (data.statusCode === 400) {
+        setErrors(data.message);
+        errors.forEach((error) => {
+          alert(error);
+        });
+        return;
+      } else {
+        const decoded: DecodedToken = jwt_decode(data.access_token);
+        const userData = {
+          userToken: data.access_token,
+          userName: decoded.username,
+          userId: decoded.sub,
+        };
+        setUser(userData);
+        setIsAuthenticated(true);
+      }
+    });
   };
 
   return (
     <AuthContext.Provider
       value={{
         signUp,
+        signIn,
         user,
         isAuthenticated,
+        errors,
       }}
     >
       {children}

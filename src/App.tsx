@@ -6,6 +6,7 @@ import LogIn from "./components/Login";
 import SignIn from "./components/SignIn";
 import ForgotPassword from "./components/ForgotPassword";
 import { AuthProvider } from "./contexts/userContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -19,7 +20,9 @@ function App() {
             <Route path="signIn" element={<SignIn />} />
             <Route path="forgotPassword" element={<ForgotPassword />} />
           </Route>
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
         </Routes>
       </AuthProvider>
     </>

@@ -11,13 +11,16 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { ThreeDots } from "react-loader-spinner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { logInRequest } from "../../api/auth";
 import { useForm } from "react-hook-form";
 import { User } from "../../contexts/userContext";
+import { useAuth } from "../../customHooks/useAuth";
+import { LogInUser } from "../../contexts/userContext";
+import SignIn from "../SignIn";
 
 function Copyright(props: any) {
   return (
@@ -39,33 +42,24 @@ function Copyright(props: any) {
 
 export default function LogIn() {
   const [loading, setLoading] = useState(false);
-  const { register, handleSubmit } = useForm();
-  interface LoginResponse {
-    access_token: string;
-    statusCode: number;
-  }
-  interface DecodedToken {
-    username: string;
-    sub: string;
-  }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const { signIn, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
-  const onSubmit = handleSubmit(async (values) => {
-    setLoading(true);
-    const response = await logInRequest(values as User);
-
-    void response.json().then((data: LoginResponse) => {
+  useEffect(() => {
+    if (isAuthenticated) {
       setLoading(false);
-      if (data.statusCode === 400) {
-        alert("Usuario o contraseña incorrectos");
-        return;
-      } else {
-        const decoded: DecodedToken = jwt_decode(data.access_token);
-        sessionStorage.setItem("userToken", data.access_token);
-        sessionStorage.setItem("userName", decoded.username);
-        sessionStorage.setItem("userId", decoded.sub);
-        window.location.href = "/dashboard";
-      }
-    });
+      navigate("/dashboard");
+    }
+  }, [isAuthenticated, navigate]);
+
+  const onSubmit = handleSubmit((values) => {
+    setLoading(true);
+    signIn(values as LogInUser);
   });
 
   return (
@@ -77,6 +71,7 @@ export default function LogIn() {
         alignItems: "center",
         justifyContent: "center",
         flexDirection: "column",
+        marginBottom: { xs: "2rem" },
       }}
     >
       <Box
@@ -121,6 +116,9 @@ export default function LogIn() {
               sx={{ background: "transparent" }}
               {...register("email", { required: true })}
             />
+            {errors.email && (
+              <Typography color="red"> Email is required </Typography>
+            )}
             <TextField
               margin="normal"
               required
@@ -131,6 +129,9 @@ export default function LogIn() {
               type="password"
               {...register("password", { required: true })}
             />
+            {errors.password && (
+              <Typography color="red"> Password is required </Typography>
+            )}
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"

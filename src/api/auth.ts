@@ -1,4 +1,4 @@
-import {User} from "../contexts/userContext"
+import {LogInUser, User} from "../contexts/userContext"
 
 const API = 'http://localhost:3000/auth';
 
@@ -11,7 +11,7 @@ export const registerRequest = async (values: User) => {
     });
 }
 
-export const logInRequest = async (values: User) => {
+export const logInRequest = async (values: LogInUser) => {
     return await fetch(`${API}/signIn`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

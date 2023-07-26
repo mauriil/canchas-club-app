@@ -60,11 +60,12 @@ export default function SignIn() {
         alignItems: "center",
         justifyContent: "center",
         flexDirection: "column",
+        marginBottom: { xs: "2rem" },
       }}
     >
       <Box
-        padding="2rem"
         sx={{
+          padding: { xs: "1rem", md: "2rem" },
           marginTop: "0px",
           backgroundColor: "#edebc9",
           boxShadow: "0px 0px 25px 1px rgb(0,0,0)",
