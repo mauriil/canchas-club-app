@@ -4,7 +4,7 @@
 import { createContext, useEffect, useState } from "react";
 import { registerRequest, logInRequest, verifyTokenRequest } from "../api/auth";
 import Cookies from "js-cookie";
-import { LogInUser, LoginResponse, SigninResponse, User, UserResp } from "../types/users";
+import { LogInUser, LoginResponse, SigningResponse, User, UserResp } from "../types/users";
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -29,9 +29,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const signUp = async (user: User) => {
     const res = await registerRequest(user);
-    void res.json().then((data: SigninResponse) => {
+    void res.json().then((data: SigningResponse) => {
       console.log("DATA: ", data);
-      if (data.statusCode === 400) {
+      if (data.statusCode > 400 || data.status > 400) {
         setErrors(data.message);
         errors.forEach((error) => {
           alert(error);
@@ -50,7 +50,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signIn = async (user: LogInUser) => {
     const res = await logInRequest(user);
     void res.json().then((data: LoginResponse) => {
-      if (data.statusCode === 400) {
+      if (data.statusCode > 400 || data.status > 400) {
         setErrors(data.message);
         errors.forEach((error) => {
           alert(error);

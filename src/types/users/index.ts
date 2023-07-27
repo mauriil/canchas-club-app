@@ -17,10 +17,12 @@ export interface LoginResponse {
   id: string;
   statusCode: number;
   message: string[];
+  status: number;
 }
-export interface SigninResponse {
+export interface SigningResponse {
   name: string;
   id: string;
   statusCode: number;
   message: string[];
+  status: number;
 }
