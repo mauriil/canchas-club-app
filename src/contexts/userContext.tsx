@@ -1,6 +1,8 @@
 import { createContext, useEffect, useState } from "react";
-import { registerRequest, logInRequest } from "../api/auth";
+import { registerRequest, logInRequest, verifyTokenRequest } from "../api/auth";
+import Cookies from "js-cookie";
 
+export const AuthContext = createContext<AuthContextType | null>(null);
 export interface UserResp {
   userName: string;
   userId: string;
@@ -13,8 +15,6 @@ interface AuthContextType {
   isAuthenticated: boolean;
   errors: string[];
 }
-
-export const AuthContext = createContext<AuthContextType | null>(null);
 
 export interface User {
   name: string;
@@ -43,10 +43,6 @@ interface SigninResponse {
   id: string;
   statusCode: number;
   message: string[];
-}
-interface DecodedToken {
-  username: string;
-  sub: string;
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
@@ -95,6 +91,35 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     });
   };
+
+  useEffect(() => {
+    async function checkLogin(): Promise<void> {
+      const cookies: {
+        [key: string]: string;
+      } = Cookies.get();
+      if (!cookies["access-token"]) {
+        setIsAuthenticated(false);
+        setUser(null);
+        return;
+      }
+
+      try {
+        const res = await verifyTokenRequest(cookies["access-token"]);
+        void res.json().then((data: UserResp) => {
+          if (!data.userId) {
+            setIsAuthenticated(false);
+            return;
+          }
+          setIsAuthenticated(true);
+          setUser(data);
+        });
+      } catch (error) {
+        setIsAuthenticated(false);
+        setUser(null);
+      }
+    }
+    void checkLogin();
+  }, []);
 
   return (
     <AuthContext.Provider

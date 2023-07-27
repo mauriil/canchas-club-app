@@ -1,12 +1,8 @@
 import { Box } from "@mui/material";
-import useScreenSize from "../../customHooks/screenSize";
-import Title from "../../components/Title";
 import logo from "../../assets/images/canchasCubLogo.png";
 import { Outlet } from "react-router-dom";
 
 const LogInPage = () => {
-  const screenSize = useScreenSize().width;
-
   return (
     <Box
       sx={{
@@ -31,17 +27,12 @@ const LogInPage = () => {
         alignItems="center"
         flexDirection="column"
       >
-        {screenSize > 900 ? (
-          <Title firtLineTitle="CANCHAS" secondLineTitle=".club" />
-        ) : (
-          <Title firtLineTitle="CANCHAS.club" />
-        )}
         <Box
           component="img"
           sx={{
-            marginBottom: { xs: "2rem", md: "0rem" },
+            marginBottom: { xs: "0rem", md: "0rem" },
             height: "auto",
-            minWidth: { xs: "25%", md: "250px" },
+            minWidth: { xs: "40%", md: "400px" },
             maxWidth: { xs: "100px", md: "50%" },
           }}
           src={logo}

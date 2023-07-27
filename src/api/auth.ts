@@ -22,3 +22,10 @@ export const logInRequest = async (values: LogInUser) => {
         mode: 'cors'
     });
 }
+
+export const verifyTokenRequest = async (token: string) => {
+    return await fetch(`${API}/verifyToken`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+    });
+}
