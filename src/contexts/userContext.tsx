@@ -1,12 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { createContext, useEffect, useState } from "react";
 import { registerRequest, logInRequest, verifyTokenRequest } from "../api/auth";
 import Cookies from "js-cookie";
+import { LogInUser, LoginResponse, SigninResponse, User, UserResp } from "../types/users";
 
 export const AuthContext = createContext<AuthContextType | null>(null);
-export interface UserResp {
-  userName: string;
-  userId: string;
-}
 
 interface AuthContextType {
   signUp: (user: User) => void;
@@ -15,34 +15,8 @@ interface AuthContextType {
   isAuthenticated: boolean;
   errors: string[];
 }
-
-export interface User {
-  name: string;
-  email: string;
-  password: string;
-  phone: string;
-}
-
-export interface LogInUser {
-  email: string;
-  password: string;
-}
-
 interface AuthProviderProps {
   children: React.ReactNode;
-}
-
-interface LoginResponse {
-  name: string;
-  id: string;
-  statusCode: number;
-  message: string[];
-}
-interface SigninResponse {
-  name: string;
-  id: string;
-  statusCode: number;
-  message: string[];
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
