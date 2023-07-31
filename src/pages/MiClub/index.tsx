@@ -1,16 +1,22 @@
 import { Box } from "@mui/material";
-import Title from "../../components/Title";
+import ClubAvatar from "../../components/ClubAvatar";
 
 const MiClub = () => {
   return (
     <Box
       display="flex"
+      flexWrap="wrap"
       alignItems="center"
-      justifyContent="center"
+      justifyContent="space-around"
       width="100%"
       height="100%"
     >
-      <Title firtLineTitle="Mi" secondLineTitle="Club" />
+      <ClubAvatar width="20vw" height="20vw" />
+      <ClubAvatar width="20vw" height="20vw" />
+      <ClubAvatar width="20vw" height="20vw" />
+      <ClubAvatar width="20vw" height="20vw" />
+      <ClubAvatar width="20vw" height="20vw" />
+      <ClubAvatar width="20vw" height="20vw" />
     </Box>
   );
 };

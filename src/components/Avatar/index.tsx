@@ -13,7 +13,7 @@ const AvatarIcon = (props: AvatarProps) => {
     <Avatar
       alt={user?.userName}
       src="/static/images/avatar/1.jpg"
-      sx={{ width: props.width, height: props.height }}
+      sx={{ width: props.width, height: props.height, fontSize: "3rem" }}
     />
   );
 };

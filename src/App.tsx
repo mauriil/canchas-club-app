@@ -11,6 +11,7 @@ import MisReservas from "./pages/MisReservas";
 import MiClub from "./pages/MiClub";
 import Settings from "./pages/Settings";
 import NotFoundPage from "./pages/NotFoundPage";
+import Home from "./pages/Home";
 
 function App() {
   return (
@@ -27,7 +28,8 @@ function App() {
           </Route>
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />}>
-              <Route index element={<Navigate to="misReservas" />} />
+              <Route index element={<Navigate to="home" />} />
+              <Route path="home" element={<Home />} />
               <Route path="misReservas" element={<MisReservas />} />
               <Route path="miClub" element={<MiClub />} />
               <Route path="configuraciones" element={<Settings />} />

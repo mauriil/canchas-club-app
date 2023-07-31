@@ -12,6 +12,7 @@ import EventIcon from "@mui/icons-material/Event";
 import MenuIcon from "@mui/icons-material/Menu";
 import BallotIcon from "@mui/icons-material/Ballot";
 import SettingsIcon from "@mui/icons-material/Settings";
+import HomeIcon from "@mui/icons-material/Home";
 import { NavLink } from "react-router-dom";
 
 type Anchor = "left";
@@ -42,47 +43,59 @@ export default function TemporaryDrawer() {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        <ListItem disablePadding>
-          <NavLink to="misReservas">
+        <NavLink to="Home">
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <HomeIcon />
+              </ListItemIcon>
+              <ListItemText primary="Home" />
+            </ListItemButton>
+          </ListItem>
+        </NavLink>
+        <NavLink to="misReservas">
+          <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
                 <EventIcon />
               </ListItemIcon>
               <ListItemText primary="Mis reservas" />
             </ListItemButton>
-          </NavLink>
-        </ListItem>
-        <ListItem disablePadding>
-          <NavLink to="miClub">
+          </ListItem>
+        </NavLink>
+        <NavLink to="miClub">
+          <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
                 <BallotIcon />
               </ListItemIcon>
               <ListItemText primary="Mi club" />
             </ListItemButton>
-          </NavLink>
-        </ListItem>
-        <ListItem disablePadding>
-          <NavLink to="configuraciones">
+          </ListItem>
+        </NavLink>
+        <NavLink to="configuraciones">
+          <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
                 <SettingsIcon />
               </ListItemIcon>
               <ListItemText primary="Configuraciones" />
             </ListItemButton>
-          </NavLink>
-        </ListItem>
+          </ListItem>
+        </NavLink>
       </List>
       <Divider />
       <List>
-        <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              <EventIcon />
-            </ListItemIcon>
-            <ListItemText primary="prueba" />
-          </ListItemButton>
-        </ListItem>
+        <NavLink to="configuraciones">
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <EventIcon />
+              </ListItemIcon>
+              <ListItemText primary="prueba" />
+            </ListItemButton>
+          </ListItem>
+        </NavLink>
       </List>
     </Box>
   );
@@ -90,8 +103,13 @@ export default function TemporaryDrawer() {
   return (
     <div>
       <React.Fragment>
-        <Button onClick={toggleDrawer("left", true)}>
-          <MenuIcon />
+        <Button
+          color="secondary"
+          variant="outlined"
+          sx={{ width: "5rem", height: "5rem" }}
+          onClick={toggleDrawer("left", true)}
+        >
+          <MenuIcon sx={{ fontSize: "3rem" }} />
         </Button>
         <Drawer
           anchor={"left"}

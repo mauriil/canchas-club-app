@@ -16,11 +16,14 @@ const Header = () => {
       justifyContent="space-between"
       boxShadow="0px 0px 25px 0px"
       padding="1rem 2rem"
-      bgcolor={"red"}
+      bgcolor={"ButtonShadow"}
+      zIndex="10"
     >
       <TemporaryDrawer />
       <Box display="flex" alignItems="center" justifyContent="flex-end">
-        <Typography marginRight="2rem">{user?.userName}</Typography>
+        <Typography fontSize={"2rem"} marginRight="2rem">
+          {user?.userName}
+        </Typography>
         <AvatarIcon width="50px" height="50px" />
       </Box>
     </Box>
