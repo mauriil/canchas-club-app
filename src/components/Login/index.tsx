@@ -12,15 +12,11 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { NavLink, useNavigate } from "react-router-dom";
-import jwt_decode from "jwt-decode";
 import { ThreeDots } from "react-loader-spinner";
 import { useEffect, useState } from "react";
-import { logInRequest } from "../../api/auth";
 import { useForm } from "react-hook-form";
-import { User } from "../../contexts/userContext";
 import { useAuth } from "../../customHooks/useAuth";
-import { LogInUser } from "../../contexts/userContext";
-import SignIn from "../SignIn";
+import { LogInUser } from "../../types/users";
 
 function Copyright(props: any) {
   return (

@@ -13,8 +13,8 @@ import Container from "@mui/material/Container";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../customHooks/useAuth";
-import { User } from "../../contexts/userContext";
 import { useEffect } from "react";
+import { User } from "../../types/users";
 
 function Copyright(props: any) {
   return (

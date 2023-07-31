@@ -7,6 +7,10 @@ import SignIn from "./components/SignIn";
 import ForgotPassword from "./components/ForgotPassword";
 import { AuthProvider } from "./contexts/userContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import MisReservas from "./pages/MisReservas";
+import MiClub from "./pages/MiClub";
+import Settings from "./pages/Settings";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   return (
@@ -19,10 +23,17 @@ function App() {
             <Route path="logIn" element={<LogIn />} />
             <Route path="signIn" element={<SignIn />} />
             <Route path="forgotPassword" element={<ForgotPassword />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
           <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />}>
+              <Route index element={<Navigate to="misReservas" />} />
+              <Route path="misReservas" element={<MisReservas />} />
+              <Route path="miClub" element={<MiClub />} />
+              <Route path="configuraciones" element={<Settings />} />
+            </Route>
           </Route>
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </AuthProvider>
     </>

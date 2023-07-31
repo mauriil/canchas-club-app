@@ -21,7 +21,7 @@ const Title = (props: TitleProps) => {
           fontSize: { xs: "3rem", sm: "4rem", md: "6rem", lg: "8rem" },
         }}
         className="size"
-        width="100vw"
+        width="100%"
         textAlign="center"
         fontWeight="100"
         component="h2"
@@ -37,7 +37,7 @@ const Title = (props: TitleProps) => {
           fontSize: { xs: "3rem", sm: "4rem", md: "6rem", lg: "8rem" },
         }}
         className="size"
-        width="100vw"
+        width="100%"
         textAlign="center"
         fontWeight="100"
         component="h2"
