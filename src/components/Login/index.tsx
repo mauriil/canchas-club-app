@@ -1,4 +1,5 @@
-import * as React from "react";
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -10,6 +11,12 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import { NavLink, useNavigate } from "react-router-dom";
+import { ThreeDots } from "react-loader-spinner";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useAuth } from "../../customHooks/useAuth";
+import { LogInUser } from "../../types/users";
 
 function Copyright(props: any) {
   return (
@@ -30,14 +37,26 @@ function Copyright(props: any) {
 }
 
 export default function LogIn() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
+  const [loading, setLoading] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const { signIn, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      setLoading(false);
+      navigate("/dashboard");
+    }
+  }, [isAuthenticated, navigate]);
+
+  const onSubmit = handleSubmit((values) => {
+    setLoading(true);
+    signIn(values as LogInUser);
+  });
 
   return (
     <Container
@@ -48,13 +67,14 @@ export default function LogIn() {
         alignItems: "center",
         justifyContent: "center",
         flexDirection: "column",
+        marginBottom: { xs: "2rem" },
       }}
     >
       <Box
         padding="2rem"
         sx={{
           marginTop: "0px",
-          backgroundColor: "#edebc9",
+          backgroundColor: "background.default",
           boxShadow: "0px 0px 25px 1px rgb(0,0,0)",
           borderRadius: "15px",
           display: "flex",
@@ -62,69 +82,83 @@ export default function LogIn() {
           alignItems: "center",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.dark" }}>
+        <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           Log in
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            sx={{ background: "transparent" }}
+
+        {loading ? (
+          <ThreeDots
+            height="80"
+            width="80"
+            radius="9"
+            color="#9dbfaf"
+            ariaLabel="three-dots-loading"
+            wrapperStyle={{}}
+            wrapperClass="spinner-wrapper"
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="password"
-            label="Password"
-            name="password"
-            autoComplete="current-password"
-            type="password"
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-          <Button
-            color="primary"
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 0, mb: 1 }}
-          >
-            LogIn
-          </Button>
-          <Button
-            color="primary"
-            type="button"
-            fullWidth
-            variant="outlined"
-            sx={{ mt: 1, mb: 0 }}
-          >
-            Sign In
-          </Button>
-          <Grid container sx={{ mt: 1, mb: 0 }}>
-            <Grid item xs>
-              <Link href="#" variant="body1">
-                Forgot password?
-              </Link>
+        ) : (
+          <Box component="form" onSubmit={onSubmit} noValidate sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              autoComplete="email"
+              autoFocus
+              sx={{ background: "transparent" }}
+              {...register("email", { required: true })}
+            />
+            {errors.email && (
+              <Typography color="red"> Email is required </Typography>
+            )}
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="password"
+              label="Password"
+              autoComplete="current-password"
+              type="password"
+              {...register("password", { required: true })}
+            />
+            {errors.password && (
+              <Typography color="red"> Password is required </Typography>
+            )}
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
+            <Button
+              color="primary"
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 0, mb: 1 }}
+            >
+              LogIn
+            </Button>
+            <NavLink to={"/index/signIn"}>
+              <Button
+                color="primary"
+                type="button"
+                fullWidth
+                variant="outlined"
+                sx={{ mt: 1, mb: 0 }}
+              >
+                Sign In
+              </Button>
+            </NavLink>
+            <Grid container sx={{ mt: 1, mb: 0 }}>
+              <Grid item xs>
+                <NavLink to={"/index/forgotPassword"}>Forgot password?</NavLink>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Link href="#" variant="body1">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
-        </Box>
+          </Box>
+        )}
         <Copyright sx={{ mt: 4, mb: 3 }} />
       </Box>
     </Container>

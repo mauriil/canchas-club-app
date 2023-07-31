@@ -10,9 +10,28 @@
 }
 
 html{
-  background-color: #00ccbe;
+  background-color: #445251;
+  background-image: url("./assets/images/background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   font-size: 62.5%;
+  z-index: -1;
+  animation: background 10s linear infinite;
 }
+
+/* FIXME: zoom in and out the background image */ 
+/* @keyframes background{
+  0%{
+    transform: scale(1);
+  }
+  50%{
+    transform: scale(1.1);
+  }
+  100%{
+    transform: scale(1);
+  }
+} */
 
 a{
   text-decoration: none;
