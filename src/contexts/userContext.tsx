@@ -52,7 +52,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return await res.json().then((data: LoginResponse) => {
       if (data.statusCode >= 400 || data.status >= 400) {
         setErrors(data.message);
-        return {status: false, errors: data.message};
+        return {status: false, errors: Array.isArray(data.message) ? data.message : [data.message]};
       } else {
         setUser({
           userName: data.name,
