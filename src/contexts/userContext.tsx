@@ -10,7 +10,7 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 interface AuthContextType {
   signUp: (user: User) => void;
-  signIn: (user: LogInUser) => void;
+  signIn: (user: LogInUser) => Promise<{status: boolean, errors: string[]}>;
   user: UserResp | null;
   isAuthenticated: boolean;
   errors: string[];
@@ -31,7 +31,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const res = await registerRequest(user);
     void res.json().then((data: SigningResponse) => {
       console.log("DATA: ", data);
-      if (data.statusCode > 400 || data.status > 400) {
+      if (data.statusCode >= 400 || data.status >= 400) {
         setErrors(data.message);
         errors.forEach((error) => {
           alert(error);
@@ -47,21 +47,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     });
   };
 
-  const signIn = async (user: LogInUser) => {
+  const signIn = async (user: LogInUser): Promise<{status: boolean, errors: string[]}> => {
     const res = await logInRequest(user);
-    void res.json().then((data: LoginResponse) => {
-      if (data.statusCode > 400 || data.status > 400) {
+    return await res.json().then((data: LoginResponse) => {
+      if (data.statusCode >= 400 || data.status >= 400) {
         setErrors(data.message);
-        errors.forEach((error) => {
-          alert(error);
-        });
-        return;
+        return {status: false, errors: data.message};
       } else {
         setUser({
           userName: data.name,
           userId: data.id,
         });
         setIsAuthenticated(true);
+        return {status: true, errors: []};
       }
     });
   };

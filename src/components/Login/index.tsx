@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../customHooks/useAuth";
 import { LogInUser } from "../../types/users";
+import { Alert, AlertColor, Snackbar } from "@mui/material";
 
 function Copyright(props: any) {
   return (
@@ -37,13 +38,20 @@ function Copyright(props: any) {
 }
 
 export default function LogIn() {
+  const [snackBarOpen, setSnackBarOpen] = useState(false);
+  const [snackBarMessage, setSnackBarMessage] = useState("");
+  const [snackBarSeverity, setSnackBarSeverity] = useState("success");
+  const handelSnackClose = () => {
+    setSnackBarOpen(false);
+  }
+
   const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { signIn, isAuthenticated } = useAuth();
+  const { signIn, isAuthenticated, errors: authErrors } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,9 +61,15 @@ export default function LogIn() {
     }
   }, [isAuthenticated, navigate]);
 
-  const onSubmit = handleSubmit((values) => {
+  const onSubmit = handleSubmit(async (values) => {
     setLoading(true);
-    signIn(values as LogInUser);
+    const singInResponse = await signIn(values as LogInUser);
+    setLoading(false);
+    if (!singInResponse.status) {
+      setSnackBarMessage(singInResponse.errors[0]);
+      setSnackBarSeverity("error");
+      setSnackBarOpen(true);
+    }
   });
 
   return (
@@ -88,7 +102,7 @@ export default function LogIn() {
         <Typography component="h1" variant="h5">
           Log in
         </Typography>
-
+        
         {loading ? (
           <ThreeDots
             height="80"
@@ -109,7 +123,9 @@ export default function LogIn() {
               label="Email Address"
               autoComplete="email"
               autoFocus
+              type="email"
               sx={{ background: "transparent" }}
+              error={errors.email ? true : false}
               {...register("email", { required: true })}
             />
             {errors.email && (
@@ -123,6 +139,8 @@ export default function LogIn() {
               label="Password"
               autoComplete="current-password"
               type="password"
+              sx={{ background: "transparent" }}
+              error={errors.password ? true : false}
               {...register("password", { required: true })}
             />
             {errors.password && (
@@ -161,6 +179,11 @@ export default function LogIn() {
         )}
         <Copyright sx={{ mt: 4, mb: 3 }} />
       </Box>
+      <Snackbar open={snackBarOpen} autoHideDuration={5000} onClick={handelSnackClose} onClose={handelSnackClose}>
+          <Alert severity={snackBarSeverity as AlertColor} sx={{ width: '100%', fontSize: '15px' }} onClose={handelSnackClose}>
+            {snackBarMessage}
+          </Alert>
+        </Snackbar>
     </Container>
   );
 }
