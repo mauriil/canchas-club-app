@@ -100,7 +100,7 @@ export default function LogIn() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Log in
+          Ingreso
         </Typography>
         
         {loading ? (
@@ -120,7 +120,7 @@ export default function LogIn() {
               required
               fullWidth
               id="email"
-              label="Email Address"
+              label="Email"
               autoComplete="email"
               autoFocus
               type="email"
@@ -129,14 +129,14 @@ export default function LogIn() {
               {...register("email", { required: true })}
             />
             {errors.email && (
-              <Typography color="red"> Email is required </Typography>
+              <Typography color="red"> El email es requerido </Typography>
             )}
             <TextField
               margin="normal"
               required
               fullWidth
               id="password"
-              label="Password"
+              label="Contraseña"
               autoComplete="current-password"
               type="password"
               sx={{ background: "transparent" }}
@@ -144,11 +144,11 @@ export default function LogIn() {
               {...register("password", { required: true })}
             />
             {errors.password && (
-              <Typography color="red"> Password is required </Typography>
+              <Typography color="red"> La contraseña es requerida</Typography>
             )}
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
+              label="Recuerda mis datos"
             />
             <Button
               color="primary"
@@ -157,7 +157,7 @@ export default function LogIn() {
               variant="contained"
               sx={{ mt: 0, mb: 1 }}
             >
-              LogIn
+              Ingresar
             </Button>
             <NavLink to={"/index/signIn"}>
               <Button
@@ -167,12 +167,12 @@ export default function LogIn() {
                 variant="outlined"
                 sx={{ mt: 1, mb: 0 }}
               >
-                Sign In
+                Registrarse
               </Button>
             </NavLink>
             <Grid container sx={{ mt: 1, mb: 0 }}>
               <Grid item xs>
-                <NavLink to={"/index/forgotPassword"}>Forgot password?</NavLink>
+                <NavLink to={"/index/forgotPassword"}>Olvide mi contraseña</NavLink>
               </Grid>
             </Grid>
           </Box>
