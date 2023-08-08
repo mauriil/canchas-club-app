@@ -9,8 +9,8 @@ import { LogInUser, LoginResponse, SigningResponse, User, UserResp } from "../ty
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 interface AuthContextType {
-  signUp: (user: User) => void;
-  signIn: (user: LogInUser) => void;
+  signUp: (user: User) => Promise<{status: boolean, errors: string[]}>;
+  signIn: (user: LogInUser) => Promise<{status: boolean, errors: string[]}>;
   user: UserResp | null;
   isAuthenticated: boolean;
   errors: string[];
@@ -27,41 +27,37 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
 
-  const signUp = async (user: User) => {
+  const signUp = async (user: User): Promise<{status: boolean, errors: string[]}> => {
     const res = await registerRequest(user);
-    void res.json().then((data: SigningResponse) => {
+    return await res.json().then((data: SigningResponse) => {
       console.log("DATA: ", data);
-      if (data.statusCode > 400 || data.status > 400) {
+      if (data.statusCode >= 400 || data.status >= 400) {
         setErrors(data.message);
-        errors.forEach((error) => {
-          alert(error);
-        });
-        return;
+        return {status: false, errors: Array.isArray(data.message) ? data.message : [data.message]};
       } else {
         setUser({
           userName: data.name,
           userId: data.id,
         });
         setIsAuthenticated(true);
+        return {status: true, errors: []};
       }
     });
   };
 
-  const signIn = async (user: LogInUser) => {
+  const signIn = async (user: LogInUser): Promise<{status: boolean, errors: string[]}> => {
     const res = await logInRequest(user);
-    void res.json().then((data: LoginResponse) => {
-      if (data.statusCode > 400 || data.status > 400) {
+    return await res.json().then((data: LoginResponse) => {
+      if (data.statusCode >= 400 || data.status >= 400) {
         setErrors(data.message);
-        errors.forEach((error) => {
-          alert(error);
-        });
-        return;
+        return {status: false, errors: Array.isArray(data.message) ? data.message : [data.message]};
       } else {
         setUser({
           userName: data.name,
           userId: data.id,
         });
         setIsAuthenticated(true);
+        return {status: true, errors: []};
       }
     });
   };

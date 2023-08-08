@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../customHooks/useAuth";
 import { LogInUser } from "../../types/users";
+import { Alert, AlertColor, Snackbar } from "@mui/material";
 
 function Copyright(props: any) {
   return (
@@ -37,13 +38,20 @@ function Copyright(props: any) {
 }
 
 export default function LogIn() {
+  const [snackBarOpen, setSnackBarOpen] = useState(false);
+  const [snackBarMessage, setSnackBarMessage] = useState("");
+  const [snackBarSeverity, setSnackBarSeverity] = useState("success");
+  const handelSnackClose = () => {
+    setSnackBarOpen(false);
+  }
+
   const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { signIn, isAuthenticated } = useAuth();
+  const { signIn, isAuthenticated, errors: authErrors } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,9 +61,15 @@ export default function LogIn() {
     }
   }, [isAuthenticated, navigate]);
 
-  const onSubmit = handleSubmit((values) => {
+  const onSubmit = handleSubmit(async (values) => {
     setLoading(true);
-    signIn(values as LogInUser);
+    const singInResponse = await signIn(values as LogInUser);
+    setLoading(false);
+    if (!singInResponse.status) {
+      setSnackBarMessage(singInResponse.errors[0]);
+      setSnackBarSeverity("error");
+      setSnackBarOpen(true);
+    }
   });
 
   return (
@@ -86,9 +100,9 @@ export default function LogIn() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Log in
+          Ingreso
         </Typography>
-
+        
         {loading ? (
           <ThreeDots
             height="80"
@@ -106,31 +120,35 @@ export default function LogIn() {
               required
               fullWidth
               id="email"
-              label="Email Address"
+              label="Email"
               autoComplete="email"
               autoFocus
+              type="email"
               sx={{ background: "transparent" }}
+              error={errors.email ? true : false}
               {...register("email", { required: true })}
             />
             {errors.email && (
-              <Typography color="red"> Email is required </Typography>
+              <Typography color="red"> El email es requerido </Typography>
             )}
             <TextField
               margin="normal"
               required
               fullWidth
               id="password"
-              label="Password"
+              label="Contraseña"
               autoComplete="current-password"
               type="password"
+              sx={{ background: "transparent" }}
+              error={errors.password ? true : false}
               {...register("password", { required: true })}
             />
             {errors.password && (
-              <Typography color="red"> Password is required </Typography>
+              <Typography color="red"> La contraseña es requerida</Typography>
             )}
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
+              label="Recuerda mis datos"
             />
             <Button
               color="primary"
@@ -139,7 +157,7 @@ export default function LogIn() {
               variant="contained"
               sx={{ mt: 0, mb: 1 }}
             >
-              LogIn
+              Ingresar
             </Button>
             <NavLink to={"/index/signIn"}>
               <Button
@@ -149,18 +167,23 @@ export default function LogIn() {
                 variant="outlined"
                 sx={{ mt: 1, mb: 0 }}
               >
-                Sign In
+                Registrarse
               </Button>
             </NavLink>
             <Grid container sx={{ mt: 1, mb: 0 }}>
               <Grid item xs>
-                <NavLink to={"/index/forgotPassword"}>Forgot password?</NavLink>
+                <NavLink to={"/index/forgotPassword"}>Olvide mi contraseña</NavLink>
               </Grid>
             </Grid>
           </Box>
         )}
         <Copyright sx={{ mt: 4, mb: 3 }} />
       </Box>
+      <Snackbar open={snackBarOpen} autoHideDuration={5000} onClick={handelSnackClose} onClose={handelSnackClose}>
+          <Alert severity={snackBarSeverity as AlertColor} sx={{ width: '100%', fontSize: '15px' }} onClose={handelSnackClose}>
+            {snackBarMessage}
+          </Alert>
+        </Snackbar>
     </Container>
   );
 }
