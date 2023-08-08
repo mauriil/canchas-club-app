@@ -146,10 +146,6 @@ export default function LogIn() {
             {errors.password && (
               <Typography color="red"> La contraseña es requerida</Typography>
             )}
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Recuerda mis datos"
-            />
             <Button
               color="primary"
               type="submit"
