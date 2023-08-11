@@ -5,7 +5,7 @@ import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import EventIcon from "@mui/icons-material/Event";
 import BallotIcon from "@mui/icons-material/Ballot";
-import SettingsIcon from "@mui/icons-material/Settings";
+import PersonIcon from '@mui/icons-material/Person';
 import { useAuth } from "../../customHooks/useAuth";
 import AvatarIcon from "../Avatar";
 import HomeIcon from "@mui/icons-material/Home";
@@ -48,15 +48,6 @@ export default function SimpleBottomNavigation() {
           icon={
             <NavLink to="miClub">
               <BallotIcon sx={{ fontSize: "35px" }} />
-            </NavLink>
-          }
-        />
-
-        <BottomNavigationAction
-          label="Configuracion"
-          icon={
-            <NavLink to="configuraciones">
-              <SettingsIcon sx={{ fontSize: "35px" }} />
             </NavLink>
           }
         />

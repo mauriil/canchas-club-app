@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Card } from "@mui/material";
 import Title from "../../components/Title";
 
 const Settings = () => {
@@ -10,7 +10,7 @@ const Settings = () => {
       width="100%"
       height="100%"
     >
-      <Title firtLineTitle="Configuraciones" />
+      <Title firtLineTitle="Perfil" />
     </Box>
   );
 };

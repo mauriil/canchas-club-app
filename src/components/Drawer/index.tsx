@@ -73,16 +73,6 @@ export default function TemporaryDrawer() {
             </ListItemButton>
           </ListItem>
         </NavLink>
-        <NavLink to="configuraciones">
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <SettingsIcon />
-              </ListItemIcon>
-              <ListItemText primary="Configuraciones" />
-            </ListItemButton>
-          </ListItem>
-        </NavLink>
       </List>
       <Divider />
       <List>
