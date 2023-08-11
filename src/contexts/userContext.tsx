@@ -2,15 +2,16 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { createContext, useEffect, useState } from "react";
-import { registerRequest, logInRequest, verifyTokenRequest } from "../api/auth";
+import { registerRequest, logInRequest, verifyTokenRequest, forgotPasswordRequest } from "../api/auth";
 import Cookies from "js-cookie";
-import { LogInUser, LoginResponse, SigningResponse, User, UserResp } from "../types/users";
+import { ForgotPasswordRequestBody, ForgotPasswordResponse, LogInUser, LoginResponse, SigningResponse, User, UserResp } from "../types/users";
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 interface AuthContextType {
   signUp: (user: User) => Promise<{status: boolean, errors: string[]}>;
   signIn: (user: LogInUser) => Promise<{status: boolean, errors: string[]}>;
+  forgotPassword: (user: ForgotPasswordRequestBody) => Promise<boolean>;
   user: UserResp | null;
   isAuthenticated: boolean;
   errors: string[];
@@ -62,6 +63,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     });
   };
 
+  const forgotPassword = async (userEmail: ForgotPasswordRequestBody): Promise<boolean> => {
+    await forgotPasswordRequest(userEmail);
+    return true;
+  };
+
   useEffect(() => {
     async function checkLogin(): Promise<void> {
       const cookies: {
@@ -96,6 +102,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       value={{
         signUp,
         signIn,
+        forgotPassword,
         user,
         isAuthenticated,
         errors,

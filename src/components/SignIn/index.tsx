@@ -93,6 +93,7 @@ export default function SignIn() {
           alignItems: "center",
           minWidth: "340px",
         }}
+        width={"100%"}
       >
         <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
           <LockOutlinedIcon />
@@ -112,7 +113,7 @@ export default function SignIn() {
             wrapperClass="spinner-wrapper"
           />
         ) : (
-          <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={onSubmit}>
+          <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={onSubmit} width={"100%"}>
             <TextField
               type="text"
               margin="normal"

@@ -1,4 +1,5 @@
 import {LogInUser, User} from "../contexts/userContext"
+import { ForgotPasswordBody } from "../types/users";
 
 const API = 'http://localhost:3000/auth';
 
@@ -15,6 +16,16 @@ export const registerRequest = async (values: User) => {
 
 export const logInRequest = async (values: LogInUser) => {
     return await fetch(`${API}/signIn`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+        credentials: 'include',
+        mode: 'cors'
+    });
+}
+
+export const forgotPasswordRequest = async (values: ForgotPasswordBody) => {
+    return await fetch(`${API}/passwordRecovery`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),

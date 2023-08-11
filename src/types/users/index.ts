@@ -26,3 +26,11 @@ export interface SigningResponse {
   message: string[];
   status: number;
 }
+export interface ForgotPasswordRequestBody {
+  email: string;
+}
+export interface ForgotPasswordResponse {
+  statusCode: number;
+  message: string[];
+  status: number;
+}
