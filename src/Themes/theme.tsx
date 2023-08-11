@@ -16,10 +16,12 @@ export const theme = createTheme({
       disabled: "#000000",
     },
     primary: {
-      main: "#228896",
+      main: "#00a6c0",
+      dark: "#283739",
+      light: "#6a888c",
     },
     secondary: {
-      main: "#A9C52F",
+      main: "#32d9cb",
     },
   },
   components: {
@@ -28,12 +30,12 @@ export const theme = createTheme({
         {
           props: { color: "primary" },
           style: {
-            backgroundColor: "#228896",
+            backgroundColor: "#00a6c0",
             color: "black",
             borderRadius: `15px`,
             fontSize: "1.2rem",
             ":hover": {
-              backgroundColor: "#228896",
+              backgroundColor: "#00a6c0",
               boxShadow: "0px 0px 25px 1px rgb(0,0,0)",
               color: "#ffffff",
             },

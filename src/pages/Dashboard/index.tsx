@@ -9,7 +9,7 @@ const Dashboard = () => {
 
   return (
     <Box
-      bgcolor={"primary.dark"}
+      bgcolor={"primary.light"}
       alignItems="center"
       height="100vh"
       width="100vw"

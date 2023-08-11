@@ -107,7 +107,7 @@ export default function SignIn() {
             height="80"
             width="80"
             radius="9"
-            color="#9dbfaf"
+            color="#5f7174"
             ariaLabel="three-dots-loading"
             wrapperStyle={{}}
             wrapperClass="spinner-wrapper"

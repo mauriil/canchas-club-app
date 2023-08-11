@@ -104,7 +104,7 @@ export default function TemporaryDrawer() {
     <div>
       <React.Fragment>
         <Button
-          color="secondary"
+          color="primary"
           variant="outlined"
           sx={{ width: "5rem", height: "5rem" }}
           onClick={toggleDrawer("left", true)}
