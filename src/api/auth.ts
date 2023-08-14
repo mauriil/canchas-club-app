@@ -1,7 +1,7 @@
 import {LogInUser, User} from "../contexts/userContext"
 import { ForgotPasswordBody } from "../types/users";
 
-const API = 'http://localhost:3000/auth';
+const API = `${import.meta.env.VITE_BACKEND_API_URL}/auth`;
 
 export const registerRequest = async (values: User) => {
     console.log(values)
