@@ -73,8 +73,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const cookies: {
         [key: string]: string;
       } = Cookies.get();
-      // expire cookie in 30 days
-      Cookies.set("access-token", cookies["access-token"], { expires: 30 });
       if (!cookies["access-token"]) {
         setIsAuthenticated(false);
         setUser(null);
