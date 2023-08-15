@@ -41,10 +41,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           userId: data.id,
         });
         setIsAuthenticated(true);
-        const responseCookies: {
-          [key: string]: string;
-        } = Cookies.get();
-        Cookies.set("access-tokenapp", responseCookies["access-token"], { expires: 30 });
         return {status: true, errors: []};
       }
     });
@@ -62,10 +58,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           userId: data.id,
         });
         setIsAuthenticated(true);
-        const responseCookies: {
-          [key: string]: string;
-        } = Cookies.get();
-        Cookies.set("access-tokenapp", responseCookies["access-token"], { expires: 30 });
         return {status: true, errors: []};
       }
     });
