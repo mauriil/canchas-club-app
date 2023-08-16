@@ -5,6 +5,7 @@ import { createContext, useEffect, useState } from "react";
 import { registerRequest, logInRequest, verifyTokenRequest, forgotPasswordRequest } from "../api/auth";
 import Cookies from "js-cookie";
 import { ForgotPasswordRequestBody, ForgotPasswordResponse, LogInUser, LoginResponse, SigningResponse, User, UserResp } from "../types/users";
+import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -27,6 +28,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   } | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
+  const navigate = useNavigate();
 
   const signUp = async (user: User): Promise<{status: boolean, errors: string[]}> => {
     const res = await registerRequest(user);
@@ -73,17 +75,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const cookies: {
         [key: string]: string;
       } = Cookies.get();
+      console.log("🚀 ~ file: userContext.tsx:74 ~ checkLogin ~ cookies:", cookies)
       if (!cookies["access-token"]) {
         setIsAuthenticated(false);
         setUser(null);
+        navigate("/index/login");
         return;
       }
 
       try {
         const res = await verifyTokenRequest(cookies["access-token"]);
         void res.json().then((data: UserResp) => {
+          console.log("🚀 ~ file: userContext.tsx:86 ~ voidres.json ~ data:", data)
           if (!data.userId) {
+            setUser(null);
             setIsAuthenticated(false);
+            navigate("/index/login");
             return;
           }
           setIsAuthenticated(true);
@@ -92,10 +99,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       } catch (error) {
         setIsAuthenticated(false);
         setUser(null);
+        navigate("/index/login");
       }
     }
     void checkLogin();
-  }, []);
+  }, [navigate]);
 
   return (
     <AuthContext.Provider
