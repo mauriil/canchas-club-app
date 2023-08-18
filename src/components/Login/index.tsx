@@ -94,6 +94,7 @@ export default function LogIn() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          minWidth: "340px"
         }}
         width={"100%"}
       >
