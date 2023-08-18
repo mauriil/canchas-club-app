@@ -94,7 +94,7 @@ export default function ForgotPassword () {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          minWidth: "340px"
+          minWidth: "400px"
         }}
         width={"100%"}
       >

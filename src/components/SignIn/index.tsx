@@ -91,7 +91,7 @@ export default function SignIn() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          minWidth: "340px",
+          minWidth: "400px",
         }}
         width={"100%"}
       >
@@ -123,7 +123,7 @@ export default function SignIn() {
               label="Nombre completo"
               autoComplete="name"
               autoFocus
-              sx={{ background: "transparent", minWidth: "340px" }}
+              sx={{ background: "transparent", minWidth: "400px" }}
               {...register("name", { required: true })}
             />
             {errors.name && (
