@@ -103,7 +103,7 @@ export default function ForgotPassword () {
         <Typography component="h1" variant="h5">
           Recupero de contraseña
         </Typography>
-        
+
         {loading ? (
           <ThreeDots
             height="80"

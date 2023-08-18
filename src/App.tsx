@@ -22,7 +22,7 @@ function App() {
           <Route path="/index" element={<LogInPage />}>
             <Route index element={<Navigate to="logIn" />} />
             <Route path="logIn" element={<LogIn />} />
-            <Route path="signIn" element={<SignIn />} />
+            <Route path="signUp" element={<SignIn />} />
             <Route path="forgotPassword" element={<ForgotPassword />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>

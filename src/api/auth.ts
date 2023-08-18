@@ -4,7 +4,6 @@ import { ForgotPasswordBody } from "../types/users";
 const API = `${import.meta.env.VITE_BACKEND_API_URL}/auth`;
 
 export const registerRequest = async (values: User) => {
-    console.log(values)
     return await fetch(`${API}/signUp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

@@ -33,7 +33,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signUp = async (user: User): Promise<{status: boolean, errors: string[]}> => {
     const res = await registerRequest(user);
     return await res.json().then((data: SigningResponse) => {
-      console.log("DATA: ", data);
       if (data.statusCode >= 400 || data.status >= 400) {
         setErrors(data.message);
         return {status: false, errors: Array.isArray(data.message) ? data.message : [data.message]};
@@ -72,10 +71,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     async function checkLogin(): Promise<void> {
+      if (["/index/forgotPassword", "/index/signUp", "/index/login"].includes(window.location.pathname)) return;
       const cookies: {
         [key: string]: string;
       } = Cookies.get();
-      console.log("🚀 ~ file: userContext.tsx:74 ~ checkLogin ~ cookies:", cookies)
       if (!cookies["access-token"]) {
         setIsAuthenticated(false);
         setUser(null);
@@ -86,7 +85,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       try {
         const res = await verifyTokenRequest(cookies["access-token"]);
         void res.json().then((data: UserResp) => {
-          console.log("🚀 ~ file: userContext.tsx:86 ~ voidres.json ~ data:", data)
           if (!data.userId) {
             setUser(null);
             setIsAuthenticated(false);

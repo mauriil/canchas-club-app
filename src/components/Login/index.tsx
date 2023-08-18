@@ -103,7 +103,7 @@ export default function LogIn() {
         <Typography component="h1" variant="h5">
           Ingreso
         </Typography>
-        
+
         {loading ? (
           <ThreeDots
             height="80"
@@ -156,7 +156,7 @@ export default function LogIn() {
             >
               Ingresar
             </Button>
-            <NavLink to={"/index/signIn"}>
+            <NavLink to={"/index/signUp"}>
               <Button
                 color="primary"
                 type="button"
