@@ -1,10 +1,9 @@
-import { Button, SvgIconTypeMap } from "@mui/material";
-import { OverridableComponent } from "@mui/material/OverridableComponent";
+import { Button } from "@mui/material";
 
 interface PerfilButtonProps {
-  icon: SvgIconTypeMap<"svg">;
+  icon: React.ReactNode;
   text: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const PerfilButton = (props: PerfilButtonProps) => {
