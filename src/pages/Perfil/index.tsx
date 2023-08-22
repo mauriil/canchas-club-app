@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Box, Typography } from "@mui/material";
 import { useAuth } from "../../customHooks/useAuth";
 import AvatarIcon from "../../components/Avatar";
@@ -7,6 +8,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import KeyIcon from "@mui/icons-material/Key";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import useCheckOrientation from "../../customHooks/checkOrientation";
 
 const Perfil = () => {
   const { user } = useAuth();
@@ -16,6 +18,8 @@ const Perfil = () => {
     Cookies.remove("access-token");
     navigate("/index/login");
   };
+
+  const orientation = useCheckOrientation();
 
   return (
     <Box
@@ -37,6 +41,7 @@ const Perfil = () => {
         height="45%"
         sx={{
           top: "0px",
+          marginTop: { md: "0px", xs: orientation === 'landscape' ? "15rem" : "0px" },
           display: { xs: "flex", md: "none" },
           flexDirection: "column",
           justifyContent: "center",
@@ -61,6 +66,12 @@ const Perfil = () => {
         alignItems="center"
         height="100vh"
         width="100vw"
+        paddingBottom={
+          { md: "0px", xs: "15rem" }
+        }
+        marginTop={
+          { md: "0px", xs: "6rem" }
+        }
       >
         <Box
           sx={{

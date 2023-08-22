@@ -12,6 +12,16 @@ const PerfilButton = (props: PerfilButtonProps) => {
       onClick={props.onClick}
       sx={{
         borderRadius: "5px",
+        width: "90%",
+        margin: "auto",
+        marginBottom: "1rem",
+        marginTop: "1rem",
+        color: "text.primary",
+        borderColor: "text.primary",
+        "&:hover": {
+          backgroundColor: "text.primary",
+          color: "background.paper",
+        },
       }}
       variant="outlined"
       startIcon={props.icon}
