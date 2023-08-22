@@ -34,3 +34,7 @@ export interface ForgotPasswordResponse {
   message: string[];
   status: number;
 }
+
+export interface ForgotPasswordBody {
+  email: string;
+}

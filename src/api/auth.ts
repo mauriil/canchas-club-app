@@ -1,4 +1,4 @@
-import {LogInUser, User} from "../contexts/userContext"
+import {LogInUser, User} from "../types/users";
 import { ForgotPasswordBody } from "../types/users";
 
 const API = `${import.meta.env.VITE_BACKEND_API_URL}/auth`;

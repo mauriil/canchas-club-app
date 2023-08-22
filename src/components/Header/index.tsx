@@ -9,7 +9,7 @@ const Header = () => {
   const navigate = useNavigate();
 
   const goToProfile = () => {
-    navigate("/dashboard/configuraciones");
+    navigate("/dashboard/miPerfil");
   };
 
   return (
@@ -22,15 +22,19 @@ const Header = () => {
       justifyContent="space-between"
       boxShadow="0px 0px 25px 0px"
       padding="1rem 2rem"
-      bgcolor={"ButtonShadow"}
+      bgcolor={"primary.light"}
       zIndex="10"
     >
       <TemporaryDrawer />
-      <Box display="flex" alignItems="center" justifyContent="flex-end" onClick={goToProfile} onPointerOver={
-        (e) => {
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="flex-end"
+        onClick={goToProfile}
+        onPointerOver={(e) => {
           (e.target as HTMLDivElement).style.cursor = "pointer";
-        }
-      }>
+        }}
+      >
         <Typography fontSize={"2rem"} marginRight="2rem">
           {user?.userName}
         </Typography>

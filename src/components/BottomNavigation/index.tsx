@@ -5,7 +5,7 @@ import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import EventIcon from "@mui/icons-material/Event";
 import BallotIcon from "@mui/icons-material/Ballot";
-import PersonIcon from '@mui/icons-material/Person';
+import PersonIcon from "@mui/icons-material/Person";
 import { useAuth } from "../../customHooks/useAuth";
 import AvatarIcon from "../Avatar";
 import HomeIcon from "@mui/icons-material/Home";
@@ -55,7 +55,7 @@ export default function SimpleBottomNavigation() {
         <BottomNavigationAction
           label={user?.userName}
           icon={
-            <NavLink to="configuraciones">
+            <NavLink to="miPerfil">
               <AvatarIcon width="35px" height="35px" />
             </NavLink>
           }

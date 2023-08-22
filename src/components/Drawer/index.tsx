@@ -76,7 +76,7 @@ export default function TemporaryDrawer() {
       </List>
       <Divider />
       <List>
-        <NavLink to="configuraciones">
+        <NavLink to="miPerfil">
           <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>

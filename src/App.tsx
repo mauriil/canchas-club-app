@@ -9,7 +9,7 @@ import { AuthProvider } from "./contexts/userContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MisReservas from "./pages/MisReservas";
 import MiClub from "./pages/MiClub";
-import Settings from "./pages/Settings";
+import Perfil from "./pages/Perfil";
 import NotFoundPage from "./pages/NotFoundPage";
 import Home from "./pages/Home";
 
@@ -32,7 +32,7 @@ function App() {
               <Route path="home" element={<Home />} />
               <Route path="misReservas" element={<MisReservas />} />
               <Route path="miClub" element={<MiClub />} />
-              <Route path="configuraciones" element={<Settings />} />
+              <Route path="miPerfil" element={<Perfil />} />
             </Route>
           </Route>
           <Route path="*" element={<NotFoundPage />} />
