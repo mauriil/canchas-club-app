@@ -15,8 +15,11 @@ const Perfil = () => {
   const navigate = useNavigate();
 
   const logOut = () => {
+    console.log("🚀 ~ file: index.tsx:18 ~ logOut ~ logOut:")
     Cookies.remove("access-token");
-    navigate("/index/login");
+    setTimeout(() => {
+      navigate("/index/login");
+    }, 500);
   };
 
   const orientation = useCheckOrientation();
