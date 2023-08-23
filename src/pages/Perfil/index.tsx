@@ -15,18 +15,8 @@ const Perfil = () => {
   const navigate = useNavigate();
 
   const logOut = () => {
-    console.log("🚀 ~ file: index.tsx:18 ~ logOut ~ logOut:")
-    const cookies = Cookies.get();
-    console.log("🚀 ~ file: index.tsx:20 ~ logOut ~ cookies1:", cookies)
-    for (const cookie in cookies) {
-      console.log("🚀 ~ file: index.tsx:22 ~ logOut ~ cookie:", cookie)
-      console.log("🚀 ~ file: index.tsx:24 ~ logOut ~ Cookies.remove(cookie);:", Cookies.remove(cookie))
-      Cookies.remove(cookie);
-    }
-    console.log("🚀 ~ file: index.tsx:20 ~ logOut ~ cookies2:", cookies)
-    setTimeout(() => {
-      navigate("/index/login");
-    }, 500);
+    Cookies.remove("access-token", process.env.VITE_ENV === "development" ? {} : {path: "/", domain: process.env.VITE_COOKIE_DOMAIN });
+    navigate("/index/login");
   };
 
   const orientation = useCheckOrientation();
