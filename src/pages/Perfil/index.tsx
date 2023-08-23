@@ -15,7 +15,8 @@ const Perfil = () => {
   const navigate = useNavigate();
 
   const logOut = () => {
-    Cookies.remove("access-token", process.env.VITE_ENV === "development" ? {} : {path: "/", domain: process.env.VITE_COOKIE_DOMAIN });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    Cookies.remove("access-token", import.meta.env.VITE_ENV === "development" ? {} : {path: "/", domain: import.meta.env.VITE_COOKIE_DOMAIN });
     navigate("/index/login");
   };
 
