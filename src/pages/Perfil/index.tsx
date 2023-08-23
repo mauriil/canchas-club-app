@@ -19,6 +19,8 @@ const Perfil = () => {
     const cookies = Cookies.get();
     console.log("🚀 ~ file: index.tsx:20 ~ logOut ~ cookies1:", cookies)
     for (const cookie in cookies) {
+      console.log("🚀 ~ file: index.tsx:22 ~ logOut ~ cookie:", cookie)
+      console.log("🚀 ~ file: index.tsx:24 ~ logOut ~ Cookies.remove(cookie);:", Cookies.remove(cookie))
       Cookies.remove(cookie);
     }
     console.log("🚀 ~ file: index.tsx:20 ~ logOut ~ cookies2:", cookies)
