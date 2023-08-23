@@ -16,7 +16,12 @@ const Perfil = () => {
 
   const logOut = () => {
     console.log("🚀 ~ file: index.tsx:18 ~ logOut ~ logOut:")
-    Cookies.remove("access-token");
+    const cookies = Cookies.get();
+    console.log("🚀 ~ file: index.tsx:20 ~ logOut ~ cookies1:", cookies)
+    for (const cookie in cookies) {
+      Cookies.remove(cookie);
+    }
+    console.log("🚀 ~ file: index.tsx:20 ~ logOut ~ cookies2:", cookies)
     setTimeout(() => {
       navigate("/index/login");
     }, 500);
