@@ -9,9 +9,7 @@ interface AvatarProps {
 
 const ClubAvatar = (props: AvatarProps) => {
   return (
-    <Box textAlign="center" sx={{
-      marginRight: "1.5rem",
-    }} >
+    <Box textAlign="center">
       <Avatar
         alt={props.title}
         src={props.logo}
