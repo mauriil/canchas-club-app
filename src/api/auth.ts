@@ -1,6 +1,7 @@
 import {LogInUser, User} from "../types/users";
 import { ForgotPasswordBody } from "../types/users";
 
+// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 const API = `${import.meta.env.VITE_BACKEND_API_URL}/auth`;
 
 export const registerRequest = async (values: User) => {
