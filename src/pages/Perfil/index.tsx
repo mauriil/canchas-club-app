@@ -16,7 +16,7 @@ const Perfil = () => {
 
   const logOut = () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    Cookies.remove("access-token", import.meta.env.VITE_ENV === "development" ? {} : {path: "/", domain: import.meta.env.VITE_COOKIE_DOMAIN });
+    Cookies.remove("access-token", import.meta.env.VITE_ENV === "development" ? {} : { path: "/", domain: import.meta.env.VITE_COOKIE_DOMAIN });
     navigate("/index/login");
   };
 
@@ -27,8 +27,11 @@ const Perfil = () => {
       sx={{
         flexDirection: { md: "row", xs: "column" },
         backgroundColor: { xs: "background.paper" },
-        background: {
-          md: "linear-gradient(#A5E65A, #32D9CB)",
+        backgroundImage: {
+          md: `url(https://canchas-club-space.nyc3.cdn.digitaloceanspaces.com/identidad-marca/FONDO%20DEPORTES/CanchasClub_FondoDeportes_EDITABLE-01.jpg)`,
+        },
+        backgroundSize:{
+          md: "cover"
         },
       }}
       display="flex"
@@ -50,7 +53,8 @@ const Perfil = () => {
           borderBottomLeftRadius: "20px",
           borderBottomRightRadius: "20px",
           boxShadow: "0px 0px 25px 1px rgb(0,0,0)",
-          background: "linear-gradient(#A5E65A, #32D9CB)",
+          backgroundImage: `url(https://canchas-club-space.nyc3.cdn.digitaloceanspaces.com/identidad-marca/FONDO%20DEPORTES/CanchasClub_FondoDeportes_EDITABLE-02.jpg)`,
+          backgroundSize: "cover",
         }}
       >
         <AvatarIcon width="8rem" height="8rem" />
