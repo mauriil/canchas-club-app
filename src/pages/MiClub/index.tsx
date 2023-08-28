@@ -60,6 +60,20 @@ const MiClub = () => {
             logo={club.logo}
           />
         ))}
+        <ClubAvatar
+            key="2"
+            width="20vw"
+            height="20vw"
+            title="soy un club"
+            logo="{club.logo}"
+          />
+          <ClubAvatar
+            key="2"
+            width="20vw"
+            height="20vw"
+            title="soy un club"
+            logo="{club.logo}"
+          />
       </Box>
       <Box
         display="flex"
