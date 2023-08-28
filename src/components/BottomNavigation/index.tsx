@@ -44,7 +44,7 @@ export default function SimpleBottomNavigation() {
         />
 
         <BottomNavigationAction
-          label="Mi Club"
+          label="Mis Clubes"
           icon={
             <NavLink to="miClub">
               <BallotIcon sx={{ fontSize: "35px" }} />

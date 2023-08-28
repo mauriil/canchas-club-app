@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Box } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box, Button } from "@mui/material";
 import ClubAvatar from "../../components/ClubAvatar";
 import { getAllClubsByUser } from "../../api/clubs";
 import { Club } from "../../types/clubs";
@@ -14,7 +14,6 @@ const MiClub = () => {
 
         if (clubsResponse.ok) {
           const data = await clubsResponse.json() as Club[];
-          console.log("🚀 ~ file: index.tsx:24 ~ fetchData ~ data:", data)
           setClubs(data);
         } else {
           console.error("Error fetching clubs:", clubsResponse.statusText);
@@ -29,25 +28,54 @@ const MiClub = () => {
     });
   }, []);
 
-
   return (
     <Box
       display="flex"
-      flexWrap="wrap"
+      flexDirection="column"
       alignItems="center"
-      justifyContent="space-around"
+      justifyContent="space-between"
       width="100%"
       height="100%"
+      paddingBottom="1rem"
+      paddingTop="3rem"
+      sx={{
+        backgroundColor: { xs: "background.paper" },
+      }}
     >
-      {clubs.map((club: Club) => (
-        <ClubAvatar
-          key={club._id}
-          width="20vw"
-          height="20vw"
-          title={club.name}
-          logo={club.logo}
-        />
-      ))}
+      <Box
+        display="flex"
+        flexWrap="wrap"
+        alignItems="center"
+        justifyContent="center"
+        width="100%"
+        flexGrow={1}
+        overflow="auto"
+      >
+        {clubs.map((club: Club) => (
+          <ClubAvatar
+            key={club._id}
+            width="20vw"
+            height="20vw"
+            title={club.name}
+            logo={club.logo}
+          />
+        ))}
+      </Box>
+      <Box
+        display="flex"
+        justifyContent="center"
+        width="100%"
+        marginTop="1rem"
+        paddingTop="1rem"
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+        >
+          Agregar club +
+        </Button>
+      </Box>
     </Box>
   );
 };

@@ -9,10 +9,12 @@ const Dashboard = () => {
 
   return (
     <Box
-      bgcolor={"primary.light"}
+      bgcolor={"background.paper"}
       alignItems="center"
       height="100vh"
       width="100vw"
+      paddingBottom={screenWidth < 900 ? "6rem" : "0"}
+      paddingTop={screenWidth < 900 ? "0" : "7rem"}
     >
       {screenWidth < 900 ? <BottomNavigation /> : <Header />}
       <Outlet />

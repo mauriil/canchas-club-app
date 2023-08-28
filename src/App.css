@@ -1,6 +1,12 @@
 @font-face {
   font-family: sportFont;
   src: url("./assets/fonts/sportFont.ttf");
+  font-family: delirium;
+  src: url("./assets/fonts/DeliriumNcv-Vm5e.ttf");
+  font-family: deliriumNeon;
+  src: url("./assets/fonts/DeliriumNeonNcv-J1AK.ttf");
+  font-family: museo;
+  src: url("./assets/fonts/Museo_500.otf");
 }
 
 *{

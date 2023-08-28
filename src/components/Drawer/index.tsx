@@ -69,7 +69,7 @@ export default function TemporaryDrawer() {
               <ListItemIcon>
                 <BallotIcon />
               </ListItemIcon>
-              <ListItemText primary="Mi club" />
+              <ListItemText primary="Mis clubes" />
             </ListItemButton>
           </ListItem>
         </NavLink>
