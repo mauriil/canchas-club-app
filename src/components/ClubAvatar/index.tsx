@@ -5,6 +5,10 @@ interface AvatarProps {
   height: string;
   title: string;
   logo: string;
+  colors: {
+    primary: string;
+    secondary: string;
+  };
 }
 
 const ClubAvatar = (props: AvatarProps) => {
@@ -17,8 +21,11 @@ const ClubAvatar = (props: AvatarProps) => {
           width: props.width,
           height: props.height,
           fontSize: "15rem",
-          backgroundColor: "primary.main",
           cursor: "pointer",
+          backgroundColor: props.colors.primary,
+          borderColor: props.colors.secondary,
+          borderWidth: "0.5rem",
+          borderStyle: "solid",
         }}
       />
       <div

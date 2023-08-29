@@ -19,9 +19,9 @@ const headers = {
     mode: 'cors'
 };
 
-export const create = async (values: User) => {
+export const createField = async (values: User) => {
     try {
-        const response = await fetch(`${BASE_API_URL}/clubs/`, {
+        const response = await fetch(`${BASE_API_URL}/fields/`, {
             method: "POST",
             headers,
             body: JSON.stringify(values)
@@ -33,9 +33,9 @@ export const create = async (values: User) => {
     }
 }
 
-export const edit = async (values: LogInUser, clubId: string) => {
+export const editField = async (values: LogInUser, clubId: string) => {
     try {
-        const response = await fetch(`${BASE_API_URL}/clubs/${clubId}`, {
+        const response = await fetch(`${BASE_API_URL}/fields/${clubId}`, {
             method: "PUT",
             headers,
             body: JSON.stringify(values)
@@ -47,9 +47,9 @@ export const edit = async (values: LogInUser, clubId: string) => {
     }
 }
 
-export const deleteClub = async (values: ForgotPasswordBody, clubId: string) => {
+export const deleteField = async (values: ForgotPasswordBody, clubId: string) => {
     try {
-        const response = await fetch(`${BASE_API_URL}/clubs/${clubId}`, {
+        const response = await fetch(`${BASE_API_URL}/fields/${clubId}`, {
             method: "DELETE",
             headers,
             body: JSON.stringify(values)
@@ -61,22 +61,9 @@ export const deleteClub = async (values: ForgotPasswordBody, clubId: string) => 
     }
 }
 
-export const getAllClubsByUser = async () => {
+export const getAllByClubId = async (clubId: string | undefined) => {
     try {
-        const response = await fetch(`${BASE_API_URL}/clubs/${userId}`, {
-            method: "GET",
-            headers: { ...headers, "Authorization": `Bearer ${token}` },
-        });
-        return response;
-    } catch (error) {
-        console.error("Error getting clubs by user:", error);
-        throw error;
-    }
-}
-
-export const getClubById = async (clubId:  string | undefined) => {
-    try {
-        const response = await fetch(`${BASE_API_URL}/clubs/info/${clubId}`, {
+        const response = await fetch(`${BASE_API_URL}/fields?clubId=${clubId}`, {
             method: "GET",
             headers: { ...headers, "Authorization": `Bearer ${token}` },
         });

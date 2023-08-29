@@ -12,6 +12,7 @@ import MiClub from "./pages/MiClub";
 import Perfil from "./pages/Perfil";
 import NotFoundPage from "./pages/NotFoundPage";
 import Home from "./pages/Home";
+import ClubManagement from "./pages/ClubManagement";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
               <Route path="home" element={<Home />} />
               <Route path="misReservas" element={<MisReservas />} />
               <Route path="miClub" element={<MiClub />} />
+              <Route path="/dashboard/miClub/:clubId" element={<ClubManagement />} />
               <Route path="miPerfil" element={<Perfil />} />
             </Route>
           </Route>

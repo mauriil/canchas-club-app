@@ -15,6 +15,10 @@ const Dashboard = () => {
       width="100vw"
       paddingBottom={screenWidth < 900 ? "6rem" : "0"}
       paddingTop={screenWidth < 900 ? "0" : "7rem"}
+      sx={{
+        minHeight: '100vh',
+        overflow: 'auto',
+      }}
     >
       {screenWidth < 900 ? <BottomNavigation /> : <Header />}
       <Outlet />

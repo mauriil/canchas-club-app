@@ -3,6 +3,7 @@ import { Box, Button } from "@mui/material";
 import ClubAvatar from "../../components/ClubAvatar";
 import { getAllClubsByUser } from "../../api/clubs";
 import { Club } from "../../types/clubs";
+import { Link } from "react-router-dom";
 
 const MiClub = () => {
   const [clubs, setClubs] = useState<Club[]>([]);
@@ -52,13 +53,16 @@ const MiClub = () => {
         overflow="auto"
       >
         {clubs.map((club: Club) => (
-          <ClubAvatar
-            key={club._id}
-            width="20vw"
-            height="20vw"
-            title={club.name}
-            logo={club.logo}
-          />
+          <Link key={club._id} to={`${club._id}`}>
+            <ClubAvatar
+              key={club._id}
+              width="20vw"
+              height="20vw"
+              title={club.name}
+              logo={club.logo}
+              colors={club.colors}
+            />
+          </Link>
         ))}
       </Box>
       <Box
