@@ -4,7 +4,7 @@ export const theme = createTheme({
   palette: {
     background: {
       default: "#F5F5F5",
-      paper: "#f7f3f0",
+      paper: "#ebedf0",
     },
     text: {
       primary: "#283739",
@@ -31,7 +31,6 @@ export const theme = createTheme({
         {
           props: { color: "primary" },
           style: {
-            backgroundColor: "#00a6c0",
             color: "black",
             borderRadius: `15px`,
             fontSize: "1.2rem",
@@ -45,12 +44,13 @@ export const theme = createTheme({
         {
           props: { color: "secondary", variant: "outlined" },
           style: {
-            backgroundColor: "#A9C52F",
             color: "black",
             borderRadius: `15px`,
+            borderColor: "#A9C52F",
             fontSize: "1.2rem",
             ":hover": {
               backgroundColor: "#A9C52F",
+              borderColor: "#A9C52F",
               boxShadow: "0px 0px 25px 1px rgb(0,0,0)",
             },
           },
@@ -71,12 +71,13 @@ export const theme = createTheme({
         {
           props: { color: "error" },
           style: {
-            backgroundColor: "#f44336",
             color: "black",
             borderRadius: `15px`,
+            borderColor: "#f44336",
             fontSize: "1.2rem",
             ":hover": {
               backgroundColor: "#f44336",
+              borderColor: "#f44336",
               boxShadow: "0px 0px 25px 1px rgb(0,0,0)",
             },
           },
