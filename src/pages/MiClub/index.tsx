@@ -3,7 +3,7 @@ import { Box, Button } from "@mui/material";
 import ClubAvatar from "../../components/ClubAvatar";
 import { getAllClubsByUser } from "../../api/clubs";
 import { Club } from "../../types/clubs";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const MiClub = () => {
   const [clubs, setClubs] = useState<Club[]>([]);
@@ -77,7 +77,9 @@ const MiClub = () => {
           color="primary"
           size="large"
         >
-          Agregar club +
+          <NavLink to="/dashboard/miClub/new" style={{ textDecoration: "none", color: "white" }}>
+            Crear Nuevo Club
+          </NavLink>
         </Button>
       </Box>
     </Box>
