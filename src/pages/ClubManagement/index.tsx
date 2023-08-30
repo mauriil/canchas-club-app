@@ -119,7 +119,8 @@ const ClubManagement = () => {
                         sx={{
                             display: "flex",
                             alignItems: "center",
-                            justifyContent: "center",
+                            justifyContent: "space-around",
+                            margin: "1rem",
                             marginBottom: "1rem",
                         }}
                     >
@@ -163,13 +164,13 @@ const ClubManagement = () => {
                                 marginLeft: "auto",
                                 display: "flex",
                                 alignItems: "center",
-                                justifyContent: "center",
+                                justifyContent: "space-around",
                                 marginTop: "1rem",
                             }}>
                                 <Button variant="outlined" color="primary" startIcon={<EditIcon />}>
                                     Editar
                                 </Button>
-                                <Button variant="outlined" color="secondary" startIcon={<DeleteIcon />}>
+                                <Button variant="outlined" color="error" startIcon={<DeleteIcon />}>
                                     Eliminar
                                 </Button>
                             </Box>

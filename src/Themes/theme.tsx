@@ -55,6 +55,58 @@ export const theme = createTheme({
             },
           },
         },
+        {
+          props: { color: "warning" },
+          style: {
+            backgroundColor: "#ff9800",
+            color: "black",
+            borderRadius: `15px`,
+            fontSize: "1.2rem",
+            ":hover": {
+              backgroundColor: "#ff9800",
+              boxShadow: "0px 0px 25px 1px rgb(0,0,0)",
+            },
+          },
+        },
+        {
+          props: { color: "error" },
+          style: {
+            backgroundColor: "#f44336",
+            color: "black",
+            borderRadius: `15px`,
+            fontSize: "1.2rem",
+            ":hover": {
+              backgroundColor: "#f44336",
+              boxShadow: "0px 0px 25px 1px rgb(0,0,0)",
+            },
+          },
+        },
+        {
+          props: { color: "success" },
+          style: {
+            backgroundColor: "#4caf50",
+            color: "black",
+            borderRadius: `15px`,
+            fontSize: "1.2rem",
+            ":hover": {
+              backgroundColor: "#4caf50",
+              boxShadow: "0px 0px 25px 1px rgb(0,0,0)",
+            },
+          },
+        },
+        {
+          props: { color: "info" },
+          style: {
+            backgroundColor: "#2196f3",
+            color: "black",
+            borderRadius: `15px`,
+            fontSize: "1.2rem",
+            ":hover": {
+              backgroundColor: "#2196f3",
+              boxShadow: "0px 0px 25px 1px rgb(0,0,0)",
+            },
+          },
+        },
       ],
     },
   },
