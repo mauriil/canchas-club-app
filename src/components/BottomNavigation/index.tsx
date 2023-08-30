@@ -10,6 +10,7 @@ import AvatarIcon from "../Avatar";
 import HomeIcon from "@mui/icons-material/Home";
 import { NavLink } from "react-router-dom";
 
+
 export default function SimpleBottomNavigation() {
   const [value, setValue] = React.useState(0);
   const { user } = useAuth();
@@ -25,7 +26,8 @@ export default function SimpleBottomNavigation() {
           width: "100vw",
           zIndex: "100",
           marginTop: "calc(100vh - 300px)",
-          backgroundColor: "primary.light",
+          backgroundColor: "#F5F5F5",
+          borderBottom: "1px solid #E0E0E0",
         }}
           onChange={(event, newValue) => {
         setValue(newValue);

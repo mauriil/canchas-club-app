@@ -3,6 +3,7 @@ import { Box } from "@mui/material";
 import useScreenSize from "../../customHooks/screenSize";
 import Header from "../../components/Header";
 import { Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const Dashboard = () => {
   const screenWidth = useScreenSize().width;

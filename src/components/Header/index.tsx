@@ -20,10 +20,10 @@ const Header = () => {
       display="flex"
       alignItems="center"
       justifyContent="space-between"
-      boxShadow="0px 0px 25px 0px"
       padding="1rem 2rem"
-      bgcolor={"primary.light"}
+      bgcolor={"#F5F5F5"}
       zIndex="10"
+      borderBottom={"1px solid #E0E0E0"}
     >
       <TemporaryDrawer />
       <Box

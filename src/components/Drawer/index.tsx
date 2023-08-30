@@ -11,7 +11,6 @@ import ListItemText from "@mui/material/ListItemText";
 import EventIcon from "@mui/icons-material/Event";
 import MenuIcon from "@mui/icons-material/Menu";
 import BallotIcon from "@mui/icons-material/Ballot";
-import SettingsIcon from "@mui/icons-material/Settings";
 import HomeIcon from "@mui/icons-material/Home";
 import { NavLink } from "react-router-dom";
 
