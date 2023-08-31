@@ -2,7 +2,6 @@
 export interface ColorsClub {
   primary: string;
   secondary: string;
-  tertiary: string;
 }
 export interface Club {
   address: string;

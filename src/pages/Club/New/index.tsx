@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
     Stepper,
     Step,
@@ -9,19 +10,15 @@ import {
     Typography,
     Box,
     TextField,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
     Avatar,
 } from '@mui/material';
-import { Create } from '@mui/icons-material';
-import axios from 'axios';
-import { Club } from '../../../types/clubs';
 import { createClub } from '../../../api/clubs';
 import { useDropzone } from 'react-dropzone';
 import { CirclePicker } from "react-color";
 import TopBar from '../../../components/TopBar';
+import ProvinceDropdown from '../../../components/ProvinceDropdown';
+import AddressAutocomplete from '../../../components/AddressAutocomplete';
+import Map from '../../../components/Map';
 
 const steps = ['Información básica', 'Colores y logo', 'Días cerrados'];
 
@@ -31,8 +28,10 @@ const CreateClub = () => {
         name: '',
         description: '',
         address: '',
+        latitude: 0,
+        longitude: 0,
         city: '',
-        country: '',
+        country: 'ARG',
         alias: '',
         colors: {
             primary: '',
@@ -102,6 +101,25 @@ const CreateClub = () => {
         }));
     };
 
+    const handleAddressChange = async (address) => {
+        try {
+            const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=AIzaSyAzVkfaA86bJwjTKyVyawoj9mp9rO72Cro`);
+            const data = await response.json();
+
+            if (data.results && data.results.length > 0) {
+                const location = data.results[0].geometry.location;
+                setClubData((prevData) => ({
+                    ...prevData,
+                    address: address,
+                    latitude: location.lat,
+                    longitude: location.lng,
+                }));
+            }
+        } catch (error) {
+            console.error('Error fetching geolocation:', error);
+        }
+    };
+
     return (
         <>
             <TopBar />
@@ -129,18 +147,32 @@ const CreateClub = () => {
                                 alignItems: "center",
                                 width: "100%"
                             }}>
-                            <Typography variant="h6">Información básica:</Typography>
+                            <Typography variant="h6" sx={{ marginBottom: 2 }}>Información básica:</Typography>
                             <TextField
                                 label="Nombre"
                                 fullWidth
                                 value={clubData.name}
-                                onChange={(e) => handleInputChange('name', e.target.value)} />
-                            {/* Agrega más campos de información básica aquí */}
+                                onChange={(e) => handleInputChange('name', e.target.value)}
+                                sx={{ marginBottom: 2, }} />
+                            <TextField
+                                label="Descripción"
+                                fullWidth
+                                value={clubData.description}
+                                onChange={(e) => handleInputChange('description', e.target.value)}
+                                sx={{ marginBottom: 2, }} />
+                            <ProvinceDropdown
+                                value={clubData.city}
+                                onChange={(province: any) => handleInputChange('city', province)} />
+                            <AddressAutocomplete
+                                value={clubData.address}
+                                onChange={(address: any) => handleAddressChange(address)} />
+                            <Map latitude={clubData.latitude} longitude={clubData.longitude} />
+
                             <Button
                                 variant="outlined"
                                 color="primary"
                                 onClick={handleNext}
-                                sx={{ mt: 2 }}
+                                sx={{ mt: 2, marginTop: 3 }}
                             >
                                 Siguiente
                             </Button>
@@ -160,7 +192,7 @@ const CreateClub = () => {
                                     display: "flex",
                                     alignItems: "center",
                                     justifyContent: "center",
-                                    marginBottom: 2,
+                                    marginBottom: 3,
                                 }}
                             >
                                 <div {...getRootProps()}>
@@ -187,6 +219,7 @@ const CreateClub = () => {
                                     "@media (min-width:600px)": {
                                         flexDirection: "row",
                                     },
+                                    marginBottom: 3,
                                 }}
                             >
                                 <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -204,7 +237,7 @@ const CreateClub = () => {
                                     />
                                 </Box>
                             </Box>
-                            {/* Agrega más campos de colores y logo aquí */}
+
                             <Box
                                 sx={{
                                     display: "flex",
@@ -236,16 +269,15 @@ const CreateClub = () => {
                                 display: "flex",
                                 flexDirection: "column",
                                 alignItems: "center",
-                                width: "100%"
                             }}>
                             <Typography variant="h6">Días cerrados:</Typography>
-                            {/* Agrega aquí una forma de seleccionar los días cerrados */}
+
                             <Box
                                 sx={{
                                     display: "flex",
                                     justifyContent: "center",
                                     width: "100%",
-                                    marginTop: 2,
+                                    marginTop: 3,
                                 }}
                             >
                                 <Button

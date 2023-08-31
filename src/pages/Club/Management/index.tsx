@@ -28,7 +28,6 @@ const ClubManagement = () => {
             colors: {
                 primary: "",
                 secondary: "",
-                tertiary: "",
             },
         },
     );
