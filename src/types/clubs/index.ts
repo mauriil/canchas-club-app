@@ -4,6 +4,7 @@ export interface ColorsClub {
   secondary: string;
 }
 export interface Club {
+  userId?: string;
   address: string;
   alias: string;
   city: string;

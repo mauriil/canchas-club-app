@@ -58,7 +58,6 @@ export const theme = createTheme({
         {
           props: { color: "warning" },
           style: {
-            backgroundColor: "#ff9800",
             color: "black",
             borderRadius: `15px`,
             fontSize: "1.2rem",

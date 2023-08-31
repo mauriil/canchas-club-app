@@ -1,0 +1,31 @@
+.selected-day {
+  background-color: #007bff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  margin: 0 auto;
+}
+
+.react-calendar__tile--rangeStart,
+.react-calendar__tile--rangeEnd,
+.react-calendar__tile--rangeStart:enabled:hover,
+.react-calendar__tile--rangeEnd:enabled:hover,
+.react-calendar__tile--rangeStart:enabled:focus,
+.react-calendar__tile--rangeEnd:enabled:focus {
+  background: none;
+  color: inherit;
+  background-color: #ffffff;
+}
+.DayPicker-Day--selected {
+  background-color: #007bff;
+  color: white;
+}
+
+.DayPicker-Day--default {
+  background-color: transparent;
+  color: inherit;
+  border-radius: 0;
+  &:hover {
+    background-color: transparent;
+  }
+}

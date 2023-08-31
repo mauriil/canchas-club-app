@@ -22,9 +22,10 @@ const headers = {
 
 export const createClub = async (values: Club) => {
     try {
-        const response = await fetch(`${BASE_API_URL}/clubs/`, {
+        values.userId = userId;
+        const response = await fetch(`${BASE_API_URL}/clubs`, {
             method: "POST",
-            headers,
+            headers: { ...headers, "Authorization": `Bearer ${token}` },
             body: JSON.stringify(values)
         });
         return response;

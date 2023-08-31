@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -19,6 +20,10 @@ import TopBar from '../../../components/TopBar';
 import ProvinceDropdown from '../../../components/ProvinceDropdown';
 import AddressAutocomplete from '../../../components/AddressAutocomplete';
 import Map from '../../../components/Map';
+import ClubClosedDaysPicker from '../../../components/ClubClosedDaysPicker';
+import ClubAvatar from '../../../components/ClubAvatar';
+import { s3Client } from '../../../api/s3client';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
 
 const steps = ['Información básica', 'Colores y logo', 'Días cerrados'];
 
@@ -37,7 +42,7 @@ const CreateClub = () => {
             primary: '',
             secondary: ''
         },
-        logo: '',
+        logo: '' || null,
         closedDays: [''],
     });
 
@@ -59,12 +64,29 @@ const CreateClub = () => {
         }
     };
 
-    const handleFileUpload = (acceptedFiles) => {
+    const handleFileUpload = async (acceptedFiles) => {
         const file = acceptedFiles[0];
-        setClubData((prevData) => ({
-            ...prevData,
-            logo: file,
-        }));
+        const formData = new FormData();
+        formData.append('file', file);
+        const bucketParams = {
+            Bucket: "example-bucket-name",
+            Key: "example.txt",
+            Body: file
+        };
+        try {
+            console.log("🚀 ~ file: index.tsx:76 ~ handleFileUpload ~ bucketParams:", bucketParams)
+        const data = await s3Client.send(new PutObjectCommand(bucketParams));
+        console.log("🚀 ~ file: index.tsx:77 ~ handleFileUpload ~ data:", data)
+        console.log(
+          "Successfully uploaded object: " +
+            bucketParams.Bucket +
+            "/" +
+            bucketParams.Key
+        );
+        } catch (error) {
+            console.log("🚀 ~ file: index.tsx:87 ~ handleFileUpload ~ error:", error)
+            
+        }
         console.log("🚀 ~ file: index.tsx:68 ~ handleFileUpload ~ clubData:", clubData)
     };
 
@@ -159,6 +181,12 @@ const CreateClub = () => {
                                 fullWidth
                                 value={clubData.description}
                                 onChange={(e) => handleInputChange('description', e.target.value)}
+                                sx={{ marginBottom: 2, }} />
+                            <TextField
+                                label="Alias"
+                                fullWidth
+                                value={clubData.alias}
+                                onChange={(e) => handleInputChange('alias', e.target.value)}
                                 sx={{ marginBottom: 2, }} />
                             <ProvinceDropdown
                                 value={clubData.city}
@@ -271,6 +299,10 @@ const CreateClub = () => {
                                 alignItems: "center",
                             }}>
                             <Typography variant="h6">Días cerrados:</Typography>
+                            <ClubClosedDaysPicker
+                                selectedDays={clubData.closedDays}
+                                onChange={(closedDays: any) => handleInputChange('closedDays', closedDays)}
+                            />
 
                             <Box
                                 sx={{
@@ -298,24 +330,53 @@ const CreateClub = () => {
                         </Box>
                     )}
                     {activeStep === steps.length && (
-                        <Box>
-                            <Typography variant="h6">Confirmar y crear:</Typography>
-                            <Typography>
+                        <Box sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                        }}>
+                            <Typography variant="h6" sx={{ margin: 1 }}>Confirmar y crear:</Typography>
+                            <Typography sx={{ margin: 1 }}>
                                 Por favor revisa la información antes de crear el club.
                             </Typography>
-                            <Button variant="outlined"
-                                color="secondary"
-                                onClick={handleBack} sx={{ mt: 2 }}>
-                                Atrás
-                            </Button>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleSubmit}
-                                sx={{ mt: 2 }}
+                            <ClubAvatar
+                                logo={clubData.logo}
+                                colors={{
+                                    primary: clubData.colors.primary,
+                                    secondary: clubData.colors.secondary
+                                }}
+                                title={clubData.name}
+                                width="130px"
+                                height="130px"
+                            />
+                            <Typography><h3>{clubData.description}</h3></Typography>
+                            <Typography>Dirección: {clubData.address}</Typography>
+                            <Typography>Provincia: {clubData.city}</Typography>
+                            <Typography>Alias: {clubData.alias}</Typography>
+
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    width: "100%",
+                                    marginTop: 3,
+                                }}
                             >
-                                Crear Club
-                            </Button>
+                                <Button variant="outlined"
+                                    color="secondary"
+                                    onClick={handleBack} sx={{ mt: 2 }}>
+                                    Atrás
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={handleSubmit}
+                                    sx={{ mt: 2 }}
+                                >
+                                    Crear Club
+                                </Button>
+                            </Box>
+
                         </Box>
                     )}
                 </Box>
