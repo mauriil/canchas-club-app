@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { LogInUser, User } from "../types/users";
+import { Club } from "../types/clubs";
+import { LogInUser } from "../types/users";
 import { ForgotPasswordBody } from "../types/users";
 import Cookies from "js-cookie";
 
@@ -19,7 +20,7 @@ const headers = {
     mode: 'cors'
 };
 
-export const create = async (values: User) => {
+export const createClub = async (values: Club) => {
     try {
         const response = await fetch(`${BASE_API_URL}/clubs/`, {
             method: "POST",
@@ -33,7 +34,7 @@ export const create = async (values: User) => {
     }
 }
 
-export const edit = async (values: LogInUser, clubId: string) => {
+export const editClub = async (values: LogInUser, clubId: string) => {
     try {
         const response = await fetch(`${BASE_API_URL}/clubs/${clubId}`, {
             method: "PUT",

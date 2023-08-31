@@ -3,12 +3,12 @@ import { Box, Typography, Button, Accordion, AccordionSummary, AccordionDetails,
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
-import { Club } from "../../types/clubs";
+import { Club } from "../../../types/clubs";
 import { useParams } from "react-router-dom";
-import { getAllByClubId } from "../../api/fields";
-import { Field } from "../../types/fields";
-import { getClubById } from "../../api/clubs";
-import TopBar from "../../components/TopBar";
+import { getAllByClubId } from "../../../api/fields";
+import { Field } from "../../../types/fields";
+import { getClubById } from "../../../api/clubs";
+import TopBar from "../../../components/TopBar";
 import { Share } from "@mui/icons-material";
 
 const ClubManagement = () => {
@@ -185,7 +185,8 @@ const ClubManagement = () => {
                 }}>
                     Agregar Cancha
                 </Button>
-            </Box></>
+            </Box>
+        </>
     );
 };
 
