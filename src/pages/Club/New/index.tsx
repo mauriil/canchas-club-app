@@ -22,8 +22,7 @@ import AddressAutocomplete from '../../../components/AddressAutocomplete';
 import Map from '../../../components/Map';
 import ClubClosedDaysPicker from '../../../components/ClubClosedDaysPicker';
 import ClubAvatar from '../../../components/ClubAvatar';
-import { s3Client } from '../../../api/s3client';
-import { PutObjectCommand } from '@aws-sdk/client-s3';
+import uploadImageToSpace from '../../../api/uploadImageToSpace';
 
 const steps = ['Información básica', 'Colores y logo', 'Días cerrados'];
 
@@ -66,27 +65,7 @@ const CreateClub = () => {
 
     const handleFileUpload = async (acceptedFiles) => {
         const file = acceptedFiles[0];
-        const formData = new FormData();
-        formData.append('file', file);
-        const bucketParams = {
-            Bucket: "example-bucket-name",
-            Key: "example.txt",
-            Body: file
-        };
-        try {
-            console.log("🚀 ~ file: index.tsx:76 ~ handleFileUpload ~ bucketParams:", bucketParams)
-        const data = await s3Client.send(new PutObjectCommand(bucketParams));
-        console.log("🚀 ~ file: index.tsx:77 ~ handleFileUpload ~ data:", data)
-        console.log(
-          "Successfully uploaded object: " +
-            bucketParams.Bucket +
-            "/" +
-            bucketParams.Key
-        );
-        } catch (error) {
-            console.log("🚀 ~ file: index.tsx:87 ~ handleFileUpload ~ error:", error)
-            
-        }
+        await uploadImageToSpace('archivo', file, 'image/jpeg');
         console.log("🚀 ~ file: index.tsx:68 ~ handleFileUpload ~ clubData:", clubData)
     };
 
