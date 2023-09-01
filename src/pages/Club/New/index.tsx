@@ -22,7 +22,8 @@ import AddressAutocomplete from '../../../components/AddressAutocomplete';
 import Map from '../../../components/Map';
 import ClubClosedDaysPicker from '../../../components/ClubClosedDaysPicker';
 import ClubAvatar from '../../../components/ClubAvatar';
-import uploadImageToSpace from '../../../api/uploadImageToSpace';
+import uploadFileToS3 from '../../../api/uploadFileToS3';
+import getFileFromS3 from '../../../api/getFileFromS3';
 
 const steps = ['Información básica', 'Colores y logo', 'Días cerrados'];
 
@@ -41,9 +42,10 @@ const CreateClub = () => {
             primary: '',
             secondary: ''
         },
-        logo: '' || null,
+        logo: '',
         closedDays: [''],
     });
+    const [logoUrl, setLogoUrl] = useState('');
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -65,8 +67,12 @@ const CreateClub = () => {
 
     const handleFileUpload = async (acceptedFiles) => {
         const file = acceptedFiles[0];
-        await uploadImageToSpace('archivo', file, 'image/jpeg');
-        console.log("🚀 ~ file: index.tsx:68 ~ handleFileUpload ~ clubData:", clubData)
+        const fileUrl = await uploadFileToS3('clublogos', clubData.name, file);
+        setClubData((prevData) => ({
+            ...prevData,
+            logo: fileUrl,
+          }));
+        setLogoUrl(await getFileFromS3(fileUrl));
     };
 
     const { getRootProps, getInputProps } = useDropzone({
@@ -206,7 +212,7 @@ const CreateClub = () => {
                                     <input {...getInputProps()} />
                                     <Avatar
                                         alt={clubData.name}
-                                        src={clubData.logo}
+                                        src={logoUrl}
                                         sx={{
                                             width: 130,
                                             height: 130,

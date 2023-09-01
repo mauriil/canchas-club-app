@@ -1,4 +1,8 @@
+/* eslint-disable no-inner-declarations */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Avatar, Box } from "@mui/material";
+import { useEffect, useState } from "react";
+import getFileFromS3 from "../../api/getFileFromS3";
 
 interface AvatarProps {
   width: string;
@@ -12,11 +16,27 @@ interface AvatarProps {
 }
 
 const ClubAvatar = (props: AvatarProps) => {
+  const [logoUrl, setLogoUrl] = useState('');
+
+
+
+  useEffect(() => {
+    if (props.logo) {
+      async function fetchLogo() {
+        const logo = await getFileFromS3(props.logo);
+        setLogoUrl(logo);
+      }
+      void fetchLogo();
+    } else {
+      setLogoUrl(`https://ui-avatars.com/api/?name=${props.title}&background=${props.colors.primary}&color=${props.colors.secondary}`);
+    }
+  }, [props.logo, props.title, props.colors.primary, props.colors.secondary]);
+
   return (
     <Box textAlign="center">
       <Avatar
         alt={props.title}
-        src={props.logo}
+        src={logoUrl}
         sx={{
           width: props.width,
           height: props.height,
