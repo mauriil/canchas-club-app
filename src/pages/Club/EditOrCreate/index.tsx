@@ -103,8 +103,8 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
     const handleLatLongChange = (position) => {
         setClubData((prevData) => ({
             ...prevData,
-            latitude: position.lat,
-            longitude: position.lng,
+            latitude: position.lat.toString(),
+            longitude: position.lng.toString(),
         }));
     };
 
@@ -224,6 +224,7 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                     justifyContent: "flex-start",
                     width: "100%",
                     marginTop: 3,
+                    marginBottom: 3,
                 }}>
                     <Typography variant="h4" gutterBottom sx={{ marginRight: 3 }}>
                         {editMode ? `Editar club ${clubData.name}` : 'Crear un nuevo club'}
