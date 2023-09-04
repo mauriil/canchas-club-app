@@ -28,7 +28,7 @@ const Perfil = () => {
         flexDirection: { md: "row", xs: "column" },
         backgroundColor: { xs: "background.paper" },
         backgroundImage: {
-          md: `url(https://canchas-club-space.nyc3.cdn.digitaloceanspaces.com/identidad-marca/FONDO%20DEPORTES/CanchasClub_FondoDeportes_EDITABLE-01.jpg)`,
+          md: `url(https://canchas-club.s3.amazonaws.com/CanchasClub_IdentidadMarca/FONDO+DEPORTES/CanchasClub_FondoDeportes_EDITABLE-01.jpg)`,
         },
         backgroundSize:{
           md: "cover"
@@ -53,7 +53,7 @@ const Perfil = () => {
           borderBottomLeftRadius: "20px",
           borderBottomRightRadius: "20px",
           boxShadow: "0px 0px 25px 1px rgb(0,0,0)",
-          backgroundImage: `url(https://canchas-club-space.nyc3.cdn.digitaloceanspaces.com/identidad-marca/FONDO%20DEPORTES/CanchasClub_FondoDeportes_EDITABLE-02.jpg)`,
+          backgroundImage: `url(https://canchas-club.s3.amazonaws.com/CanchasClub_IdentidadMarca/FONDO+DEPORTES/CanchasClub_FondoDeportes_EDITABLE-02.jpg)`,
           backgroundSize: "cover",
         }}
       >

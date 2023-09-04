@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 import { createClub, deleteClub, editClub, getClubById } from '../../../api/clubs';
 import { useDropzone } from 'react-dropzone';
 import uploadFileToS3 from '../../../api/uploadFileToS3';
-import getFileFromS3 from '../../../api/getFileFromS3';
 import TopBar from '../../../components/TopBar';
 import { Alert, AlertColor, Avatar, Box, Button, Snackbar, Step, StepLabel, Stepper, TextField, Typography } from '@mui/material';
 import ProvinceDropdown from '../../../components/ProvinceDropdown';

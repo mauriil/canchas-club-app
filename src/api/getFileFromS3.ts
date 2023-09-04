@@ -10,22 +10,22 @@ const cookies: {
 const token = cookies["access-token"];
 
 async function getPresignedUrl(location: string) {
-
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/aws/getPresignedUrl/${location}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            credentials: "include",
-            mode: "cors",
-            "Authorization": `Bearer ${token}`
-        },
-    });
-
-    if (!response.ok) {
-        throw new Error('Error al obtener la URL prefirmada');
+    try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/aws/getPresignedUrl/${location}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                credentials: "include",
+                mode: "cors",
+                "Authorization": `Bearer ${token}`
+            },
+        });
+        return await response.text();
+    } catch (error) {
+        console.error('Error al obtener el archivo:', error);
+        throw error;
     }
 
-    return await response.text();
 }
 
 async function getFileFromS3(location: string) {
