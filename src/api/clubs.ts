@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Club } from "../types/clubs";
-import { LogInUser } from "../types/users";
 import { ForgotPasswordBody } from "../types/users";
 import Cookies from "js-cookie";
 
@@ -17,7 +16,8 @@ const BASE_API_URL = import.meta.env.VITE_BACKEND_API_URL;
 const headers = {
     "Content-Type": "application/json",
     credentials: 'include',
-    mode: 'cors'
+    mode: 'cors',
+    "Authorization": `Bearer ${token}`
 };
 
 export const createClub = async (values: Club) => {
@@ -25,7 +25,7 @@ export const createClub = async (values: Club) => {
         values.userId = userId;
         const response = await fetch(`${BASE_API_URL}/clubs`, {
             method: "POST",
-            headers: { ...headers, "Authorization": `Bearer ${token}` },
+            headers,
             body: JSON.stringify(values)
         });
         return response;
@@ -35,10 +35,10 @@ export const createClub = async (values: Club) => {
     }
 }
 
-export const editClub = async (values: LogInUser, clubId: string) => {
+export const editClub = async (values: Club, clubId: string) => {
     try {
         const response = await fetch(`${BASE_API_URL}/clubs/${clubId}`, {
-            method: "PUT",
+            method: "PATCH",
             headers,
             body: JSON.stringify(values)
         });
@@ -49,12 +49,11 @@ export const editClub = async (values: LogInUser, clubId: string) => {
     }
 }
 
-export const deleteClub = async (values: ForgotPasswordBody, clubId: string) => {
+export const deleteClub = async (clubId: string) => {
     try {
         const response = await fetch(`${BASE_API_URL}/clubs/${clubId}`, {
             method: "DELETE",
             headers,
-            body: JSON.stringify(values)
         });
         return response;
     } catch (error) {

@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TextField } from '@mui/material';
 
-const AddressAutocomplete = ({ value, onChange }) => {
+const AddressAutocomplete = ({ value, onChange, error, helperText }) => {
   const [inputValue, setInputValue] = useState(value);
+  useEffect(() => {
+    setInputValue(value);
+  }, [value]);
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
@@ -35,6 +38,8 @@ const AddressAutocomplete = ({ value, onChange }) => {
       onChange={handleInputChange}
       onBlur={() => onChange(inputValue)}
       onFocus={handleScriptLoad}
+      error={error}
+      helperText={helperText}
       sx={{ marginBottom: 2, }}
     />
   );

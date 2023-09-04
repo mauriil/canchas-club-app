@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import React, { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -28,10 +30,15 @@ const ClosedDaysPicker = ({ selectedDays, onChange }) => {
 
   const handleDateClick = (date) => {
     const dateISOString = date.toISOString().substring(0, 10);
-    console.log("🚀 ~ file: index.tsx:27 ~ handleDateClick ~ dateISOString:", dateISOString)
     const updatedDates = selectedDates.includes(dateISOString)
       ? selectedDates.filter((d) => d !== dateISOString)
       : [...selectedDates, dateISOString];
+
+      updatedDates.sort((a: string | number | Date, b: string | number | Date) => {
+        const dateA = new Date(a);
+        const dateB = new Date(b);
+        return dateA - dateB;
+      });
 
     setSelectedDates(updatedDates);
     onChange(updatedDates);
@@ -48,6 +55,25 @@ const ClosedDaysPicker = ({ selectedDays, onChange }) => {
     ) : null;
   };
 
+  function formatDateToARGString(dateString) {
+    const daysOfWeek = [
+      'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'
+    ];
+
+    const months = [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio',
+      'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+
+    const date = new Date(dateString);
+    const dayOfWeek = daysOfWeek[date.getDay() + 1];
+    const day = date.getDate() + 1;
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+
+    return `${dayOfWeek} ${day} de ${month} de ${year}`;
+  }
+
   return (
     <Box
       sx={{
@@ -61,7 +87,14 @@ const ClosedDaysPicker = ({ selectedDays, onChange }) => {
         variant="outlined"
         onClick={async () => {
           const holidays = await fetchArgentinianHolidays();
-          setSelectedDates([...selectedDates, ...holidays]);
+          const allClosedDays = [...selectedDates, ...holidays];
+          allClosedDays.sort((a: string | number | Date, b: string | number | Date) => {
+            const dateA = new Date(a);
+            const dateB = new Date(b);
+            return dateA - dateB;
+          });
+          setSelectedDates(allClosedDays);
+          onChange(allClosedDays);
         }}
         sx={{ marginBottom: "1rem" }}
       >
@@ -97,7 +130,7 @@ const ClosedDaysPicker = ({ selectedDays, onChange }) => {
         <AccordionDetails>
           <ul>
             {selectedDates.map((date) => (
-              <li key={date}>{date}</li>
+              <li key={date}>{formatDateToARGString(date)}</li>
             ))}
           </ul>
         </AccordionDetails>

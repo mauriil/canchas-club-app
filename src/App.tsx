@@ -13,7 +13,7 @@ import Perfil from "./pages/Perfil";
 import NotFoundPage from "./pages/NotFoundPage";
 import Home from "./pages/Home";
 import ClubManagement from "./pages/Club/Management";
-import CreateClub from "./pages/Club/New";
+import EditOrCreateClub from "./pages/Club/EditOrCreate";
 
 function App() {
   return (
@@ -34,8 +34,9 @@ function App() {
               <Route path="home" element={<Home />} />
               <Route path="misReservas" element={<MisReservas />} />
               <Route path="miClub" element={<MiClub />} />
-              <Route path="/dashboard/miClub/new" element={<CreateClub />} />
+              <Route path="/dashboard/miClub/new" element={<EditOrCreateClub />} />
               <Route path="/dashboard/miClub/:clubId" element={<ClubManagement />} />
+              <Route path="/dashboard/miClub/:clubId/edit" element={<EditOrCreateClub editMode={true} />} />
               <Route path="miPerfil" element={<Perfil />} />
             </Route>
           </Route>

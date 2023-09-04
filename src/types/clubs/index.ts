@@ -10,9 +10,11 @@ export interface Club {
   city: string;
   country: string;
   description: string;
+  latitude: string;
+  longitude: string;
   logo: string;
   name: string;
-  _id?: string;
+  _id?: string | undefined;
   closedDays: string[];
   colors: ColorsClub;
 }

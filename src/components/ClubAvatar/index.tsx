@@ -3,6 +3,7 @@
 import { Avatar, Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import getFileFromS3 from "../../api/getFileFromS3";
+import useScreenSize from "../../customHooks/screenSize";
 
 interface AvatarProps {
   width: string;
@@ -17,8 +18,7 @@ interface AvatarProps {
 
 const ClubAvatar = (props: AvatarProps) => {
   const [logoUrl, setLogoUrl] = useState('');
-
-
+  const screenWidth = useScreenSize().width;
 
   useEffect(() => {
     if (props.logo) {
@@ -50,7 +50,7 @@ const ClubAvatar = (props: AvatarProps) => {
       />
       <div
         style={{
-          fontSize: "1.5rem",
+          fontSize: screenWidth < 900 ? "1.5rem" : "2rem",
           fontWeight: "bold",
           fontFamily: "sans-serif",
           color: "primary.main",

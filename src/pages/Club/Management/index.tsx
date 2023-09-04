@@ -1,19 +1,21 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { useEffect, useState } from "react";
 import { Box, Typography, Button, Accordion, AccordionSummary, AccordionDetails, Avatar, Snackbar, Alert, AlertColor } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import { Club } from "../../../types/clubs";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getAllByClubId } from "../../../api/fields";
 import { Field } from "../../../types/fields";
 import { getClubById } from "../../../api/clubs";
 import TopBar from "../../../components/TopBar";
 import { Share } from "@mui/icons-material";
+import ClubAvatar from "../../../components/ClubAvatar";
 
 const ClubManagement = () => {
+    const navigate = useNavigate();
     const { clubId } = useParams();
-    const [editClubMode, setEditClubMode] = useState(false);
     const [clubData, setClubData] = useState<Club>(
         {
             _id: "",
@@ -23,6 +25,8 @@ const ClubManagement = () => {
             logo: "",
             alias: "",
             city: "",
+            latitude: "0",
+            longitude: "0",
             country: "",
             closedDays: [""],
             colors: {
@@ -73,7 +77,7 @@ const ClubManagement = () => {
     }, [clubId]);
 
     const handleEditClub = () => {
-        setEditClubMode(!editClubMode);
+        navigate(`edit`);
     };
 
     if (clubData.name === "") {
@@ -100,20 +104,13 @@ const ClubManagement = () => {
                     justifyContent: "center",
                 }}>
 
-                    <Avatar
-                        alt={clubData.name}
-                        src={clubData.logo}
-                        sx={{
-                            width: 130,
-                            height: 130,
-                            backgroundColor: clubData.colors.primary,
-                            borderColor: clubData.colors.secondary,
-                            borderWidth: "0.5rem",
-                            borderStyle: "solid",
-                        }} />
-                    <Typography variant="h4" sx={{ marginBottom: "0.5rem" }}>
-                        {clubData.name}
-                    </Typography>
+                    <ClubAvatar
+                        width="130px"
+                        height="130px"
+                        title={clubData.name}
+                        logo={clubData.logo}
+                        colors={clubData.colors}
+                        />
                     <Box
                         sx={{
                             display: "flex",

@@ -1,53 +1,98 @@
+/* eslint-disable no-inner-declarations */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { useState } from 'react';
-import {
-    Stepper,
-    Step,
-    StepLabel,
-    Button,
-    Typography,
-    Box,
-    TextField,
-    Avatar,
-} from '@mui/material';
-import { createClub } from '../../../api/clubs';
+import { useEffect, useState } from 'react';
+import { createClub, deleteClub, editClub, getClubById } from '../../../api/clubs';
 import { useDropzone } from 'react-dropzone';
-import { CirclePicker } from "react-color";
+import uploadFileToS3 from '../../../api/uploadFileToS3';
+import getFileFromS3 from '../../../api/getFileFromS3';
 import TopBar from '../../../components/TopBar';
+import { Alert, AlertColor, Avatar, Box, Button, Snackbar, Step, StepLabel, Stepper, TextField, Typography } from '@mui/material';
 import ProvinceDropdown from '../../../components/ProvinceDropdown';
 import AddressAutocomplete from '../../../components/AddressAutocomplete';
 import Map from '../../../components/Map';
-import ClubClosedDaysPicker from '../../../components/ClubClosedDaysPicker';
+import { CirclePicker } from 'react-color';
 import ClubAvatar from '../../../components/ClubAvatar';
-import uploadFileToS3 from '../../../api/uploadFileToS3';
-import getFileFromS3 from '../../../api/getFileFromS3';
+import ClubClosedDaysPicker from '../../../components/ClubClosedDaysPicker';
+import { useNavigate } from 'react-router-dom';
+import { Club } from '../../../types/clubs';
+import ConfirmationDialog from '../../../components/ConfirmationDialog';
 
 const steps = ['Información básica', 'Colores y logo', 'Días cerrados'];
 
-const CreateClub = () => {
+interface EditOrCreateClubProps {
+    editMode?: boolean;
+}
+
+const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
+    const [snackBarOpen, setSnackBarOpen] = useState(false);
+    const [snackBarMessage, setSnackBarMessage] = useState("");
+    const [snackBarSeverity, setSnackBarSeverity] = useState("success");
+    const handelSnackClose = () => {
+        setSnackBarOpen(false);
+    }
     const [activeStep, setActiveStep] = useState(0);
     const [clubData, setClubData] = useState({
+        _id: '',
         name: '',
         description: '',
         address: '',
-        latitude: 0,
-        longitude: 0,
+        latitude: '0',
+        longitude: '0',
         city: '',
         country: 'ARG',
         alias: '',
         colors: {
-            primary: '',
-            secondary: ''
+            primary: '#FFFFFF',
+            secondary: '#FFFFFF'
         },
         logo: '',
         closedDays: [''],
     });
-    const [logoUrl, setLogoUrl] = useState('');
+    const [buttonNextClicked, setButtonNextClicked] = useState(false);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (editMode && clubData.name === '') {
+            const clubId = window.location.pathname.split('/')[3];
+            void fetchClubData(clubId).then((clubData) => {
+                setClubData(clubData);
+            });
+        }
+    }, [editMode, clubData]);
+
+    const fetchClubData = async (clubId: string) => {
+        try {
+            const clubInfo = await getClubById(clubId);
+            if (clubInfo.ok) {
+                const clubData = await clubInfo.json() as Club
+                return clubData;
+            } else {
+                console.error("Error fetching club data:", clubInfo.statusText);
+            }
+        } catch (error) {
+            console.error("Error fetching club data:", error);
+        }
+    }
 
     const handleNext = () => {
+        if (activeStep === 0) {
+            setButtonNextClicked(true);
+            if (clubData.name === ''
+                || clubData.address === ''
+                || clubData.city === ''
+                || clubData.description === ''
+                || clubData.alias === '') {
+                setSnackBarMessage('Por favor completa todos los campos');
+                setSnackBarSeverity('warning');
+                setSnackBarOpen(true);
+                return;
+            }
+            setButtonNextClicked(false);
+        }
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 
@@ -55,13 +100,41 @@ const CreateClub = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
+    const handleLatLongChange = (position) => {
+        setClubData((prevData) => ({
+            ...prevData,
+            latitude: position.lat,
+            longitude: position.lng,
+        }));
+    };
+
     const handleSubmit = async () => {
-        try {
-            const response = await createClub(clubData);
-            console.log('Club creado:', response);
-            // Realiza otras acciones después de la creación exitosa
-        } catch (error) {
-            console.error('Error al crear el club:', error);
+        if (editMode) {
+            try {
+                await editClub(clubData, clubData._id);
+                setSnackBarMessage('Club editado correctamente');
+                setSnackBarSeverity('success');
+                setSnackBarOpen(true);
+                setTimeout(() => {
+                    navigate("/dashboard/miClub");
+                }, 1500);
+                return;
+            } catch (error) {
+                console.error('Error al editar el club:', error);
+            }
+        } else {
+            try {
+                await createClub(clubData);
+                setSnackBarMessage('Club creado correctamente');
+                setSnackBarSeverity('success');
+                setSnackBarOpen(true);
+                setTimeout(() => {
+                    navigate("/dashboard/miClub");
+                }, 1500);
+                return;
+            } catch (error) {
+                console.error('Error al crear el club:', error);
+            }
         }
     };
 
@@ -71,8 +144,7 @@ const CreateClub = () => {
         setClubData((prevData) => ({
             ...prevData,
             logo: fileUrl,
-          }));
-        setLogoUrl(await getFileFromS3(fileUrl));
+        }));
     };
 
     const { getRootProps, getInputProps } = useDropzone({
@@ -118,14 +190,25 @@ const CreateClub = () => {
                 setClubData((prevData) => ({
                     ...prevData,
                     address: address,
-                    latitude: location.lat,
-                    longitude: location.lng,
+                    latitude: location.lat.toString(),
+                    longitude: location.lng.toString(),
                 }));
             }
         } catch (error) {
             console.error('Error fetching geolocation:', error);
         }
     };
+
+    const handleDelete = async () => {
+        await deleteClub(clubData._id);
+        setSnackBarMessage('Club eliminado correctamente');
+        setSnackBarSeverity('success');
+        setSnackBarOpen(true);
+        setTimeout(() => {
+            navigate("/dashboard/miClub");
+        }, 1500);
+        return;
+    }
 
     return (
         <>
@@ -135,9 +218,32 @@ const CreateClub = () => {
                 marginTop: 1,
                 alignItems: "center",
             }}>
-                <Typography variant="h4" gutterBottom>
-                    Crear un nuevo club
-                </Typography>
+
+                <Box sx={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    width: "100%",
+                    marginTop: 3,
+                }}>
+                    <Typography variant="h4" gutterBottom sx={{ marginRight: 3 }}>
+                        {editMode ? `Editar club ${clubData.name}` : 'Crear un nuevo club'}
+                    </Typography>
+                    <Button
+                        variant="outlined"
+                        color="error"
+                        onClick={() => setOpenDeleteDialog(true)}
+                    >
+                        Eliminar club
+                    </Button>
+                    <ConfirmationDialog
+                        open={openDeleteDialog}
+                        onClose={() => setOpenDeleteDialog(false)}
+                        onConfirm={handleDelete}
+                        message={`¿Estás seguro que querés eliminar el club ${clubData.name}?
+                        Todas las configuraciones y las canchas asociadas se eliminarán, asi como también todos aquellos turnos futuros confirmados y/o los turnos fijos se cancelarán.
+                        Esta acción no se puede deshacer.`}
+                    />
+                </Box>
                 <Stepper activeStep={activeStep} alternativeLabel>
                     {steps.map((label) => (
                         <Step key={label}>
@@ -160,26 +266,45 @@ const CreateClub = () => {
                                 fullWidth
                                 value={clubData.name}
                                 onChange={(e) => handleInputChange('name', e.target.value)}
-                                sx={{ marginBottom: 2, }} />
+                                sx={{ marginBottom: 2, }}
+                                error={clubData.name === '' && buttonNextClicked}
+                                helperText={clubData.name === '' && buttonNextClicked ? 'Campo requerido' : ''}
+                            />
                             <TextField
                                 label="Descripción"
                                 fullWidth
                                 value={clubData.description}
                                 onChange={(e) => handleInputChange('description', e.target.value)}
-                                sx={{ marginBottom: 2, }} />
+                                sx={{ marginBottom: 2, }}
+                                error={clubData.description === '' && buttonNextClicked}
+                                helperText={clubData.description === '' && buttonNextClicked ? 'Campo requerido' : ''}
+                            />
                             <TextField
                                 label="Alias"
                                 fullWidth
                                 value={clubData.alias}
                                 onChange={(e) => handleInputChange('alias', e.target.value)}
-                                sx={{ marginBottom: 2, }} />
+                                sx={{ marginBottom: 2, }}
+                                error={clubData.alias === '' && buttonNextClicked}
+                                helperText={clubData.alias === '' && buttonNextClicked ? 'Campo requerido' : ''}
+                            />
                             <ProvinceDropdown
                                 value={clubData.city}
-                                onChange={(province: any) => handleInputChange('city', province)} />
+                                onChange={(province: any) => handleInputChange('city', province)}
+                                error={clubData.city === '' && buttonNextClicked}
+                                errorValue={clubData.city === '' && buttonNextClicked ? 'Campo requerido' : ''}
+                            />
                             <AddressAutocomplete
                                 value={clubData.address}
-                                onChange={(address: any) => handleAddressChange(address)} />
-                            <Map latitude={clubData.latitude} longitude={clubData.longitude} />
+                                onChange={(address: any) => handleAddressChange(address)}
+                                error={clubData.address === '' && buttonNextClicked}
+                                helperText={clubData.address === '' && buttonNextClicked ? 'Campo requerido' : ''}
+                            />
+
+
+                            {clubData.latitude !== '0' && clubData.longitude !== '0' && (
+                                <Map latitude={parseFloat(clubData.latitude)} longitude={parseFloat(clubData.longitude)} onMarkerDragEnd={(position: any) => handleLatLongChange(position)} />
+                            )}
 
                             <Button
                                 variant="outlined"
@@ -210,17 +335,16 @@ const CreateClub = () => {
                             >
                                 <div {...getRootProps()}>
                                     <input {...getInputProps()} />
-                                    <Avatar
-                                        alt={clubData.name}
-                                        src={logoUrl}
-                                        sx={{
-                                            width: 130,
-                                            height: 130,
-                                            backgroundColor: clubData.colors.primary,
-                                            borderColor: clubData.colors.secondary,
-                                            borderWidth: '0.5rem',
-                                            borderStyle: 'solid',
-                                        }} />
+                                    <ClubAvatar
+                                        logo={clubData.logo}
+                                        colors={{
+                                            primary: clubData.colors.primary,
+                                            secondary: clubData.colors.secondary
+                                        }}
+                                        title={clubData.name}
+                                        width="130px"
+                                        height="130px"
+                                    />
                                 </div>
                             </Box>
                             <Box
@@ -358,7 +482,7 @@ const CreateClub = () => {
                                     onClick={handleSubmit}
                                     sx={{ mt: 2 }}
                                 >
-                                    Crear Club
+                                    {editMode ? 'Guardar cambios' : 'Crear club'}
                                 </Button>
                             </Box>
 
@@ -366,8 +490,13 @@ const CreateClub = () => {
                     )}
                 </Box>
             </Box>
+            <Snackbar open={snackBarOpen} autoHideDuration={5000} onClick={handelSnackClose} onClose={handelSnackClose}>
+                <Alert severity={snackBarSeverity as AlertColor} sx={{ width: '100%', fontSize: '15px' }} onClose={handelSnackClose}>
+                    {snackBarMessage}
+                </Alert>
+            </Snackbar>
         </>
     );
 };
 
-export default CreateClub;
+export default EditOrCreateClub;
