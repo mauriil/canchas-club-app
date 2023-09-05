@@ -38,3 +38,10 @@ export interface ForgotPasswordResponse {
 export interface ForgotPasswordBody {
   email: string;
 }
+
+export interface PlanStatus {
+  date: string;
+  remainingClubCreations: number;
+  remainingFieldCreations: number;
+  status: string;
+}

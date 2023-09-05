@@ -37,7 +37,7 @@ function Copyright(props: any) {
   );
 }
 
-export default function ForgotPassword () {
+export default function ForgotPassword() {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const [snackBarMessage, setSnackBarMessage] = useState("");
   const [snackBarSeverity, setSnackBarSeverity] = useState("success");
@@ -152,10 +152,10 @@ export default function ForgotPassword () {
         <Copyright sx={{ mt: 4, mb: 3 }} />
       </Box>
       <Snackbar open={snackBarOpen} autoHideDuration={5000} onClick={handelSnackClose} onClose={handelSnackClose}>
-          <Alert severity={snackBarSeverity as AlertColor} sx={{ width: '100%', fontSize: '15px' }} onClose={handelSnackClose}>
-            {snackBarMessage}
-          </Alert>
-        </Snackbar>
+        <Alert severity={snackBarSeverity as AlertColor} sx={{ width: '100%', fontSize: '15px' }} onClose={handelSnackClose}>
+          {snackBarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 }
