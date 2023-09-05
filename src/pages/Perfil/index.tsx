@@ -2,25 +2,49 @@
 import { Box, Typography } from "@mui/material";
 import { useAuth } from "../../customHooks/useAuth";
 import AvatarIcon from "../../components/Avatar";
-import PerfilButton from "../../components/PerfilButton";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import LogoutIcon from "@mui/icons-material/Logout";
-import KeyIcon from "@mui/icons-material/Key";
-import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
 import useCheckOrientation from "../../customHooks/checkOrientation";
+import PerfilOptions from "../../components/Perfil/PerfilOptions";
+import { getPlanStatus } from "../../api/users";
+import { useEffect, useState } from "react";
+import PerfilPlanStatus from "../../components/Perfil/PerfilPlanStatus";
 
 const Perfil = () => {
   const { user } = useAuth();
-  const navigate = useNavigate();
+  const [isPremium, setIsPremium] = useState(false);
+  const [selectedOption, setSelectedOption] = useState("menu");
 
-  const logOut = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    Cookies.remove("access-token", import.meta.env.VITE_ENV === "development" ? {} : { path: "/", domain: import.meta.env.VITE_COOKIE_DOMAIN });
-    navigate("/index/login");
-  };
+  const checkPremium = async () => {
+    const planStatus = await getPlanStatus();
+    setIsPremium(planStatus.type !== "free");
+  }
+  useEffect(() => {
+    void checkPremium();
+  }, []);
 
   const orientation = useCheckOrientation();
+
+  const handleItemClick = (option: string) => {
+    switch (option) {
+      case 'editProfile':
+        // Lógica para "Editar Perfil"
+        // ...
+        break;
+      case 'myPlan':
+        setSelectedOption('myPlan')
+        break;
+      case 'ownerOfClub':
+        // Lógica para "Soy dueño de un club"
+        // ...
+        break;
+      case 'mercadoPagoToken':
+        // Lógica para "Mercado Pago token"
+        // ...
+        break;
+      default:
+        setSelectedOption('menu')
+        break;
+    }
+  };
 
   return (
     <Box
@@ -141,27 +165,14 @@ const Perfil = () => {
             marginRight: { md: "3rem" },
           }}
         >
-          <Box
-            display="flex"
-            flexDirection="column"
-            justifyContent="space-around"
-            height="100%"
-            width="100%"
-            borderRadius="15px"
-            sx={{
-              backgroundColor: { md: "background.paper" },
-              boxShadow: { md: "0px 0px 25px 1px rgb(0,0,0)" },
-            }}
-          >
-            <PerfilButton text="Editar Perfil" icon={<PersonOutlineIcon />} />
-            <PerfilButton text="Editar Perfil" icon={<PersonOutlineIcon />} />
-            <PerfilButton text="Mercado Pago token" icon={<KeyIcon />} />
-            <PerfilButton
-              onClick={logOut}
-              text="Cerrar sesion"
-              icon={<LogoutIcon />}
-            />
-          </Box>
+          {
+            selectedOption === 'menu' ? (
+              <PerfilOptions isPremium={isPremium} onItemClick={handleItemClick}/>
+            ) :
+            selectedOption === 'myPlan' ? (
+              <PerfilPlanStatus onItemClick={handleItemClick} />
+            ) : null
+          }
         </Box>
       </Box>
     </Box>
