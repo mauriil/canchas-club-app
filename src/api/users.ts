@@ -32,3 +32,16 @@ export const getPlanStatus = async (): Promise<PlanStatus> => {
         throw error;
     }
 }
+
+export const cancelPlan = async () => {
+    try {
+        const response = await fetch(`${BASE_API_URL}/users/${userId}/subscription/cancel`, {
+            method: "GET",
+            headers,
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching cancelPlan:", error);
+        throw error;
+    }
+}
