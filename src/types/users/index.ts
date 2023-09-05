@@ -41,6 +41,7 @@ export interface ForgotPasswordBody {
 
 export interface PlanStatus {
   date: string;
+  type: string;
   remainingClubCreations: number;
   remainingFieldCreations: number;
   status: string;

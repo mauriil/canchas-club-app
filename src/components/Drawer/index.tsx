@@ -13,6 +13,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import BallotIcon from "@mui/icons-material/Ballot";
 import HomeIcon from "@mui/icons-material/Home";
 import { NavLink } from "react-router-dom";
+import { getPlanStatus } from "../../api/users";
 
 type Anchor = "left";
 
@@ -20,20 +21,29 @@ export default function TemporaryDrawer() {
   const [state, setState] = React.useState({
     left: false,
   });
+  const [isPremium, setIsPremium] = React.useState(false);
+
+  const checkPremium = async () => {
+    const planStatus = await getPlanStatus();
+    setIsPremium(planStatus.type !== "free");
+  }
+  React.useEffect(() => {
+    void checkPremium();
+  }, []);
 
   const toggleDrawer =
     (anchor: Anchor, open: boolean) =>
-    (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event.type === "keydown" &&
-        ((event as React.KeyboardEvent).key === "Tab" ||
-          (event as React.KeyboardEvent).key === "Shift")
-      ) {
-        return;
-      }
+      (event: React.KeyboardEvent | React.MouseEvent) => {
+        if (
+          event.type === "keydown" &&
+          ((event as React.KeyboardEvent).key === "Tab" ||
+            (event as React.KeyboardEvent).key === "Shift")
+        ) {
+          return;
+        }
 
-      setState({ ...state, [anchor]: open });
-    };
+        setState({ ...state, [anchor]: open });
+      };
 
   const list = (anchor: Anchor) => (
     <Box
@@ -62,19 +72,21 @@ export default function TemporaryDrawer() {
             </ListItemButton>
           </ListItem>
         </NavLink>
-        <NavLink to="miClub">
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <BallotIcon />
-              </ListItemIcon>
-              <ListItemText primary="Mis clubes" />
-            </ListItemButton>
-          </ListItem>
-        </NavLink>
+        {isPremium && (
+          <NavLink to="miClub">
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <BallotIcon />
+                </ListItemIcon>
+                <ListItemText primary="Mis clubes" />
+              </ListItemButton>
+            </ListItem>
+          </NavLink>
+        )}
       </List>
       <Divider />
-      <List>
+      {/* <List>
         <NavLink to="miPerfil">
           <ListItem disablePadding>
             <ListItemButton>
@@ -85,7 +97,7 @@ export default function TemporaryDrawer() {
             </ListItemButton>
           </ListItem>
         </NavLink>
-      </List>
+      </List> */}
     </Box>
   );
 

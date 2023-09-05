@@ -9,11 +9,21 @@ import { useAuth } from "../../customHooks/useAuth";
 import AvatarIcon from "../Avatar";
 import HomeIcon from "@mui/icons-material/Home";
 import { NavLink } from "react-router-dom";
+import { getPlanStatus } from "../../api/users";
 
 
 export default function SimpleBottomNavigation() {
   const [value, setValue] = React.useState(0);
+  const [isPremium, setIsPremium] = React.useState(false);
   const { user } = useAuth();
+
+  const checkPremium = async () => {
+    const planStatus = await getPlanStatus();
+    setIsPremium(planStatus.type !== "free");
+  }
+  React.useEffect(() => {
+    void checkPremium();
+  }, []);
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -29,46 +39,48 @@ export default function SimpleBottomNavigation() {
           backgroundColor: "#F5F5F5",
           borderBottom: "1px solid #E0E0E0",
         }}
-          onChange={(event, newValue) => {
-        setValue(newValue);
+        onChange={(event, newValue) => {
+          setValue(newValue);
         }}
       >
-      <BottomNavigationAction
-        label="Home"
-        icon={
-          <NavLink to="home">
-            <HomeIcon sx={{ fontSize: "35px" }} />
-          </NavLink>
-        }
-      />
+        <BottomNavigationAction
+          label="Home"
+          icon={
+            <NavLink to="home">
+              <HomeIcon sx={{ fontSize: "35px" }} />
+            </NavLink>
+          }
+        />
 
-      <BottomNavigationAction
-        label="Mis Reservas"
-        icon={
-          <NavLink to="misReservas">
-            <EventIcon sx={{ fontSize: "35px" }} />
-          </NavLink>
-        }
-      />
+        <BottomNavigationAction
+          label="Mis Reservas"
+          icon={
+            <NavLink to="misReservas">
+              <EventIcon sx={{ fontSize: "35px" }} />
+            </NavLink>
+          }
+        />
 
-      <BottomNavigationAction
-        label="Mis Clubes"
-        icon={
-          <NavLink to="miClub">
-            <BallotIcon sx={{ fontSize: "35px" }} />
-          </NavLink>
-        }
-      />
+        {isPremium && (
+          <BottomNavigationAction
+            label="Mis Clubes"
+            icon={
+              <NavLink to="miClub">
+                <BallotIcon sx={{ fontSize: "35px" }} />
+              </NavLink>
+            }
+          />
+        )}
 
-      <BottomNavigationAction
-        label={user?.userName}
-        icon={
-          <NavLink to="miPerfil">
-            <AvatarIcon width="35px" height="35px" />
-          </NavLink>
-        }
-      />
-    </BottomNavigation>
+        <BottomNavigationAction
+          label={user?.userName}
+          icon={
+            <NavLink to="miPerfil">
+              <AvatarIcon width="35px" height="35px" />
+            </NavLink>
+          }
+        />
+      </BottomNavigation>
     </Box >
   );
 }
