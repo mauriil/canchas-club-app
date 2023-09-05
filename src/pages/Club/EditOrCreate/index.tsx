@@ -123,7 +123,14 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
             }
         } else {
             try {
-                await createClub(clubData);
+                const req = await createClub(clubData);
+                const request = await req.json();
+                if (request.statusCode >= 400) {
+                    setSnackBarMessage(request.message);
+                    setSnackBarSeverity('error');
+                    setSnackBarOpen(true);
+                    return;
+                }
                 setSnackBarMessage('Club creado correctamente');
                 setSnackBarSeverity('success');
                 setSnackBarOpen(true);
