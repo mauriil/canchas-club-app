@@ -10,7 +10,6 @@ const UserProfilePlanStatus = ({onItemClick}: UserProfilePlanStatusProps) => {
         <Box
             display="flex"
             flexDirection="column"
-            justifyContent="space-around"
             height="100%"
             width="100%"
             borderRadius="15px"
@@ -28,13 +27,15 @@ const UserProfilePlanStatus = ({onItemClick}: UserProfilePlanStatusProps) => {
                     borderBottom: "1px solid #E0E0E0",
                     width: "100%",
                     padding: "1rem",
+                    borderTopLeftRadius: "20px",
+                    borderTopRightRadius: "20px",
                 }}
             >
                 <IconButton >
                     <ArrowBack onClick={() => onItemClick('menu')}/>
                 </IconButton>
             </Box>
-            <p>HOLA</p>
+            <p>DESCRIPCION DEL PLAN EN CURSO</p>
         </Box>
     );
 };
