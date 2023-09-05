@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+import { useState, useEffect } from "react";
 import { Box, Button } from "@mui/material";
 import ClubAvatar from "../../components/ClubAvatar";
 import { getAllClubsByUser } from "../../api/clubs";
@@ -52,7 +53,8 @@ const MiClub = () => {
         flexGrow={1}
         overflow="auto"
       >
-        {clubs.map((club: Club) => (
+        {clubs.length > 0 ? (
+        clubs.map((club: Club) => (
           <Link key={club._id} to={`${club._id}`}>
             <ClubAvatar
               key={club._id}
@@ -63,7 +65,18 @@ const MiClub = () => {
               colors={club.colors}
             />
           </Link>
-        ))}
+        )))
+        :
+        (<Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          width="100%"
+          height="100%"
+        >
+          <h1>No tienes ningún club</h1>
+        </Box>)
+        }
       </Box>
       <Box
         display="flex"

@@ -140,7 +140,8 @@ const ClubManagement = () => {
                 <Typography variant="h5" sx={{ marginBottom: "0.5rem" }}>
                     Canchas
                 </Typography>
-                {fields.map((field) => (
+                {fields.length > 0 ? (
+                fields.map((field) => (
                     <Accordion key={field._id} sx={{ maxHeight: 'calc(100vh - 300px)', backgroundColor: "#F5F5F5" }}>
                         <AccordionSummary>
                             <Box display="flex" alignItems="center">
@@ -173,7 +174,12 @@ const ClubManagement = () => {
 
                         </AccordionDetails>
                     </Accordion>
-                ))}
+                )))
+            : (
+                <Typography variant="body1" sx={{ marginBottom: "0.5rem" }}>
+                    No hay canchas registradas
+                </Typography>
+            )}
 
                 {/* Botón para Agregar Cancha */}
                 <Button variant="contained" color="primary" startIcon={<AddIcon />} sx={{

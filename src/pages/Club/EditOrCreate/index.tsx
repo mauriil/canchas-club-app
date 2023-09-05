@@ -228,13 +228,17 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                     <Typography variant="h4" gutterBottom sx={{ marginRight: 3 }}>
                         {editMode ? `Editar club ${clubData.name}` : 'Crear un nuevo club'}
                     </Typography>
-                    <Button
-                        variant="outlined"
-                        color="error"
-                        onClick={() => setOpenDeleteDialog(true)}
-                    >
-                        Eliminar club
-                    </Button>
+                    {editMode ?
+                        <Button
+                            variant="outlined"
+                            color="error"
+                            onClick={() => setOpenDeleteDialog(true)}
+                        >
+                            Eliminar club
+                        </Button>
+                        :
+                        null}
+
                     <ConfirmationDialog
                         open={openDeleteDialog}
                         onClose={() => setOpenDeleteDialog(false)}
