@@ -45,3 +45,16 @@ export const cancelPlan = async () => {
         throw error;
     }
 }
+
+export const createPremiumSubscription = async (typeOfPlan: string): Promise<{paymentUrl: string, statusCode?: number, message: string}> => {
+    try {
+        const response = await fetch(`${BASE_API_URL}/users/${userId}/subscription/create/${typeOfPlan}`, {
+            method: "GET",
+            headers,
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching createPremiumSubscription:", error);
+        throw error;
+    }
+}

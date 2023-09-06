@@ -18,21 +18,21 @@ const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
 
     const servicios = [
         {
-            id: 1,
+            id: 'premium1',
             icono: 'url1',
             nombre: 'Servicio 1',
             items: ['Item 1', 'Item 2', 'Item 3'],
             precio: 50,
         },
         {
-            id: 2,
+            id: 'premium2',
             icono: 'url2',
             nombre: 'Servicio 2',
             items: ['Item 4', 'Item 5', 'Item 6', 'Item 7', 'Item 8'],
             precio: 75,
         },
         {
-            id: 3,
+            id: 'premium3',
             icono: 'url3',
             nombre: 'Servicio 3',
             items: ['Item 4', 'Item 5', 'Item 6', 'Item 4', 'Item 5', 'Item 6', 'Item 7', 'Item 8'],
@@ -79,11 +79,11 @@ const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
                     {servicios.map((servicio) => (
                         <Grid2  xs={12} sm={4} key={servicio.id}>
                             <SubscriptionPriceCard
+                                id={servicio.id}
                                 icon={servicio.icono}
                                 title={servicio.nombre}
                                 items={servicio.items}
                                 price={servicio.precio}
-                                onBuyClick={() => alert(`Compraste ${servicio.nombre}`)}
                             />
                         </Grid2>
                     ))}

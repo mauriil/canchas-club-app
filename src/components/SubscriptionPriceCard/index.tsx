@@ -1,27 +1,52 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import '../../App.css';
-import React from 'react';
+import React, { useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
 import Button from '@mui/material/Button';
-import { Box, Typography } from '@mui/material';
+import { Alert, AlertColor, Box, Snackbar, Typography } from '@mui/material';
 import AvatarIcon from '../Avatar';
+import MercadoUserSubscription from '../MercadoUserSubscription';
+import { createPremiumSubscription } from '../../api/users';
 
 interface SubscriptionPriceProps {
+  id: string;
   icon: string;
   title: string;
   items: string[];
   price: number;
-  onBuyClick: () => void;
 }
 
 const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
+  id,
   icon,
   title,
   items,
   price,
-  onBuyClick,
 }) => {
+  const [snackBarOpen, setSnackBarOpen] = useState(false);
+  const [snackBarMessage, setSnackBarMessage] = useState("");
+  const [snackBarSeverity, setSnackBarSeverity] = useState("success");
+  const handelSnackClose = () => {
+    setSnackBarOpen(false);
+  }
+  const [planUrl, setPlanUrl] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleBuyClick = async (id: string) => {
+    const req = await createPremiumSubscription(id);
+    if (req.statusCode !== undefined && req.statusCode >= 400) {
+      setSnackBarMessage(req.message);
+      setSnackBarSeverity('error');
+      setSnackBarOpen(true);
+      return;
+    }
+    setPlanUrl(req.paymentUrl);
+    setIsModalOpen(true);
+  };
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <>
       <Typography variant="body1" color="textSecondary" fontFamily="museo300" fontSize="1.5rem" sx={{
@@ -72,7 +97,7 @@ const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
           }}>
             ${price}
           </Typography>
-          <Button variant="contained" onClick={onBuyClick} sx={{
+          <Button variant="contained" onClick={() => handleBuyClick(id)} sx={{
             backgroundColor: 'primary.main',
             color: 'white',
             width: '100%',
@@ -82,6 +107,14 @@ const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
             Suscribirse
           </Button>
         </CardContent>
+
+        <MercadoUserSubscription isOpen={isModalOpen} onClose={handleCloseModal} url={planUrl} />
+
+        <Snackbar open={snackBarOpen} autoHideDuration={5000} onClick={handelSnackClose} onClose={handelSnackClose}>
+          <Alert severity={snackBarSeverity as AlertColor} sx={{ width: '100%', fontSize: '15px' }} onClose={handelSnackClose}>
+            {snackBarMessage}
+          </Alert>
+        </Snackbar>
       </Card></>
   );
 };
