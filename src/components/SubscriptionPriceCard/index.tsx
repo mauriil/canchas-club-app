@@ -29,7 +29,6 @@ const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
   const handelSnackClose = () => {
     setSnackBarOpen(false);
   }
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const handleBuyClick = async (id: string) => {
     const req = await createPremiumSubscription(id);
     if (req.statusCode !== undefined && req.statusCode >= 400) {
@@ -38,13 +37,7 @@ const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
       setSnackBarOpen(true);
       return;
     }
-    // open  url in new tab and reload this page
-    window.open(req.paymentUrl, '_blank');
-    window.location.reload();
-    setIsModalOpen(true);
-  };
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+    window.location.replace(req.paymentUrl);
   };
 
   return (
