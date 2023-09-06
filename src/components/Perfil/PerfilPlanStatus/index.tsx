@@ -79,8 +79,8 @@ const UserProfilePlanStatus = ({ onItemClick }: UserProfilePlanStatusProps) => {
                     borderTopRightRadius: "20px",
                 }}
             >
-                <IconButton >
-                    <ArrowBack onClick={() => onItemClick('menu')} />
+                <IconButton onClick={() => onItemClick('menu')} >
+                    <ArrowBack />
                 </IconButton>
             </Box>
             <p>DESCRIPCION DEL PLAN EN CURSO</p>

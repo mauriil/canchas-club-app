@@ -7,6 +7,7 @@ import PerfilOptions from "../../components/Perfil/PerfilOptions";
 import { getPlanStatus } from "../../api/users";
 import { useEffect, useState } from "react";
 import PerfilPlanStatus from "../../components/Perfil/PerfilPlanStatus";
+import PerfilShowPlans from "../../components/Perfil/PerfilShowPlans";
 
 const Perfil = () => {
   const { user } = useAuth();
@@ -32,9 +33,8 @@ const Perfil = () => {
       case 'myPlan':
         setSelectedOption('myPlan')
         break;
-      case 'ownerOfClub':
-        // Lógica para "Soy dueño de un club"
-        // ...
+      case 'showPlans':
+        setSelectedOption('showPlans')
         break;
       case 'mercadoPagoToken':
         // Lógica para "Mercado Pago token"
@@ -69,7 +69,7 @@ const Perfil = () => {
         height="45%"
         sx={{
           top: "0px",
-          marginTop: { md: "0px", xs: orientation === 'landscape' ? "15rem" : "0px" },
+          marginTop: { md: "0px" },
           display: { xs: "flex", md: "none" },
           flexDirection: "column",
           justifyContent: "center",
@@ -99,7 +99,7 @@ const Perfil = () => {
           { md: "0px", xs: "15rem" }
         }
         marginTop={
-          { md: "0px", xs: "6rem" }
+          { md: "0px", xs: "1rem" }
         }
       >
         <Box
@@ -161,7 +161,7 @@ const Perfil = () => {
         <Box
           sx={{
             width: { xs: "100%", md: "50%" },
-            height: "60%",
+            height: "auto",
             marginRight: { md: "3rem" },
           }}
         >
@@ -171,6 +171,9 @@ const Perfil = () => {
             ) :
             selectedOption === 'myPlan' ? (
               <PerfilPlanStatus onItemClick={handleItemClick} />
+            ) :
+            selectedOption === 'showPlans' ? (
+              <PerfilShowPlans onItemClick={handleItemClick}/>
             ) : null
           }
         </Box>

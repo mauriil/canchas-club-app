@@ -1,13 +1,11 @@
-import React from 'react';
-import { Box, Typography } from '@mui/material';
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline'; // Importa el icono necesario
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet'; // Importa el icono necesario
-import BusinessIcon from '@mui/icons-material/Business'; // Importa el icono necesario
-import KeyIcon from '@mui/icons-material/Key'; // Importa el icono necesario
-import LogoutIcon from '@mui/icons-material/Logout'; // Importa el icono necesario
+import { Box } from '@mui/material';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import BusinessIcon from '@mui/icons-material/Business';
+import KeyIcon from '@mui/icons-material/Key';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
 import Cookies from "js-cookie";
-import AvatarIcon from '../../Avatar';
 import PerfilButton from '../PerfilButton';
 
 interface UserProfileOptionsProps {
@@ -36,12 +34,13 @@ const UserProfileOptions = ({ isPremium, onItemClick }: UserProfileOptionsProps)
                 backgroundColor: { md: 'background.paper' },
                 boxShadow: { md: '0px 0px 25px 1px rgb(0,0,0)' },
             }}
+            padding={{ md: '3rem' }}
         >
             <PerfilButton text="Editar Perfil" icon={<PersonOutlineIcon />} />
             {isPremium ? (
                 <PerfilButton text="Mi plan" icon={<AccountBalanceWalletIcon />} onClick={() => onItemClick('myPlan')}  />
             ) : (
-                <PerfilButton text="Soy dueño de un club" icon={<BusinessIcon />} />
+                <PerfilButton text="Soy dueño de un club" icon={<BusinessIcon />} onClick={() => onItemClick('showPlans')} />
             )}
             <PerfilButton text="Mercado Pago token" icon={<KeyIcon />} />
             <PerfilButton

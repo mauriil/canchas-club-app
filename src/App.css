@@ -5,8 +5,15 @@
   src: url("./assets/fonts/DeliriumNcv-Vm5e.ttf");
   font-family: deliriumNeon;
   src: url("./assets/fonts/DeliriumNeonNcv-J1AK.ttf");
-  font-family: museo;
-  src: url("./assets/fonts/Museo_500.otf");
+  font-family: museo300;
+  src: local("Museo-300"),
+    url("./assets/fonts/Museo-300.ttf") format("truetype");
+  font-family: museo500;
+  src: local("Museo-500"),
+    url("./assets/fonts/Museo-500.ttf") format("truetype");
+  font-family: museo700;
+  src: local("Museo-700"),
+    url("./assets/fonts/Museo-700.ttf") format("truetype");
 }
 
 *{
