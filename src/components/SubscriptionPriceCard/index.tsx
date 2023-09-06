@@ -37,7 +37,7 @@ const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
       setSnackBarOpen(true);
       return;
     }
-    window.location.replace(req.paymentUrl);
+    window.open(req.paymentUrl);
   };
 
   return (
