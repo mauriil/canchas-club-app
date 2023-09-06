@@ -6,7 +6,6 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import { Alert, AlertColor, Box, Snackbar, Typography } from '@mui/material';
 import AvatarIcon from '../Avatar';
-import MercadoUserSubscription from '../MercadoUserSubscription';
 import { createPremiumSubscription } from '../../api/users';
 
 interface SubscriptionPriceProps {
@@ -30,7 +29,6 @@ const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
   const handelSnackClose = () => {
     setSnackBarOpen(false);
   }
-  const [planUrl, setPlanUrl] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleBuyClick = async (id: string) => {
     const req = await createPremiumSubscription(id);
@@ -40,7 +38,9 @@ const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
       setSnackBarOpen(true);
       return;
     }
-    setPlanUrl(req.paymentUrl);
+    // open  url in new tab and reload this page
+    window.open(req.paymentUrl, '_blank');
+    window.location.reload();
     setIsModalOpen(true);
   };
   const handleCloseModal = () => {
@@ -107,8 +107,6 @@ const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
             Suscribirse
           </Button>
         </CardContent>
-
-        <MercadoUserSubscription isOpen={isModalOpen} onClose={handleCloseModal} url={planUrl} />
 
         <Snackbar open={snackBarOpen} autoHideDuration={5000} onClick={handelSnackClose} onClose={handelSnackClose}>
           <Alert severity={snackBarSeverity as AlertColor} sx={{ width: '100%', fontSize: '15px' }} onClose={handelSnackClose}>
