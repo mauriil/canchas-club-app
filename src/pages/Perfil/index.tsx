@@ -2,7 +2,6 @@
 import { Box, Typography } from "@mui/material";
 import { useAuth } from "../../customHooks/useAuth";
 import AvatarIcon from "../../components/Avatar";
-import useCheckOrientation from "../../customHooks/checkOrientation";
 import PerfilOptions from "../../components/Perfil/PerfilOptions";
 import { getPlanStatus } from "../../api/users";
 import { useEffect, useState } from "react";
@@ -21,8 +20,6 @@ const Perfil = () => {
   useEffect(() => {
     void checkPremium();
   }, []);
-
-  const orientation = useCheckOrientation();
 
   const handleItemClick = (option: string) => {
     switch (option) {
@@ -66,7 +63,7 @@ const Perfil = () => {
     >
       <Box
         width="100%"
-        height="45%"
+        height="25%"
         sx={{
           top: "0px",
           marginTop: { md: "0px" },
@@ -93,7 +90,7 @@ const Perfil = () => {
         display="flex"
         justifyContent="space-between"
         alignItems="center"
-        height="100vh"
+        height="75%"
         width="100vw"
         paddingBottom={
           { md: "0px", xs: "15rem" }

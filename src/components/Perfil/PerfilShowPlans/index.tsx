@@ -9,11 +9,23 @@ interface PerfiilShowPlansProps {
 }
 
 const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
+    const [isMobilePurchase, setIsMobilePurchase] = useState(false);
+    const [purchaseUrl, setPurchaseUrl] = useState("");
     const [snackBarOpen, setSnackBarOpen] = useState(false);
     const [snackBarMessage, setSnackBarMessage] = useState("");
     const [snackBarSeverity, setSnackBarSeverity] = useState("success");
     const handelSnackClose = () => {
         setSnackBarOpen(false);
+    }
+
+    const buySubscription = (mercadoPagoURL: string) => {
+        // check  if is mobile
+        if (window.innerWidth <= 768) {
+            setIsMobilePurchase(true);
+            setPurchaseUrl(mercadoPagoURL);
+            return;
+        }
+        window.open(mercadoPagoURL);
     }
 
     const servicios = [
@@ -45,7 +57,7 @@ const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
         <Box
             display="flex"
             flexDirection="column"
-            height="100%"
+            height="auto"
             width="100%"
             borderRadius="15px"
             sx={{
@@ -71,24 +83,37 @@ const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
                 </IconButton>
             </Box>
 
-            <Box sx={{
-                margin: 1,
-                paddingBottom: '10rem',
-            }}>
-                <Grid2 container spacing={2}>
-                    {servicios.map((servicio) => (
-                        <Grid2  xs={12} sm={4} key={servicio.id}>
-                            <SubscriptionPriceCard
-                                id={servicio.id}
-                                icon={servicio.icono}
-                                title={servicio.nombre}
-                                items={servicio.items}
-                                price={servicio.precio}
-                            />
+            {
+                isMobilePurchase ?
+                (
+                    <iframe src={purchaseUrl} style={{ width: '100%', height: '65vh',  overflow: 'hidden' }}></iframe>
+                )
+                :
+                (
+                    <Box sx={{
+                        margin: 1,
+                        paddingBottom: '10rem',
+                    }}>
+                        <Grid2 container spacing={2}>
+                            {servicios.map((servicio) => (
+                                <Grid2  xs={12} sm={4} key={servicio.id}>
+                                    <SubscriptionPriceCard
+                                        id={servicio.id}
+                                        icon={servicio.icono}
+                                        title={servicio.nombre}
+                                        items={servicio.items}
+                                        price={servicio.precio}
+                                        onSubscribeClick={(mercadoPagoURL) => {
+                                            buySubscription(mercadoPagoURL);
+                                        }}
+                                    />
+                                </Grid2>
+                            ))}
                         </Grid2>
-                    ))}
-                </Grid2>
-            </Box>
+                    </Box>
+                )
+            }
+
             <Snackbar open={snackBarOpen} autoHideDuration={5000} onClick={handelSnackClose} onClose={handelSnackClose}>
                 <Alert severity={snackBarSeverity as AlertColor} sx={{ width: '100%', fontSize: '15px' }} onClose={handelSnackClose}>
                     {snackBarMessage}

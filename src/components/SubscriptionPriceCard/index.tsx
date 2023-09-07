@@ -14,6 +14,7 @@ interface SubscriptionPriceProps {
   title: string;
   items: string[];
   price: number;
+  onSubscribeClick: (mercadoPagoURL: string) => void;
 }
 
 const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
@@ -22,6 +23,7 @@ const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
   title,
   items,
   price,
+  onSubscribeClick,
 }) => {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const [snackBarMessage, setSnackBarMessage] = useState("");
@@ -37,7 +39,8 @@ const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
       setSnackBarOpen(true);
       return;
     }
-    window.open(req.paymentUrl);
+    onSubscribeClick(req.paymentUrl);
+    return;
   };
 
   return (
