@@ -19,7 +19,7 @@ export default function SimpleBottomNavigation() {
 
   const checkPremium = async () => {
     const planStatus = await getPlanStatus();
-    setIsPremium(planStatus.type !== "free");
+    setIsPremium(planStatus.type !== "free" && planStatus.status === "active");
   }
   React.useEffect(() => {
     void checkPremium();

@@ -34,6 +34,7 @@ const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
 
     const handleDialogClose = () => {
         setDialogOpen(false);
+        window.location.reload();
     }
 
     const servicios = [
