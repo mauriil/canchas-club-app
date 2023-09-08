@@ -14,7 +14,7 @@ interface SubscriptionPriceProps {
   title: string;
   items: string[];
   price: number;
-  onSubscribeClick: (mercadoPagoURL: string) => void;
+  onSubscribeClick: (buyStatus: boolean) => void;
 }
 
 const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
@@ -37,9 +37,10 @@ const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
       setSnackBarMessage(req.message);
       setSnackBarSeverity('error');
       setSnackBarOpen(true);
+      onSubscribeClick(false);
       return;
     }
-    onSubscribeClick(req.paymentUrl);
+    onSubscribeClick(true);
     return;
   };
 
@@ -51,7 +52,7 @@ const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
         color: 'primary.main',
         fontFamily: 'museo700',
         fontSize: '2rem',
-        minHeight: '4rem', // Establecer una altura fija para el CardHeader
+        minHeight: '4rem',
       }} >
         {title}
       </Typography>

@@ -1,5 +1,5 @@
 import SubscriptionPriceCard from '../../SubscriptionPriceCard';
-import { Alert, AlertColor, Box, IconButton, Snackbar } from '@mui/material';
+import { Alert, AlertColor, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Snackbar } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
 import { useState } from 'react';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
@@ -9,8 +9,8 @@ interface PerfiilShowPlansProps {
 }
 
 const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
-    const [isMobilePurchase, setIsMobilePurchase] = useState(false);
-    const [purchaseUrl, setPurchaseUrl] = useState("");
+    const [buyStatus, setBuyStatus] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
     const [snackBarOpen, setSnackBarOpen] = useState(false);
     const [snackBarMessage, setSnackBarMessage] = useState("");
     const [snackBarSeverity, setSnackBarSeverity] = useState("success");
@@ -18,14 +18,22 @@ const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
         setSnackBarOpen(false);
     }
 
-    const buySubscription = (mercadoPagoURL: string) => {
-        // check  if is mobile
-        if (window.innerWidth <= 768) {
-            setIsMobilePurchase(true);
-            setPurchaseUrl(mercadoPagoURL);
+    const buySubscription = (buyStatus: boolean) => {
+        setBuyStatus(buyStatus);
+        if (buyStatus) {
+            setSnackBarMessage("¡Suscripción en curso!");
+            setSnackBarSeverity('success');
+            setSnackBarOpen(true);
+            setDialogOpen(true);
             return;
         }
-        window.open(mercadoPagoURL);
+        setSnackBarMessage("¡Suscripción fallida!");
+        setSnackBarSeverity('error');
+        setSnackBarOpen(true);
+    }
+
+    const handleDialogClose = () => {
+        setDialogOpen(false);
     }
 
     const servicios = [
@@ -83,36 +91,42 @@ const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
                 </IconButton>
             </Box>
 
-            {
-                isMobilePurchase ?
-                (
-                    <iframe src={purchaseUrl} style={{ width: '100%', height: '65vh',  overflow: 'hidden' }}></iframe>
-                )
-                :
-                (
-                    <Box sx={{
-                        margin: 1,
-                        paddingBottom: '10rem',
-                    }}>
-                        <Grid2 container spacing={2}>
-                            {servicios.map((servicio) => (
-                                <Grid2  xs={12} sm={4} key={servicio.id}>
-                                    <SubscriptionPriceCard
-                                        id={servicio.id}
-                                        icon={servicio.icono}
-                                        title={servicio.nombre}
-                                        items={servicio.items}
-                                        price={servicio.precio}
-                                        onSubscribeClick={(mercadoPagoURL) => {
-                                            buySubscription(mercadoPagoURL);
-                                        }}
-                                    />
-                                </Grid2>
-                            ))}
+            <Box sx={{
+                margin: 1,
+                paddingBottom: '10rem',
+            }}>
+                <Grid2 container spacing={2}>
+                    {servicios.map((servicio) => (
+                        <Grid2 xs={12} sm={4} key={servicio.id}>
+                            <SubscriptionPriceCard
+                                id={servicio.id}
+                                icon={servicio.icono}
+                                title={servicio.nombre}
+                                items={servicio.items}
+                                price={servicio.precio}
+                                onSubscribeClick={(buyStatus) => {
+                                    buySubscription(buyStatus);
+                                }}
+                            />
                         </Grid2>
-                    </Box>
-                )
-            }
+                    ))}
+                </Grid2>
+            </Box>
+
+            <Box>
+                <Dialog open={dialogOpen} onClose={handleDialogClose}>
+                    <DialogTitle>¡Suscripción exitosa!</DialogTitle>
+                    <DialogContent>
+                        <p>Tu pedido de suscripción se ha realizado con éxito. Por favor revisa tu casilla de e-mail para seguir instrucciones</p>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleDialogClose} color="primary">
+                            Cerrar
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </Box>
+
 
             <Snackbar open={snackBarOpen} autoHideDuration={5000} onClick={handelSnackClose} onClose={handelSnackClose}>
                 <Alert severity={snackBarSeverity as AlertColor} sx={{ width: '100%', fontSize: '15px' }} onClose={handelSnackClose}>
