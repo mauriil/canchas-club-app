@@ -14,7 +14,8 @@ interface SubscriptionPriceProps {
   title: string;
   items: string[];
   price: number;
-  onSubscribeClick: (buyStatus: boolean) => void;
+  onSubscribeResolve: (buyStatus: boolean) => void;
+  onSubscribeClick: () => void;
 }
 
 const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
@@ -23,7 +24,9 @@ const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
   title,
   items,
   price,
+  onSubscribeResolve,
   onSubscribeClick,
+
 }) => {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const [snackBarMessage, setSnackBarMessage] = useState("");
@@ -32,15 +35,16 @@ const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
     setSnackBarOpen(false);
   }
   const handleBuyClick = async (id: string) => {
+    onSubscribeClick();
     const req = await createPremiumSubscription(id);
     if (req.statusCode !== undefined && req.statusCode >= 400) {
       setSnackBarMessage(req.message);
       setSnackBarSeverity('error');
       setSnackBarOpen(true);
-      onSubscribeClick(false);
+      onSubscribeResolve(false);
       return;
     }
-    onSubscribeClick(true);
+    onSubscribeResolve(true);
     return;
   };
 

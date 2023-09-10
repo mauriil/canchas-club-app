@@ -3,13 +3,14 @@ import { Alert, AlertColor, Box, Button, Dialog, DialogActions, DialogContent, D
 import { ArrowBack } from '@mui/icons-material';
 import { useState } from 'react';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
+import CanchasClubLoader from '../../Loader';
 
 interface PerfiilShowPlansProps {
     onItemClick: (option: string) => void;
 }
 
 const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
-    const [buyStatus, setBuyStatus] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [snackBarOpen, setSnackBarOpen] = useState(false);
     const [snackBarMessage, setSnackBarMessage] = useState("");
@@ -19,7 +20,7 @@ const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
     }
 
     const buySubscription = (buyStatus: boolean) => {
-        setBuyStatus(buyStatus);
+        setLoading(false);
         if (buyStatus) {
             setSnackBarMessage("¡Suscripción en curso!");
             setSnackBarSeverity('success');
@@ -92,27 +93,33 @@ const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
                 </IconButton>
             </Box>
 
-            <Box sx={{
-                margin: 1,
-                paddingBottom: '10rem',
-            }}>
-                <Grid2 container spacing={2}>
-                    {servicios.map((servicio) => (
-                        <Grid2 xs={12} sm={4} key={servicio.id}>
-                            <SubscriptionPriceCard
-                                id={servicio.id}
-                                icon={servicio.icono}
-                                title={servicio.nombre}
-                                items={servicio.items}
-                                price={servicio.precio}
-                                onSubscribeClick={(buyStatus) => {
-                                    buySubscription(buyStatus);
-                                }}
-                            />
-                        </Grid2>
-                    ))}
-                </Grid2>
-            </Box>
+            {loading ? (
+                <CanchasClubLoader />
+            ) : (
+                <Box sx={{
+                    margin: 1,
+                    paddingBottom: '10rem',
+                }}>
+                    <Grid2 container spacing={2}>
+                        {servicios.map((servicio) => (
+                            <Grid2 xs={12} sm={4} key={servicio.id}>
+                                <SubscriptionPriceCard
+                                    id={servicio.id}
+                                    icon={servicio.icono}
+                                    title={servicio.nombre}
+                                    items={servicio.items}
+                                    price={servicio.precio}
+                                    onSubscribeClick={() => setLoading(true)}
+                                    onSubscribeResolve={(buyStatus) => {
+                                        buySubscription(buyStatus);
+                                    }}
+                                />
+                            </Grid2>
+                        ))}
+                    </Grid2>
+                </Box>
+            )}
+
 
             <Box>
                 <Dialog open={dialogOpen} onClose={handleDialogClose}>

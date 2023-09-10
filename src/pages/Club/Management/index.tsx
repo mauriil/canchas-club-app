@@ -12,6 +12,7 @@ import { getClubById } from "../../../api/clubs";
 import TopBar from "../../../components/TopBar";
 import { Share } from "@mui/icons-material";
 import ClubAvatar from "../../../components/ClubAvatar";
+import CanchasClubLoader from "../../../components/Loader";
 
 const ClubManagement = () => {
     const navigate = useNavigate();
@@ -81,7 +82,9 @@ const ClubManagement = () => {
     };
 
     if (clubData.name === "") {
-        return <div>Loading...</div>;
+        return (
+            <CanchasClubLoader />
+        );
     }
 
     return (
