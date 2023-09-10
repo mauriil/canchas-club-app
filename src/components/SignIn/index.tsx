@@ -15,8 +15,8 @@ import { useForm } from "react-hook-form";
 import { useAuth } from "../../customHooks/useAuth";
 import { useEffect, useState } from "react";
 import { User } from "../../types/users";
-import { ThreeDots } from "react-loader-spinner";
 import { Alert, AlertColor, Snackbar } from "@mui/material";
+import CanchasClubLoader from "../Loader";
 
 function Copyright(props: any) {
   return (
@@ -103,15 +103,7 @@ export default function SignIn() {
         </Typography>
 
         {loading ? (
-          <ThreeDots
-            height="80"
-            width="80"
-            radius="9"
-            color="#5f7174"
-            ariaLabel="three-dots-loading"
-            wrapperStyle={{}}
-            wrapperClass="spinner-wrapper"
-          />
+          <CanchasClubLoader />
         ) : (
           <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={onSubmit} width={"100%"}>
             <TextField

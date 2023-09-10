@@ -3,8 +3,6 @@
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -12,12 +10,12 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { NavLink, useNavigate } from "react-router-dom";
-import { ThreeDots } from "react-loader-spinner";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../customHooks/useAuth";
 import { ForgotPasswordRequestBody } from "../../types/users";
 import { Alert, AlertColor, Snackbar } from "@mui/material";
+import CanchasClubLoader from "../Loader";
 
 function Copyright(props: any) {
   return (
@@ -106,15 +104,7 @@ export default function ForgotPassword() {
         </Typography>
 
         {loading ? (
-          <ThreeDots
-            height="80"
-            width="80"
-            radius="9"
-            color="#5f7174"
-            ariaLabel="three-dots-loading"
-            wrapperStyle={{}}
-            wrapperClass="spinner-wrapper"
-          />
+          <CanchasClubLoader />
         ) : (
           <Box component="form" onSubmit={onSubmit} noValidate sx={{ mt: 1 }} width={"100%"}>
             <TextField
