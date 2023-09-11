@@ -83,7 +83,7 @@ const ClubManagement = () => {
 
     if (clubData.name === "") {
         return (
-            <CanchasClubLoader />
+            <CanchasClubLoader width="10%"/>
         );
     }
 

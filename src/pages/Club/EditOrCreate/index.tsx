@@ -8,7 +8,7 @@ import { createClub, deleteClub, editClub, getClubById } from '../../../api/club
 import { useDropzone } from 'react-dropzone';
 import uploadFileToS3 from '../../../api/uploadFileToS3';
 import TopBar from '../../../components/TopBar';
-import { Alert, AlertColor, Avatar, Box, Button, Snackbar, Step, StepLabel, Stepper, TextField, Typography } from '@mui/material';
+import { Alert, AlertColor, Avatar, Box, Button, CircularProgress, LinearProgress, Snackbar, Step, StepLabel, Stepper, TextField, Typography } from '@mui/material';
 import ProvinceDropdown from '../../../components/ProvinceDropdown';
 import AddressAutocomplete from '../../../components/AddressAutocomplete';
 import Map from '../../../components/Map';
@@ -18,6 +18,7 @@ import ClubClosedDaysPicker from '../../../components/ClubClosedDaysPicker';
 import { useNavigate } from 'react-router-dom';
 import { Club } from '../../../types/clubs';
 import ConfirmationDialog from '../../../components/ConfirmationDialog';
+import CanchasClubLoader from '../../../components/Loader';
 
 const steps = ['Información básica', 'Colores y logo', 'Días cerrados'];
 
@@ -26,6 +27,8 @@ interface EditOrCreateClubProps {
 }
 
 const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
+    const [isLoadingImage, setIsLoadingImage] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
     const [snackBarOpen, setSnackBarOpen] = useState(false);
     const [snackBarMessage, setSnackBarMessage] = useState("");
     const [snackBarSeverity, setSnackBarSeverity] = useState("success");
@@ -145,12 +148,24 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
     };
 
     const handleFileUpload = async (acceptedFiles) => {
-        const file = acceptedFiles[0];
-        const fileUrl = await uploadFileToS3('clublogos', clubData.name, file);
-        setClubData((prevData) => ({
-            ...prevData,
-            logo: fileUrl,
-        }));
+        setIsLoadingImage(true);
+        try {
+            const file = acceptedFiles[0];
+            const fileUrl = await uploadFileToS3('clublogos', clubData.name, file, (progress) => {
+                setUploadProgress(progress);
+            });
+            setClubData((prevData) => ({
+                ...prevData,
+                logo: fileUrl,
+            }));
+            setIsLoadingImage(false);
+        } catch (error) {
+            console.error('Error uploading file:', error);
+            setSnackBarMessage('Error al subir la imagen');
+            setSnackBarSeverity('error');
+            setSnackBarOpen(true);
+            setIsLoadingImage(false);
+        }
     };
 
     const { getRootProps, getInputProps } = useDropzone({
@@ -335,7 +350,7 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                                 alignItems: "center",
                                 width: "100%",
                             }}>
-                            <Typography variant="h6">Colores y logo:</Typography>
+                            <Typography variant="h6"  sx={{marginBottom: 2}}>Colores y logo:</Typography>
                             <Box
                                 sx={{
                                     display: "flex",
@@ -344,19 +359,38 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                                     marginBottom: 3,
                                 }}
                             >
-                                <div {...getRootProps()}>
-                                    <input {...getInputProps()} />
-                                    <ClubAvatar
-                                        logo={clubData.logo}
-                                        colors={{
-                                            primary: clubData.colors.primary,
-                                            secondary: clubData.colors.secondary
-                                        }}
-                                        title={clubData.name}
-                                        width="130px"
-                                        height="130px"
-                                    />
-                                </div>
+                                {isLoadingImage ? (
+                                    <Box>
+                                        <CanchasClubLoader width="10%" />
+                                        <LinearProgress
+                                            variant="determinate"
+                                            value={uploadProgress}
+                                            sx={{
+                                                width: '150px', // Ancho personalizado
+                                                height: '8px',   // Altura personalizada
+                                                marginRight: '8px', // Margen derecho para separar el número de porcentaje
+                                            }}
+                                        />
+                                        <Typography variant="body2" color="textSecondary">
+                                            {`${uploadProgress}%`}
+                                        </Typography>
+                                    </Box>
+                                ) : (
+                                    <div {...getRootProps()}>
+                                        <input {...getInputProps()} />
+                                        <ClubAvatar
+                                            logo={clubData.logo}
+                                            colors={{
+                                                primary: clubData.colors.primary,
+                                                secondary: clubData.colors.secondary
+                                            }}
+                                            title={clubData.name}
+                                            width="130px"
+                                            height="130px"
+                                        />
+                                    </div>
+                                )}
+
                             </Box>
                             <Box
                                 sx={{
