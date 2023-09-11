@@ -94,7 +94,7 @@ const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
             </Box>
 
             {loading ? (
-                <CanchasClubLoader />
+                <CanchasClubLoader width='10%' />
             ) : (
                 <Box sx={{
                     margin: 1,

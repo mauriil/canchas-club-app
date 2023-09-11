@@ -15,7 +15,8 @@ const Perfil = () => {
 
   const checkPremium = async () => {
     const planStatus = await getPlanStatus();
-    setIsPremium(planStatus.type !== "free");
+    console.log("🚀 ~ file: index.tsx:18 ~ checkPremium ~ planStatus:", planStatus)
+    setIsPremium(planStatus.type !== "free" && planStatus.type !== "");
   }
   useEffect(() => {
     void checkPremium();

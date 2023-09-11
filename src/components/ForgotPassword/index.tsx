@@ -104,7 +104,7 @@ export default function ForgotPassword() {
         </Typography>
 
         {loading ? (
-          <CanchasClubLoader />
+          <CanchasClubLoader width="50%" />
         ) : (
           <Box component="form" onSubmit={onSubmit} noValidate sx={{ mt: 1 }} width={"100%"}>
             <TextField
