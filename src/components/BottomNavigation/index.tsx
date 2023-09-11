@@ -10,7 +10,7 @@ import AvatarIcon from "../Avatar";
 import HomeIcon from "@mui/icons-material/Home";
 import { NavLink } from "react-router-dom";
 import { getPlanStatus } from "../../api/users";
-
+import canchasClubLogo from "../../assets/images/canchasCubLogo.png";
 
 export default function SimpleBottomNavigation() {
   const [value, setValue] = React.useState(0);
@@ -20,7 +20,7 @@ export default function SimpleBottomNavigation() {
   const checkPremium = async () => {
     const planStatus = await getPlanStatus();
     setIsPremium(planStatus.type !== "free" && planStatus.status === "active");
-  }
+  };
   React.useEffect(() => {
     void checkPremium();
   }, []);
@@ -60,7 +60,19 @@ export default function SimpleBottomNavigation() {
             </NavLink>
           }
         />
-
+        <BottomNavigationAction
+          icon={
+            <NavLink to="home">
+              <Box
+                height="50px"
+                component="img"
+                alt="Logo Canchas Club"
+                src={canchasClubLogo}
+                className="logo"
+              />
+            </NavLink>
+          }
+        />
         {isPremium && (
           <BottomNavigationAction
             label="Mis Clubes"
@@ -81,6 +93,6 @@ export default function SimpleBottomNavigation() {
           }
         />
       </BottomNavigation>
-    </Box >
+    </Box>
   );
 }

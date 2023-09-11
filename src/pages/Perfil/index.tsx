@@ -16,29 +16,29 @@ const Perfil = () => {
   const checkPremium = async () => {
     const planStatus = await getPlanStatus();
     setIsPremium(planStatus.type !== "free");
-  }
+  };
   useEffect(() => {
     void checkPremium();
   }, []);
 
   const handleItemClick = (option: string) => {
     switch (option) {
-      case 'editProfile':
+      case "editProfile":
         // Lógica para "Editar Perfil"
         // ...
         break;
-      case 'myPlan':
-        setSelectedOption('myPlan')
+      case "myPlan":
+        setSelectedOption("myPlan");
         break;
-      case 'showPlans':
-        setSelectedOption('showPlans')
+      case "showPlans":
+        setSelectedOption("showPlans");
         break;
-      case 'mercadoPagoToken':
+      case "mercadoPagoToken":
         // Lógica para "Mercado Pago token"
         // ...
         break;
       default:
-        setSelectedOption('menu')
+        setSelectedOption("menu");
         break;
     }
   };
@@ -51,8 +51,8 @@ const Perfil = () => {
         backgroundImage: {
           md: `url(https://canchas-club.s3.amazonaws.com/CanchasClub_IdentidadMarca/FONDO+DEPORTES/CanchasClub_FondoDeportes_EDITABLE-01.jpg)`,
         },
-        backgroundSize:{
-          md: "cover"
+        backgroundSize: {
+          md: "cover",
         },
       }}
       display="flex"
@@ -92,12 +92,8 @@ const Perfil = () => {
         alignItems="center"
         height="75%"
         width="100vw"
-        paddingBottom={
-          { md: "0px", xs: "15rem" }
-        }
-        marginTop={
-          { md: "0px", xs: "1rem" }
-        }
+        paddingBottom={{ md: "0px", xs: "15rem" }}
+        marginTop={{ md: "0px", xs: "1rem" }}
       >
         <Box
           sx={{
@@ -162,17 +158,16 @@ const Perfil = () => {
             marginRight: { md: "3rem" },
           }}
         >
-          {
-            selectedOption === 'menu' ? (
-              <PerfilOptions isPremium={isPremium} onItemClick={handleItemClick}/>
-            ) :
-            selectedOption === 'myPlan' ? (
-              <PerfilPlanStatus onItemClick={handleItemClick} />
-            ) :
-            selectedOption === 'showPlans' ? (
-              <PerfilShowPlans onItemClick={handleItemClick}/>
-            ) : null
-          }
+          {selectedOption === "menu" ? (
+            <PerfilOptions
+              isPremium={isPremium}
+              onItemClick={handleItemClick}
+            />
+          ) : selectedOption === "myPlan" ? (
+            <PerfilPlanStatus onItemClick={handleItemClick} />
+          ) : selectedOption === "showPlans" ? (
+            <PerfilShowPlans onItemClick={handleItemClick} />
+          ) : null}
         </Box>
       </Box>
     </Box>

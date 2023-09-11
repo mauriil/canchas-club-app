@@ -1,18 +1,53 @@
-import { Box } from "@mui/material";
-import Title from "../../components/Title";
+import { Grid } from "@mui/material";
+import { useEffect, useState } from "react";
+import { getAllBookingsByUser } from "../../api/bookings";
+import { useAuth } from "../../customHooks/useAuth";
 
-const misReservas = () => {
+const MisReservas = () => {
+  const [booking, setBooking] = useState({});
+  const { user } = useAuth();
+
+  const getBookings = async () => {
+    const id = +user?.userId | 0;
+    const bookingsOfUser = await getAllBookingsByUser(id);
+    setBooking(bookingsOfUser);
+  };
+
+  useEffect(() => {
+    void getBookings();
+  }, []);
+
   return (
-    <Box
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      width="100%"
-      height="100%"
+    <Grid
+      container
+      rowSpacing={2}
+      columnSpacing={{ xs: 0, sm: 2, md: 3 }}
+      sx={{
+        flexGrow: 1,
+        paddingLeft: 0,
+        display: "flex",
+        justifyContent: "center",
+      }}
     >
-      <Title firtLineTitle="Mis" secondLineTitle="Reservas" />
-    </Box>
+      {booking.map((booking) => {
+        return (
+          <Grid
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            key={booking.id}
+            item
+            xs={12}
+            sm={6}
+            lg={4}
+            xl={3}
+          >
+            <BookingCard booking={booking} />
+          </Grid>
+        );
+      })}
+    </Grid>
   );
 };
 
-export default misReservas;
+export default MisReservas;
