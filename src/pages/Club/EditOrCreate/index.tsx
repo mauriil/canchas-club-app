@@ -27,6 +27,7 @@ interface EditOrCreateClubProps {
 }
 
 const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
+    const [submittingForm, setSubmittingForm] = useState(false);
     const [isLoadingImage, setIsLoadingImage] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [snackBarOpen, setSnackBarOpen] = useState(false);
@@ -111,6 +112,7 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
     };
 
     const handleSubmit = async () => {
+        setSubmittingForm(true);
         if (editMode) {
             try {
                 await editClub(clubData, clubData._id);
@@ -122,6 +124,7 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                 }, 1500);
                 return;
             } catch (error) {
+                setSubmittingForm(false);
                 console.error('Error al editar el club:', error);
             }
         } else {
@@ -142,6 +145,7 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                 }, 1500);
                 return;
             } catch (error) {
+                setSubmittingForm(false);
                 console.error('Error al crear el club:', error);
             }
         }
@@ -235,306 +239,312 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
         <>
             <TopBar />
 
-            <Box p={4} sx={{
-                marginTop: 1,
-                alignItems: "center",
-            }}>
-
-                <Box sx={{
-                    display: "flex",
-                    justifyContent: "flex-start",
-                    width: "100%",
-                    marginTop: 3,
-                    marginBottom: 3,
+            {submittingForm ? (
+                <CanchasClubLoader width="10%" />
+            ) : (
+                <Box p={4} sx={{
+                    marginTop: 1,
+                    alignItems: "center",
                 }}>
-                    <Typography variant="h4" gutterBottom sx={{ marginRight: 3 }}>
-                        {editMode ? `Editar club ${clubData.name}` : 'Crear un nuevo club'}
-                    </Typography>
-                    {editMode ?
-                        <Button
-                            variant="outlined"
-                            color="error"
-                            onClick={() => setOpenDeleteDialog(true)}
-                        >
-                            Eliminar club
-                        </Button>
-                        :
-                        null}
 
-                    <ConfirmationDialog
-                        open={openDeleteDialog}
-                        onClose={() => setOpenDeleteDialog(false)}
-                        onConfirm={handleDelete}
-                        message={`¿Estás seguro que querés eliminar el club ${clubData.name}?
-                        Todas las configuraciones y las canchas asociadas se eliminarán, asi como también todos aquellos turnos futuros confirmados y/o los turnos fijos se cancelarán.
-                        Esta acción no se puede deshacer.`}
-                    />
-                </Box>
-                <Stepper activeStep={activeStep} alternativeLabel>
-                    {steps.map((label) => (
-                        <Step key={label}>
-                            <StepLabel>{label}</StepLabel>
-                        </Step>
-                    ))}
-                </Stepper>
-                <Box mt={4}>
-                    {activeStep === 0 && (
-                        <Box
-                            sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                width: "100%"
-                            }}>
-                            <Typography variant="h6" sx={{ marginBottom: 2 }}>Información básica:</Typography>
-                            <TextField
-                                label="Nombre"
-                                fullWidth
-                                value={clubData.name}
-                                onChange={(e) => handleInputChange('name', e.target.value)}
-                                sx={{ marginBottom: 2, }}
-                                error={clubData.name === '' && buttonNextClicked}
-                                helperText={clubData.name === '' && buttonNextClicked ? 'Campo requerido' : ''}
-                            />
-                            <TextField
-                                label="Descripción"
-                                fullWidth
-                                value={clubData.description}
-                                onChange={(e) => handleInputChange('description', e.target.value)}
-                                sx={{ marginBottom: 2, }}
-                                error={clubData.description === '' && buttonNextClicked}
-                                helperText={clubData.description === '' && buttonNextClicked ? 'Campo requerido' : ''}
-                            />
-                            <TextField
-                                label="Alias"
-                                fullWidth
-                                value={clubData.alias}
-                                onChange={(e) => handleInputChange('alias', e.target.value)}
-                                sx={{ marginBottom: 2, }}
-                                error={clubData.alias === '' && buttonNextClicked}
-                                helperText={clubData.alias === '' && buttonNextClicked ? 'Campo requerido' : ''}
-                            />
-                            <ProvinceDropdown
-                                value={clubData.city}
-                                onChange={(province: any) => handleInputChange('city', province)}
-                                error={clubData.city === '' && buttonNextClicked}
-                                errorValue={clubData.city === '' && buttonNextClicked ? 'Campo requerido' : ''}
-                            />
-                            <AddressAutocomplete
-                                value={clubData.address}
-                                onChange={(address: any) => handleAddressChange(address)}
-                                error={clubData.address === '' && buttonNextClicked}
-                                helperText={clubData.address === '' && buttonNextClicked ? 'Campo requerido' : ''}
-                            />
-
-
-                            {clubData.latitude !== '0' && clubData.longitude !== '0' && (
-                                <Map latitude={parseFloat(clubData.latitude)} longitude={parseFloat(clubData.longitude)} onMarkerDragEnd={(position: any) => handleLatLongChange(position)} />
-                            )}
-
+                    <Box sx={{
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        width: "100%",
+                        marginTop: 3,
+                        marginBottom: 3,
+                    }}>
+                        <Typography variant="h4" gutterBottom sx={{ marginRight: 3 }}>
+                            {editMode ? `Editar club ${clubData.name}` : 'Crear un nuevo club'}
+                        </Typography>
+                        {editMode ?
                             <Button
                                 variant="outlined"
-                                color="primary"
-                                onClick={handleNext}
-                                sx={{ mt: 2, marginTop: 3 }}
+                                color="error"
+                                onClick={() => setOpenDeleteDialog(true)}
                             >
-                                Siguiente
+                                Eliminar club
                             </Button>
-                        </Box>
-                    )}
-                    {activeStep === 1 && (
-                        <Box
-                            sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                width: "100%",
-                            }}>
-                            <Typography variant="h6"  sx={{marginBottom: 2}}>Colores y logo:</Typography>
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    marginBottom: 3,
-                                }}
-                            >
-                                {isLoadingImage ? (
-                                    <Box>
-                                        <CanchasClubLoader width="10%" />
-                                        <LinearProgress
-                                            variant="determinate"
-                                            value={uploadProgress}
-                                            sx={{
-                                                width: '150px', // Ancho personalizado
-                                                height: '8px',   // Altura personalizada
-                                                marginRight: '8px', // Margen derecho para separar el número de porcentaje
-                                            }}
-                                        />
-                                        <Typography variant="body2" color="textSecondary">
-                                            {`${uploadProgress}%`}
-                                        </Typography>
-                                    </Box>
-                                ) : (
-                                    <div {...getRootProps()}>
-                                        <input {...getInputProps()} />
-                                        <ClubAvatar
-                                            logo={clubData.logo}
-                                            colors={{
-                                                primary: clubData.colors.primary,
-                                                secondary: clubData.colors.secondary
-                                            }}
-                                            title={clubData.name}
-                                            width="130px"
-                                            height="130px"
-                                        />
-                                    </div>
-                                )}
+                            :
+                            null}
 
-                            </Box>
+                        <ConfirmationDialog
+                            open={openDeleteDialog}
+                            onClose={() => setOpenDeleteDialog(false)}
+                            onConfirm={handleDelete}
+                            message={`¿Estás seguro que querés eliminar el club ${clubData.name}?
+                            Todas las configuraciones y las canchas asociadas se eliminarán, asi como también todos aquellos turnos futuros confirmados y/o los turnos fijos se cancelarán.
+                            Esta acción no se puede deshacer.`}
+                        />
+                    </Box>
+                    <Stepper activeStep={activeStep} alternativeLabel>
+                        {steps.map((label) => (
+                            <Step key={label}>
+                                <StepLabel>{label}</StepLabel>
+                            </Step>
+                        ))}
+                    </Stepper>
+                    <Box mt={4}>
+                        {activeStep === 0 && (
                             <Box
                                 sx={{
                                     display: "flex",
                                     flexDirection: "column",
                                     alignItems: "center",
-                                    gap: 7,
-                                    "@media (min-width:600px)": {
-                                        flexDirection: "row",
-                                    },
-                                    marginBottom: 3,
-                                }}
-                            >
-                                <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                                    <Typography variant="subtitle1">Color primario:</Typography>
-                                    <CirclePicker
-                                        color={clubData.colors.primary}
-                                        onChange={handlePrimaryColorChange}
-                                    />
-                                </Box>
-                                <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                                    <Typography variant="subtitle1">Color secundario:</Typography>
-                                    <CirclePicker
-                                        color={clubData.colors.secondary}
-                                        onChange={handleSecondaryColorChange}
-                                    />
-                                </Box>
-                            </Box>
+                                    width: "100%"
+                                }}>
+                                <Typography variant="h6" sx={{ marginBottom: 2 }}>Información básica:</Typography>
+                                <TextField
+                                    label="Nombre"
+                                    fullWidth
+                                    value={clubData.name}
+                                    onChange={(e) => handleInputChange('name', e.target.value)}
+                                    sx={{ marginBottom: 2, }}
+                                    error={clubData.name === '' && buttonNextClicked}
+                                    helperText={clubData.name === '' && buttonNextClicked ? 'Campo requerido' : ''}
+                                />
+                                <TextField
+                                    label="Descripción"
+                                    fullWidth
+                                    value={clubData.description}
+                                    onChange={(e) => handleInputChange('description', e.target.value)}
+                                    sx={{ marginBottom: 2, }}
+                                    error={clubData.description === '' && buttonNextClicked}
+                                    helperText={clubData.description === '' && buttonNextClicked ? 'Campo requerido' : ''}
+                                />
+                                <TextField
+                                    label="Alias"
+                                    fullWidth
+                                    value={clubData.alias}
+                                    onChange={(e) => handleInputChange('alias', e.target.value)}
+                                    sx={{ marginBottom: 2, }}
+                                    error={clubData.alias === '' && buttonNextClicked}
+                                    helperText={clubData.alias === '' && buttonNextClicked ? 'Campo requerido' : ''}
+                                />
+                                <ProvinceDropdown
+                                    value={clubData.city}
+                                    onChange={(province: any) => handleInputChange('city', province)}
+                                    error={clubData.city === '' && buttonNextClicked}
+                                    errorValue={clubData.city === '' && buttonNextClicked ? 'Campo requerido' : ''}
+                                />
+                                <AddressAutocomplete
+                                    value={clubData.address}
+                                    onChange={(address: any) => handleAddressChange(address)}
+                                    error={clubData.address === '' && buttonNextClicked}
+                                    helperText={clubData.address === '' && buttonNextClicked ? 'Campo requerido' : ''}
+                                />
 
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    width: "100%",
-                                    marginTop: 2,
-                                }}
-                            >
-                                <Button
-                                    variant="outlined"
-                                    color="secondary"
-                                    onClick={handleBack}
-                                >
-                                    Atrás
-                                </Button>
+
+                                {clubData.latitude !== '0' && clubData.longitude !== '0' && (
+                                    <Map latitude={parseFloat(clubData.latitude)} longitude={parseFloat(clubData.longitude)} onMarkerDragEnd={(position: any) => handleLatLongChange(position)} />
+                                )}
+
                                 <Button
                                     variant="outlined"
                                     color="primary"
                                     onClick={handleNext}
+                                    sx={{ mt: 2, marginTop: 3 }}
                                 >
                                     Siguiente
                                 </Button>
                             </Box>
-                        </Box>
-                    )}
-                    {activeStep === 2 && (
-                        <Box
-                            sx={{
+                        )}
+                        {activeStep === 1 && (
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                    width: "100%",
+                                }}>
+                                <Typography variant="h6" sx={{ marginBottom: 2 }}>Colores y logo:</Typography>
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        marginBottom: 3,
+                                    }}
+                                >
+                                    {isLoadingImage ? (
+                                        <Box>
+                                            <CanchasClubLoader width="10%" />
+                                            <LinearProgress
+                                                variant="determinate"
+                                                value={uploadProgress}
+                                                sx={{
+                                                    width: '150px', // Ancho personalizado
+                                                    height: '8px',   // Altura personalizada
+                                                    marginRight: '8px', // Margen derecho para separar el número de porcentaje
+                                                }}
+                                            />
+                                            <Typography variant="body2" color="textSecondary">
+                                                {`${uploadProgress}%`}
+                                            </Typography>
+                                        </Box>
+                                    ) : (
+                                        <div {...getRootProps()}>
+                                            <input {...getInputProps()} />
+                                            <ClubAvatar
+                                                logo={clubData.logo}
+                                                colors={{
+                                                    primary: clubData.colors.primary,
+                                                    secondary: clubData.colors.secondary
+                                                }}
+                                                title={clubData.name}
+                                                width="130px"
+                                                height="130px"
+                                            />
+                                        </div>
+                                    )}
+
+                                </Box>
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "center",
+                                        gap: 7,
+                                        "@media (min-width:600px)": {
+                                            flexDirection: "row",
+                                        },
+                                        marginBottom: 3,
+                                    }}
+                                >
+                                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                                        <Typography variant="subtitle1">Color primario:</Typography>
+                                        <CirclePicker
+                                            color={clubData.colors.primary}
+                                            onChange={handlePrimaryColorChange}
+                                        />
+                                    </Box>
+                                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                                        <Typography variant="subtitle1">Color secundario:</Typography>
+                                        <CirclePicker
+                                            color={clubData.colors.secondary}
+                                            onChange={handleSecondaryColorChange}
+                                        />
+                                    </Box>
+                                </Box>
+
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        width: "100%",
+                                        marginTop: 2,
+                                    }}
+                                >
+                                    <Button
+                                        variant="outlined"
+                                        color="secondary"
+                                        onClick={handleBack}
+                                    >
+                                        Atrás
+                                    </Button>
+                                    <Button
+                                        variant="outlined"
+                                        color="primary"
+                                        onClick={handleNext}
+                                    >
+                                        Siguiente
+                                    </Button>
+                                </Box>
+                            </Box>
+                        )}
+                        {activeStep === 2 && (
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                }}>
+                                <Typography variant="h6">Días cerrados:</Typography>
+                                <ClubClosedDaysPicker
+                                    selectedDays={clubData.closedDays}
+                                    onChange={(closedDays: any) => handleInputChange('closedDays', closedDays)}
+                                />
+
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        width: "100%",
+                                        marginTop: 3,
+                                    }}
+                                >
+                                    <Button
+                                        variant="outlined"
+                                        color="secondary"
+                                        onClick={handleBack}
+                                    >
+                                        Atrás
+                                    </Button>
+                                    <Button
+                                        variant="outlined"
+                                        color="primary"
+                                        onClick={handleNext}
+                                    >
+                                        Siguiente
+                                    </Button>
+                                </Box>
+                            </Box>
+                        )}
+                        {activeStep === steps.length && (
+                            <Box sx={{
                                 display: "flex",
                                 flexDirection: "column",
                                 alignItems: "center",
                             }}>
-                            <Typography variant="h6">Días cerrados:</Typography>
-                            <ClubClosedDaysPicker
-                                selectedDays={clubData.closedDays}
-                                onChange={(closedDays: any) => handleInputChange('closedDays', closedDays)}
-                            />
+                                <Typography variant="h6" sx={{ margin: 1 }}>Confirmar y crear:</Typography>
+                                <Typography sx={{ margin: 1 }}>
+                                    Por favor revisa la información antes de crear el club.
+                                </Typography>
+                                <ClubAvatar
+                                    logo={clubData.logo}
+                                    colors={{
+                                        primary: clubData.colors.primary,
+                                        secondary: clubData.colors.secondary
+                                    }}
+                                    title={clubData.name}
+                                    width="130px"
+                                    height="130px"
+                                />
+                                <Typography><h3>{clubData.description}</h3></Typography>
+                                <Typography>Dirección: {clubData.address}</Typography>
+                                <Typography>Provincia: {clubData.city}</Typography>
+                                <Typography>Alias: {clubData.alias}</Typography>
 
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    width: "100%",
-                                    marginTop: 3,
-                                }}
-                            >
-                                <Button
-                                    variant="outlined"
-                                    color="secondary"
-                                    onClick={handleBack}
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        width: "100%",
+                                        marginTop: 3,
+                                    }}
                                 >
-                                    Atrás
-                                </Button>
-                                <Button
-                                    variant="outlined"
-                                    color="primary"
-                                    onClick={handleNext}
-                                >
-                                    Siguiente
-                                </Button>
+                                    <Button variant="outlined"
+                                        color="secondary"
+                                        onClick={handleBack} sx={{ mt: 2 }}>
+                                        Atrás
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={handleSubmit}
+                                        sx={{ mt: 2 }}
+                                    >
+                                        {editMode ? 'Guardar cambios' : 'Crear club'}
+                                    </Button>
+                                </Box>
+
                             </Box>
-                        </Box>
-                    )}
-                    {activeStep === steps.length && (
-                        <Box sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                        }}>
-                            <Typography variant="h6" sx={{ margin: 1 }}>Confirmar y crear:</Typography>
-                            <Typography sx={{ margin: 1 }}>
-                                Por favor revisa la información antes de crear el club.
-                            </Typography>
-                            <ClubAvatar
-                                logo={clubData.logo}
-                                colors={{
-                                    primary: clubData.colors.primary,
-                                    secondary: clubData.colors.secondary
-                                }}
-                                title={clubData.name}
-                                width="130px"
-                                height="130px"
-                            />
-                            <Typography><h3>{clubData.description}</h3></Typography>
-                            <Typography>Dirección: {clubData.address}</Typography>
-                            <Typography>Provincia: {clubData.city}</Typography>
-                            <Typography>Alias: {clubData.alias}</Typography>
-
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    width: "100%",
-                                    marginTop: 3,
-                                }}
-                            >
-                                <Button variant="outlined"
-                                    color="secondary"
-                                    onClick={handleBack} sx={{ mt: 2 }}>
-                                    Atrás
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={handleSubmit}
-                                    sx={{ mt: 2 }}
-                                >
-                                    {editMode ? 'Guardar cambios' : 'Crear club'}
-                                </Button>
-                            </Box>
-
-                        </Box>
-                    )}
+                        )}
+                    </Box>
                 </Box>
-            </Box>
+            )
+            }
+
             <Snackbar open={snackBarOpen} autoHideDuration={5000} onClick={handelSnackClose} onClose={handelSnackClose}>
                 <Alert severity={snackBarSeverity as AlertColor} sx={{ width: '100%', fontSize: '15px' }} onClose={handelSnackClose}>
                     {snackBarMessage}
