@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { Club } from '../../../types/clubs';
 import ConfirmationDialog from '../../../components/ConfirmationDialog';
 import CanchasClubLoader from '../../../components/Loader';
+import { set } from 'date-fns';
 
 const steps = ['Información básica', 'Colores y logo', 'Días cerrados'];
 
@@ -162,6 +163,9 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                 ...prevData,
                 logo: fileUrl,
             }));
+            setSnackBarMessage('Logo actualizado correctamente');
+            setSnackBarSeverity('success');
+            setSnackBarOpen(true);
             setIsLoadingImage(false);
         } catch (error) {
             console.error('Error uploading file:', error);
