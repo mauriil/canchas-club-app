@@ -41,23 +41,23 @@ const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
     const servicios = [
         {
             id: 'premium1',
-            icono: 'url1',
-            nombre: 'Servicio 1',
-            items: ['Item 1', 'Item 2', 'Item 3'],
+            icono: 'Essentials',
+            nombre: 'CanchaEssentials',
+            items: ['Administra hasta 3 canchas', 'Configuración de horarios y disponibilidad', 'Visibilidad básica en la plataforma', 'Soporte por correo electrónico'],
             precio: 50,
         },
         {
             id: 'premium2',
-            icono: 'url2',
-            nombre: 'Servicio 2',
-            items: ['Item 4', 'Item 5', 'Item 6', 'Item 7', 'Item 8'],
+            icono: 'Progresivo',
+            nombre: 'CanchaProgresivo',
+            items: ['Administra de 4 a 9 canchas', 'Plataforma avanzada de gestión de turnos', 'Visibilidad mejorada en la plataforma', 'Soporte prioritario'],
             precio: 75,
         },
         {
             id: 'premium3',
-            icono: 'url3',
-            nombre: 'Servicio 3',
-            items: ['Item 4', 'Item 5', 'Item 6', 'Item 4', 'Item 5', 'Item 6', 'Item 7', 'Item 8'],
+            icono: 'Avanzado',
+            nombre: 'CanchaAvanzado',
+            items: ['Administra un número ilimitado de canchas', 'Plataforma avanzada de gestión y promoción', 'Visibilidad premium y destacada en la plataforma', 'Asistencia personalizada y orientación estratégica'],
             precio: 100,
         },
     ];
