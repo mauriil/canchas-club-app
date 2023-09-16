@@ -11,7 +11,6 @@ import {
 import Cookies from "js-cookie";
 import {
   ForgotPasswordRequestBody,
-  ForgotPasswordResponse,
   LogInUser,
   LoginResponse,
   SigningResponse,
@@ -26,6 +25,7 @@ interface AuthContextType {
   signUp: (user: User) => Promise<{ status: boolean; errors: string[] }>;
   signIn: (user: LogInUser) => Promise<{ status: boolean; errors: string[] }>;
   forgotPassword: (user: ForgotPasswordRequestBody) => Promise<boolean>;
+  logOut: () => void;
   user: UserResp | null;
   isAuthenticated: boolean;
   errors: string[];
@@ -94,6 +94,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return true;
   };
 
+  const logOut = (): void => {
+    Cookies.remove("access-token", import.meta.env.VITE_ENV === "development" ? {} : { path: "/", domain: import.meta.env.VITE_COOKIE_DOMAIN });
+    localStorage.removeItem("dashboardFirstLoad");
+    navigate("/index/login");
+  };
+
   useEffect(() => {
     async function checkLogin(): Promise<void> {
       if (
@@ -139,6 +145,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         signUp,
         signIn,
         forgotPassword,
+        logOut,
         user,
         isAuthenticated,
         errors,

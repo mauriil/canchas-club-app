@@ -7,6 +7,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
 import Cookies from "js-cookie";
 import PerfilButton from '../PerfilButton';
+import { useAuth } from "../../../customHooks/useAuth";
+
 
 interface UserProfileOptionsProps {
     isPremium: boolean;
@@ -14,13 +16,7 @@ interface UserProfileOptionsProps {
 }
 
 const UserProfileOptions = ({ isPremium, onItemClick }: UserProfileOptionsProps) => {
-    const navigate = useNavigate();
-
-    const logOut = () => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        Cookies.remove("access-token", import.meta.env.VITE_ENV === "development" ? {} : { path: "/", domain: import.meta.env.VITE_COOKIE_DOMAIN });
-        navigate("/index/login");
-    };
+    const { logOut } = useAuth();
 
     return (
         <Box
