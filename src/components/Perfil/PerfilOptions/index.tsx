@@ -32,13 +32,13 @@ const UserProfileOptions = ({ isPremium, onItemClick }: UserProfileOptionsProps)
             }}
             padding={{ md: '3rem' }}
         >
-            <PerfilButton text="Editar Perfil" icon={<PersonOutlineIcon />} />
+            <PerfilButton text="Editar Perfil" icon={<PersonOutlineIcon />} onClick={() => onItemClick('editProfile')} />
             {isPremium ? (
                 <PerfilButton text="Mi plan" icon={<AccountBalanceWalletIcon />} onClick={() => onItemClick('myPlan')}  />
             ) : (
                 <PerfilButton text="Soy dueño de un club" icon={<BusinessIcon />} onClick={() => onItemClick('showPlans')} />
             )}
-            <PerfilButton text="Mercado Pago token" icon={<KeyIcon />} />
+            <PerfilButton text="Mercado Pago token" icon={<KeyIcon />} onClick={() => onItemClick('mercadoPagoToken')}/>
             <PerfilButton
                 onClick={logOut}
                 text="Cerrar sesion"

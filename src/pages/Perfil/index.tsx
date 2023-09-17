@@ -7,41 +7,28 @@ import { getPlanStatus } from "../../api/users";
 import { useEffect, useState } from "react";
 import PerfilPlanStatus from "../../components/Perfil/PerfilPlanStatus";
 import PerfilShowPlans from "../../components/Perfil/PerfilShowPlans";
+import PerfilEdit from "../../components/Perfil/PerfilEdit";
+import MercadoPagoToken from "../../components/Perfil/MercadoPagoToken";
+import CanchasClubLoader from "../../components/Loader";
 
 const Perfil = () => {
   const { user } = useAuth();
   const [isPremium, setIsPremium] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedOption, setSelectedOption] = useState("menu");
 
   const checkPremium = async () => {
     const planStatus = await getPlanStatus();
     console.log("🚀 ~ file: index.tsx:18 ~ checkPremium ~ planStatus:", planStatus)
     setIsPremium(planStatus.type !== "free" && planStatus.type !== "");
+    setIsLoading(false);
   }
   useEffect(() => {
     void checkPremium();
   }, []);
 
   const handleItemClick = (option: string) => {
-    switch (option) {
-      case 'editProfile':
-        // Lógica para "Editar Perfil"
-        // ...
-        break;
-      case 'myPlan':
-        setSelectedOption('myPlan')
-        break;
-      case 'showPlans':
-        setSelectedOption('showPlans')
-        break;
-      case 'mercadoPagoToken':
-        // Lógica para "Mercado Pago token"
-        // ...
-        break;
-      default:
-        setSelectedOption('menu')
-        break;
-    }
+    setSelectedOption(option);
   };
 
   return (
@@ -161,9 +148,15 @@ const Perfil = () => {
             width: { xs: "100%", md: "50%" },
             height: "auto",
             marginRight: { md: "3rem" },
+            backgroundColor: { md: "background.default" },
+            borderRadius: "15px",
+            boxShadow: isLoading ? { md: "0px 0px 25px 1px rgb(0,0,0)" } : 'none',
           }}
         >
           {
+            isLoading ? (
+              <CanchasClubLoader width="10%" />
+            ) :
             selectedOption === 'menu' ? (
               <PerfilOptions isPremium={isPremium} onItemClick={handleItemClick}/>
             ) :
@@ -172,6 +165,12 @@ const Perfil = () => {
             ) :
             selectedOption === 'showPlans' ? (
               <PerfilShowPlans onItemClick={handleItemClick}/>
+            ) :
+            selectedOption === 'editProfile' ? (
+              <PerfilEdit onItemClick={handleItemClick}/>
+            ) :
+            selectedOption === 'mercadoPagoToken' ? (
+              <MercadoPagoToken onItemClick={handleItemClick}/>
             ) : null
           }
         </Box>
