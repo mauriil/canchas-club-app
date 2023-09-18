@@ -49,3 +49,9 @@ export interface PlanStatus {
   status: string;
   value: number;
 }
+
+export interface EditUser {
+  name: string;
+  password?: string;
+  phone: string;
+}

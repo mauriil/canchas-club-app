@@ -3,11 +3,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { ArrowBack } from '@mui/icons-material';
-import { Alert, AlertColor, Box, Button, IconButton, Snackbar } from '@mui/material';
+import { Alert, AlertColor, Box, Button, Card, CardActions, CardContent, Checkbox, FormControlLabel, Grid, IconButton, Snackbar, TextField, Typography } from '@mui/material';
 import ConfirmationDialog from '../../ConfirmationDialog';
-import { useEffect, useState } from 'react';
-import { cancelPlan, getPlanStatus } from '../../../api/users';
-import { PlanStatus } from '../../../types/users';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { cancelPlan, getPlanStatus, getUser, updateUser } from '../../../api/users';
+import { EditUser } from '../../../types/users';
 
 interface UserProfileEditProps {
     onItemClick: (option: string) => void;
@@ -20,20 +20,6 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
         setSnackBarOpen(false);
     }
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-    const [planStatus, setPlanStatus] = useState<PlanStatus | null>(null);
-    const getPlanStatusRequest = async () => {
-        try {
-            const planStatusResponse: PlanStatus = await getPlanStatus();
-            setPlanStatus(planStatusResponse);
-        } catch (error) {
-            console.error("Error fetching plan status:", error);
-        }
-    }
-
-    useEffect(() => {
-        void getPlanStatusRequest();
-    }, []);
-
 
     const handleDelete = async () => {
         const req = await cancelPlan();
@@ -51,6 +37,46 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
         }, 1500);
         return;
     }
+
+    const [formData, setFormData] = useState<EditUser>({
+        name: '',
+        phone: '',
+    });
+
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    const getUserData = async () => {
+        try {
+            const user = await getUser();
+            setFormData({
+                name: user.name,
+                password: '',
+                phone: user.phone,
+            });
+        } catch (error) {
+            console.error("Error fetching plan status:", error);
+        }
+    }
+
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (formData.password === '') delete formData.password;
+        console.log('Datos enviados:', formData);
+        await updateUser(formData);
+        setSnackBarMessage('Datos actualizados');
+        setSnackBarSeverity('success');
+        setSnackBarOpen(true);
+        setTimeout(() => {
+            window.location.reload();
+        }, 1500);
+    };
+
+    useEffect(() => {
+        void getUserData();
+    }, []);
 
     return (
         <Box
@@ -81,25 +107,58 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
                     <ArrowBack />
                 </IconButton>
             </Box>
-            <p>DESCRIPCION DEL PLAN EN CURSO</p>
-            <p>Nombre: {planStatus?.type}</p>
-            <p>Fecha de inicio: {
-            new Date(planStatus?.date as string).toLocaleDateString("es-AR", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-            })
-            }</p>
-            <p>Valor: {planStatus?.value}</p>
-            <p>Estado: {planStatus?.status}</p>
-            <p>Clubes creados: {planStatus?.clubsCreated}</p>
-            <p>Clubes restantes: {planStatus?.remainingClubCreations}</p>
-            <p>Canchas creadas: {planStatus?.fieldsCreated}</p>
-            <p>Canchas restantes: {planStatus?.remainingFieldCreations}</p>
 
-            <Button variant="contained" color="error" onClick={() => setOpenDeleteDialog(true)}>
-                Cancelar plan
-            </Button>
+            <Card>
+                <CardContent>
+                    <Typography variant="h5" component="div" gutterBottom sx={{
+                        fontWeight: 'bold',
+                        fontSize: '1.5rem',
+                        justifyContent: 'center',
+                        display: 'flex',
+                        margin: '1rem',
+                    }}>
+                        Editar Información de Usuario
+                    </Typography>
+                    <form onSubmit={handleSubmit}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    label="Nombre"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleInputChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    label="Contraseña"
+                                    name="password"
+                                    type="password"
+                                    value={formData.password}
+                                    onChange={handleInputChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    label="Teléfono"
+                                    name="phone"
+                                    value={formData.phone}
+                                    onChange={handleInputChange}
+                                />
+                            </Grid>
+                        </Grid>
+                        <CardActions>
+                            <Button type="submit" variant="contained" color="primary">
+                                Guardar Cambios
+                            </Button>
+                        </CardActions>
+                    </form>
+                </CardContent>
+            </Card>
+
             <ConfirmationDialog
                 open={openDeleteDialog}
                 onClose={() => setOpenDeleteDialog(false)}
