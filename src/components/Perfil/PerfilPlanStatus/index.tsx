@@ -12,6 +12,7 @@ import { PlanStatus } from '../../../types/users';
 import Avanzado from '../../../assets/images/CanchasClub_Iconografia-AVANZADO.svg';
 import Progresivo from '../../../assets/images/CanchasClub_Iconografia-PROGRESIV.svg';
 import Essentials from '../../../assets/images/CanchasClub_Iconografia-ESSENTIAL.svg';
+import CanchasClubLoader from '../../Loader';
 
 interface UserProfilePlanStatusProps {
     onItemClick: (option: string) => void;
@@ -25,6 +26,7 @@ const UserProfilePlanStatus = ({ onItemClick }: UserProfilePlanStatusProps) => {
     const handelSnackClose = () => {
         setSnackBarOpen(false);
     }
+    const [isLoading, setIsLoading] = useState(true);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [planStatus, setPlanStatus] = useState<PlanStatus | null>(null);
     const getPlanStatusRequest = async () => {
@@ -33,23 +35,25 @@ const UserProfilePlanStatus = ({ onItemClick }: UserProfilePlanStatusProps) => {
             setPlanStatus(planStatusResponse);
             switch (planStatusResponse.type) {
                 case 'premium1':
-                  setLogoUrl(Essentials);
-                  setPlanTitle('CanchaEssentials');
-                  break;
+                    setLogoUrl(Essentials);
+                    setPlanTitle('CanchaEssentials');
+                    break;
                 case 'premium2':
-                  setLogoUrl(Progresivo);
-                  setPlanTitle('CanchaProgresivo');
-                  break;
+                    setLogoUrl(Progresivo);
+                    setPlanTitle('CanchaProgresivo');
+                    break;
                 case 'premium3':
-                  setLogoUrl(Avanzado);
-                  setPlanTitle('CanchaAvanzado');
-                  break;
+                    setLogoUrl(Avanzado);
+                    setPlanTitle('CanchaAvanzado');
+                    break;
                 default:
-                  setLogoUrl(Essentials);
-                  setPlanTitle('CanchaEssentials');
-                  break;
-              }
+                    setLogoUrl(Essentials);
+                    setPlanTitle('CanchaEssentials');
+                    break;
+            }
+            setIsLoading(false);
         } catch (error) {
+            setIsLoading(false);
             console.error("Error fetching plan status:", error);
         }
     }
@@ -105,73 +109,78 @@ const UserProfilePlanStatus = ({ onItemClick }: UserProfilePlanStatusProps) => {
                     <ArrowBack />
                 </IconButton>
             </Box>
-            <Card>
-            <Box sx={{
-          width: '100%',
-          height: 'auto',
-          display: 'flex',
-          justifyContent: 'center',
-          flexDirection: 'column',
-          alignItems: 'center',
-          marginTop: '1rem',
-        }}>
-        <img src={logoUrl} alt="logo" width={'100px'} />
-        <Typography variant="body1" color="textSecondary" fontFamily="museo300" fontSize="1.5rem">
-            {planTitle}
-        </Typography>
-        </Box>
-      <CardContent>
-        <Grid container justifyContent="center" spacing={2}>
-          <Grid item xs={6}>
-          <Typography variant="h3" align="center" color={'primary'}>
-                {planStatus?.clubsCreated}
-              </Typography>
-              <Typography variant="subtitle1" align="center">
-                Clubes creados
-              </Typography>
-          </Grid>
-          <Grid item xs={6}>
-          <Typography variant="h3" align="center" color={'primary'}>
-                {planStatus?.fieldsCreated}
-              </Typography>
-              <Typography variant="subtitle1" align="center">
-                Canchas creadas
-              </Typography>
-          </Grid>
-        </Grid>
-        <Typography variant="h6" align="center" sx={{
-            color: 'primary.main',
-            fontWeight: 'bold',
-        }}>
-          Estado
-        </Typography>
-        <Typography variant="body1" align="center" >
-          {planStatus?.status}
-        </Typography>
-        <Typography variant="h6" align="center" sx={{
-            color: 'primary.main',
-            fontWeight: 'bold',
-        }}>
-          Fecha de renovación
-        </Typography>
-        <Typography variant="body1" align="center">
-        {
-            new Date(planStatus?.date as string).toLocaleDateString("es-AR", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-            })
-            }
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button fullWidth variant="contained" color="error" onClick={() => setOpenDeleteDialog(true)} sx={{
-            color: 'white',
-        }}>
-          Solicitar Baja
-        </Button>
-      </CardActions>
-    </Card>
+            {isLoading ? (
+                <CanchasClubLoader width="10%" />
+            ) : (
+                <Card>
+                    <Box sx={{
+                        width: '100%',
+                        height: 'auto',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        marginTop: '1rem',
+                    }}>
+                        <img src={logoUrl} alt="logo" width={'100px'} />
+                        <Typography variant="body1" color="textSecondary" fontFamily="museo300" fontSize="1.5rem">
+                            {planTitle}
+                        </Typography>
+                    </Box>
+                    <CardContent>
+                        <Grid container justifyContent="center" spacing={2}>
+                            <Grid item xs={6}>
+                                <Typography variant="h3" align="center" color={'primary'}>
+                                    {planStatus?.clubsCreated}
+                                </Typography>
+                                <Typography variant="subtitle1" align="center">
+                                    Clubes creados
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Typography variant="h3" align="center" color={'primary'}>
+                                    {planStatus?.fieldsCreated}
+                                </Typography>
+                                <Typography variant="subtitle1" align="center">
+                                    Canchas creadas
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                        <Typography variant="h6" align="center" sx={{
+                            color: 'primary.main',
+                            fontWeight: 'bold',
+                        }}>
+                            Estado
+                        </Typography>
+                        <Typography variant="body1" align="center" >
+                            {planStatus?.status}
+                        </Typography>
+                        <Typography variant="h6" align="center" sx={{
+                            color: 'primary.main',
+                            fontWeight: 'bold',
+                        }}>
+                            Fecha de renovación
+                        </Typography>
+                        <Typography variant="body1" align="center">
+                            {
+                                new Date(planStatus?.date as string).toLocaleDateString("es-AR", {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                })
+                            }
+                        </Typography>
+                    </CardContent>
+                    <CardActions>
+                        <Button fullWidth variant="contained" color="error" onClick={() => setOpenDeleteDialog(true)} sx={{
+                            color: 'white',
+                        }}>
+                            Solicitar Baja
+                        </Button>
+                    </CardActions>
+                </Card>
+            )}
+
             <ConfirmationDialog
                 open={openDeleteDialog}
                 onClose={() => setOpenDeleteDialog(false)}
