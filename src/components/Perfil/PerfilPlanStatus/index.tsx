@@ -3,18 +3,22 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { ArrowBack } from '@mui/icons-material';
-import { Alert, AlertColor, Box, Button, IconButton, Snackbar } from '@mui/material';
+import { Alert, AlertColor, Box, Button, Card, CardActions, CardContent, CardHeader, Grid, IconButton, Snackbar, Typography } from '@mui/material';
 import ConfirmationDialog from '../../ConfirmationDialog';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cancelPlan, getPlanStatus } from '../../../api/users';
 import { PlanStatus } from '../../../types/users';
+import Avanzado from '../../../assets/images/CanchasClub_Iconografia-AVANZADO.svg';
+import Progresivo from '../../../assets/images/CanchasClub_Iconografia-PROGRESIV.svg';
+import Essentials from '../../../assets/images/CanchasClub_Iconografia-ESSENTIAL.svg';
 
 interface UserProfilePlanStatusProps {
     onItemClick: (option: string) => void;
 }
 const UserProfilePlanStatus = ({ onItemClick }: UserProfilePlanStatusProps) => {
-    const navigate = useNavigate();
+    const [logoUrl, setLogoUrl] = useState('');
+    const [planTitle, setPlanTitle] = useState('');
     const [snackBarOpen, setSnackBarOpen] = useState(false);
     const [snackBarMessage, setSnackBarMessage] = useState("");
     const [snackBarSeverity, setSnackBarSeverity] = useState("success");
@@ -27,6 +31,24 @@ const UserProfilePlanStatus = ({ onItemClick }: UserProfilePlanStatusProps) => {
         try {
             const planStatusResponse: PlanStatus = await getPlanStatus();
             setPlanStatus(planStatusResponse);
+            switch (planStatusResponse.type) {
+                case 'premium1':
+                  setLogoUrl(Essentials);
+                  setPlanTitle('CanchaEssentials');
+                  break;
+                case 'premium2':
+                  setLogoUrl(Progresivo);
+                  setPlanTitle('CanchaProgresivo');
+                  break;
+                case 'premium3':
+                  setLogoUrl(Avanzado);
+                  setPlanTitle('CanchaAvanzado');
+                  break;
+                default:
+                  setLogoUrl(Essentials);
+                  setPlanTitle('CanchaEssentials');
+                  break;
+              }
         } catch (error) {
             console.error("Error fetching plan status:", error);
         }
@@ -83,25 +105,73 @@ const UserProfilePlanStatus = ({ onItemClick }: UserProfilePlanStatusProps) => {
                     <ArrowBack />
                 </IconButton>
             </Box>
-            <p>DESCRIPCION DEL PLAN EN CURSO</p>
-            <p>Nombre: {planStatus?.type}</p>
-            <p>Fecha de inicio: {
+            <Card>
+            <Box sx={{
+          width: '100%',
+          height: 'auto',
+          display: 'flex',
+          justifyContent: 'center',
+          flexDirection: 'column',
+          alignItems: 'center',
+          marginTop: '1rem',
+        }}>
+        <img src={logoUrl} alt="logo" width={'100px'} />
+        <Typography variant="body1" color="textSecondary" fontFamily="museo300" fontSize="1.5rem">
+            {planTitle}
+        </Typography>
+        </Box>
+      <CardContent>
+        <Grid container justifyContent="center" spacing={2}>
+          <Grid item xs={6}>
+          <Typography variant="h3" align="center" color={'primary'}>
+                {planStatus?.clubsCreated}
+              </Typography>
+              <Typography variant="subtitle1" align="center">
+                Clubes creados
+              </Typography>
+          </Grid>
+          <Grid item xs={6}>
+          <Typography variant="h3" align="center" color={'primary'}>
+                {planStatus?.fieldsCreated}
+              </Typography>
+              <Typography variant="subtitle1" align="center">
+                Canchas creadas
+              </Typography>
+          </Grid>
+        </Grid>
+        <Typography variant="h6" align="center" sx={{
+            color: 'primary.main',
+            fontWeight: 'bold',
+        }}>
+          Estado
+        </Typography>
+        <Typography variant="body1" align="center" >
+          {planStatus?.status}
+        </Typography>
+        <Typography variant="h6" align="center" sx={{
+            color: 'primary.main',
+            fontWeight: 'bold',
+        }}>
+          Fecha de renovación
+        </Typography>
+        <Typography variant="body1" align="center">
+        {
             new Date(planStatus?.date as string).toLocaleDateString("es-AR", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
             })
-            }</p>
-            <p>Valor: {planStatus?.value}</p>
-            <p>Estado: {planStatus?.status}</p>
-            <p>Clubes creados: {planStatus?.clubsCreated}</p>
-            <p>Clubes restantes: {planStatus?.remainingClubCreations}</p>
-            <p>Canchas creadas: {planStatus?.fieldsCreated}</p>
-            <p>Canchas restantes: {planStatus?.remainingFieldCreations}</p>
-
-            <Button variant="contained" color="error" onClick={() => setOpenDeleteDialog(true)}>
-                Cancelar plan
-            </Button>
+            }
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button fullWidth variant="contained" color="error" onClick={() => setOpenDeleteDialog(true)} sx={{
+            color: 'white',
+        }}>
+          Solicitar Baja
+        </Button>
+      </CardActions>
+    </Card>
             <ConfirmationDialog
                 open={openDeleteDialog}
                 onClose={() => setOpenDeleteDialog(false)}
