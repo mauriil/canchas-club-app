@@ -97,7 +97,7 @@ const MercadoPagoToken = ({ onItemClick }: MercadoPagoTokenProps) => {
             <p>Canchas creadas: {planStatus?.fieldsCreated}</p>
             <p>Canchas restantes: {planStatus?.remainingFieldCreations}</p>
 
-            <Button variant="contained" color="error" onClick={() => setOpenDeleteDialog(true)}>
+            <Button variant="outlined" color="error" onClick={() => setOpenDeleteDialog(true)}>
                 Cancelar plan
             </Button>
             <ConfirmationDialog
