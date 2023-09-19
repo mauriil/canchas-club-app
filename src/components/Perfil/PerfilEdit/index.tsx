@@ -8,6 +8,7 @@ import ConfirmationDialog from '../../ConfirmationDialog';
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { cancelPlan, getPlanStatus, getUser, updateUser } from '../../../api/users';
 import { EditUser } from '../../../types/users';
+import CanchasClubLoader from '../../Loader';
 
 interface UserProfileEditProps {
     onItemClick: (option: string) => void;
@@ -20,6 +21,7 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
         setSnackBarOpen(false);
     }
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const handleDelete = async () => {
         const req = await cancelPlan();
@@ -56,8 +58,10 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
                 password: '',
                 phone: user.phone,
             });
+            setIsLoading(false);
         } catch (error) {
             console.error("Error fetching plan status:", error);
+            setIsLoading(false);
         }
     }
 
@@ -108,56 +112,60 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
                 </IconButton>
             </Box>
 
-            <Card>
-                <CardContent>
-                    <Typography variant="h5" component="div" gutterBottom sx={{
-                        fontWeight: 'bold',
-                        fontSize: '1.5rem',
-                        justifyContent: 'center',
-                        display: 'flex',
-                        margin: '1rem',
-                    }}>
-                        Editar Información de Usuario
-                    </Typography>
-                    <form onSubmit={handleSubmit}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <TextField
-                                    fullWidth
-                                    label="Nombre"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleInputChange}
-                                />
+            {isLoading ? (
+                <CanchasClubLoader width="10%" />
+            ) : (
+                <Card>
+                    <CardContent>
+                        <Typography variant="h5" component="div" gutterBottom sx={{
+                            fontWeight: 'bold',
+                            fontSize: '1.5rem',
+                            justifyContent: 'center',
+                            display: 'flex',
+                            margin: '1rem',
+                        }}>
+                            Editar Información de Usuario
+                        </Typography>
+                        <form onSubmit={handleSubmit}>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        fullWidth
+                                        label="Nombre"
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleInputChange}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        fullWidth
+                                        label="Contraseña"
+                                        name="password"
+                                        type="password"
+                                        value={formData.password}
+                                        onChange={handleInputChange}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        fullWidth
+                                        label="Teléfono"
+                                        name="phone"
+                                        value={formData.phone}
+                                        onChange={handleInputChange}
+                                    />
+                                </Grid>
                             </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    fullWidth
-                                    label="Contraseña"
-                                    name="password"
-                                    type="password"
-                                    value={formData.password}
-                                    onChange={handleInputChange}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    fullWidth
-                                    label="Teléfono"
-                                    name="phone"
-                                    value={formData.phone}
-                                    onChange={handleInputChange}
-                                />
-                            </Grid>
-                        </Grid>
-                        <CardActions>
-                            <Button type="submit" variant="contained" color="primary">
-                                Guardar Cambios
-                            </Button>
-                        </CardActions>
-                    </form>
-                </CardContent>
-            </Card>
+                            <CardActions>
+                                <Button type="submit" variant="contained" color="primary">
+                                    Guardar Cambios
+                                </Button>
+                            </CardActions>
+                        </form>
+                    </CardContent>
+                </Card>
+            )}
 
             <ConfirmationDialog
                 open={openDeleteDialog}
