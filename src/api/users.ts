@@ -47,6 +47,20 @@ export const updateUser = async (user: EditUser): Promise<User> => {
     }
 }
 
+export const updateUserPassword = async (oldPassword: string, newPassword: string) => {
+    try {
+        const response = await fetch(`${BASE_API_URL}/auth/newPassword/${userId}`, {
+            method: "PATCH",
+            headers,
+            body: JSON.stringify({oldPassword, newPassword}),
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching updateUserPassword:", error);
+        throw error;
+    }
+}
+
 export const getPlanStatus = async (): Promise<PlanStatus> => {
     try {
         const response = await fetch(`${BASE_API_URL}/users/${userId}/planStatus`, {

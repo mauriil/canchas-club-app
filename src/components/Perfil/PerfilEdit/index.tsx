@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
@@ -9,6 +10,8 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { cancelPlan, getPlanStatus, getUser, updateUser } from '../../../api/users';
 import { EditUser } from '../../../types/users';
 import CanchasClubLoader from '../../Loader';
+import ChangePasswordDialog from '../ChangePasswordDialog';
+import { Lock } from '@mui/icons-material';
 
 interface UserProfileEditProps {
     onItemClick: (option: string) => void;
@@ -22,6 +25,16 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
     }
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [isChangePasswordDialogOpen, setChangePasswordDialogOpen] = useState(false);
+
+
+    const handleOpenChangePasswordDialog = () => {
+        setChangePasswordDialogOpen(true);
+    };
+    const handleCloseChangePasswordDialog = () => {
+        setChangePasswordDialogOpen(false);
+    };
+
 
     const handleDelete = async () => {
         const req = await cancelPlan();
@@ -140,25 +153,37 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
                                 <Grid item xs={12}>
                                     <TextField
                                         fullWidth
-                                        label="Contraseña"
-                                        name="password"
-                                        type="password"
-                                        value={formData.password}
-                                        onChange={handleInputChange}
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        fullWidth
                                         label="Teléfono"
                                         name="phone"
                                         value={formData.phone}
                                         onChange={handleInputChange}
                                     />
                                 </Grid>
+                                <Grid item xs={12} sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}>
+                                    <Button
+                                        variant="outlined"
+                                        color="warning"
+                                        startIcon={<Lock />}
+                                        onClick={handleOpenChangePasswordDialog}
+                                    >
+                                        Cambiar Contraseña
+                                    </Button>
+                                    <ChangePasswordDialog
+                                        open={isChangePasswordDialogOpen}
+                                        onClose={handleCloseChangePasswordDialog}
+                                    />
+                                </Grid>
                             </Grid>
-                            <CardActions>
-                                <Button type="submit" variant="contained" color="primary">
+                            <CardActions sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}>
+                                <Button type="submit" variant="outlined" color="primary" >
                                     Guardar Cambios
                                 </Button>
                             </CardActions>
