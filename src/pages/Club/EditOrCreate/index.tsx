@@ -347,7 +347,8 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                                     variant="outlined"
                                     color="primary"
                                     onClick={handleNext}
-                                    sx={{ mt: 2, marginTop: 3 }}
+                                    fullWidth
+                                    sx={{ margin: 3 }}
                                 >
                                     Siguiente
                                 </Button>
@@ -442,6 +443,7 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                                     <Button
                                         variant="outlined"
                                         color="secondary"
+                                        fullWidth
                                         onClick={handleBack}
                                     >
                                         Atrás
@@ -449,6 +451,7 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                                     <Button
                                         variant="outlined"
                                         color="primary"
+                                        fullWidth
                                         onClick={handleNext}
                                     >
                                         Siguiente
@@ -480,6 +483,7 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                                     <Button
                                         variant="outlined"
                                         color="secondary"
+                                        fullWidth
                                         onClick={handleBack}
                                     >
                                         Atrás
@@ -487,6 +491,7 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                                     <Button
                                         variant="outlined"
                                         color="primary"
+                                        fullWidth
                                         onClick={handleNext}
                                     >
                                         Siguiente
@@ -529,12 +534,14 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                                 >
                                     <Button variant="outlined"
                                         color="secondary"
+                                        fullWidth
                                         onClick={handleBack} sx={{ mt: 2 }}>
                                         Atrás
                                     </Button>
                                     <Button
                                         variant="contained"
                                         color="primary"
+                                        fullWidth
                                         onClick={handleSubmit}
                                         sx={{ mt: 2 }}
                                     >

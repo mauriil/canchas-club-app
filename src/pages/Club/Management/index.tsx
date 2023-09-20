@@ -13,6 +13,8 @@ import TopBar from "../../../components/TopBar";
 import { Share } from "@mui/icons-material";
 import ClubAvatar from "../../../components/ClubAvatar";
 import CanchasClubLoader from "../../../components/Loader";
+import { PlanStatus } from "../../../types/users";
+import { getPlanStatus } from "../../../api/users";
 
 const ClubManagement = () => {
     const navigate = useNavigate();
@@ -86,6 +88,21 @@ const ClubManagement = () => {
             <CanchasClubLoader width="10%"/>
         );
     }
+
+    const handleAddField = async () => {
+        try {
+          const planStatus: PlanStatus = await getPlanStatus();
+          if (planStatus.remainingFieldCreations > 0) {
+            navigate("/dashboard/fields/new");
+          } else {
+            setSnackBarMessage("No tienes más creaciones de canchas disponibles, actualiza tu plan");
+            setSnackBarSeverity("error");
+            setSnackBarOpen(true);
+          }
+        } catch (error) {
+          console.error("Error creating club:", error);
+        }
+      };
 
     return (
         <>
@@ -187,7 +204,7 @@ const ClubManagement = () => {
                 {/* Botón para Agregar Cancha */}
                 <Button variant="contained" color="primary" startIcon={<AddIcon />} sx={{
                     marginTop: "2rem",
-                }}>
+                }} onClick={handleAddField}>
                     Agregar Cancha
                 </Button>
             </Box>

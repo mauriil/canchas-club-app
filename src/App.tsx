@@ -14,6 +14,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import Home from "./pages/Home";
 import ClubManagement from "./pages/Club/Management";
 import EditOrCreateClub from "./pages/Club/EditOrCreate";
+import EditOrCreateField from "./pages/Field/EditOrCreate";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
               <Route path="/dashboard/miClub/new" element={<EditOrCreateClub />} />
               <Route path="/dashboard/miClub/:clubId" element={<ClubManagement />} />
               <Route path="/dashboard/miClub/:clubId/edit" element={<EditOrCreateClub editMode={true} />} />
+              <Route path="/dashboard/fields/new" element={<EditOrCreateField />} />
               <Route path="miPerfil" element={<Perfil />} />
             </Route>
           </Route>
