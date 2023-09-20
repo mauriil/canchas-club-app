@@ -172,8 +172,10 @@ const UserProfilePlanStatus = ({ onItemClick }: UserProfilePlanStatusProps) => {
                         </Typography>
                     </CardContent>
                     <CardActions>
-                        <Button fullWidth variant="contained" color="error" onClick={() => setOpenDeleteDialog(true)} sx={{
-                            color: 'white',
+                        <Button fullWidth variant="outlined" color="error" onClick={() => setOpenDeleteDialog(true)} sx={{
+                            ":hover": {
+                                color: 'white',
+                            }
                         }}>
                             Solicitar Baja
                         </Button>
