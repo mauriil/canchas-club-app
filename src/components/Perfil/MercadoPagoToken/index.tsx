@@ -2,12 +2,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { ArrowBack } from '@mui/icons-material';
-import { Alert, AlertColor, Box, Button, IconButton, Snackbar } from '@mui/material';
-import ConfirmationDialog from '../../ConfirmationDialog';
+import { Alert, AlertColor, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, IconButton, Snackbar, TextField } from '@mui/material';
+
 import { useEffect, useState } from 'react';
-import { cancelPlan, getPlanStatus } from '../../../api/users';
-import { PlanStatus } from '../../../types/users';
+import CanchasClubLoader from '../../Loader';
+import { ArrowBack, Refresh } from '@mui/icons-material';
+import { checkMercadoPagoAccessToken } from '../../../api/mercadoPago';
+import { getUser, updateUser } from '../../../api/users';
 
 interface MercadoPagoTokenProps {
     onItemClick: (option: string) => void;
@@ -19,38 +20,84 @@ const MercadoPagoToken = ({ onItemClick }: MercadoPagoTokenProps) => {
     const handelSnackClose = () => {
         setSnackBarOpen(false);
     }
-    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-    const [planStatus, setPlanStatus] = useState<PlanStatus | null>(null);
-    const getPlanStatusRequest = async () => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [mercadoTokenData, setmercadoTokenData] = useState({
+        accessToken: '',
+    });
+    const [errors, setErrors] = useState({
+        accessToken: { error: false, message: '' },
+    });
+    const [integrationStatus, setIntegrationStatus] = useState('NO INTEGRADO');
+
+    const mercadoPagoInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setmercadoTokenData({
+            ...mercadoTokenData,
+            [name]: value,
+        });
+    };
+
+    const handleMercadoPagoTokenSubmit = async (mercadoTokenData: { accessToken: string; }) => {
+        const isValid = await checkMercadoPagoToken(mercadoTokenData.accessToken)
+        if (isValid) {
+            setIsLoading(true);
+            await updateUser({ mercadoPagoToken: mercadoTokenData.accessToken});
+            setSnackBarMessage('Éxito al guardar el token')
+            setSnackBarSeverity('success');
+            setSnackBarOpen(true);
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        }
+    };
+
+    const checkMercadoPagoToken =  async (accessToken: string): Promise<boolean> => {
+        setErrors({
+            accessToken: { error: false, message: '' },
+        });
+        if (!accessToken) {
+            setErrors({
+                accessToken: { error: true, message: 'Debe proveer un token válido' },
+            });
+            return false;
+        }
+        setIsLoading(true);
+        const request = await checkMercadoPagoAccessToken(accessToken)
+        if (request.statusCode >= 400) {
+            setSnackBarMessage(request.message);
+            setSnackBarSeverity('error');
+            setSnackBarOpen(true);
+            setIsLoading(false);
+            return false;
+        }
+        setIsLoading(false);
+        if (!request) {
+            setIntegrationStatus('ERROR');
+        } else {
+            setIntegrationStatus('INTEGRADO');
+        }
+        return request as boolean;
+    };
+
+    const getUserData = async () => {
         try {
-            const planStatusResponse: PlanStatus = await getPlanStatus();
-            setPlanStatus(planStatusResponse);
+            const user = await getUser();
+            if (user.mercadoPagoToken !== null) {
+                setmercadoTokenData({
+                    accessToken: user.mercadoPagoToken,
+                });
+                await checkMercadoPagoToken(user.mercadoPagoToken);
+            }
+            setIsLoading(false);
         } catch (error) {
             console.error("Error fetching plan status:", error);
+            setIsLoading(false);
         }
     }
 
     useEffect(() => {
-        void getPlanStatusRequest();
+        void getUserData();
     }, []);
-
-
-    const handleDelete = async () => {
-        const req = await cancelPlan();
-        if (req.statusCode >= 400) {
-            setSnackBarMessage(req.message);
-            setSnackBarSeverity('error');
-            setSnackBarOpen(true);
-            return;
-        }
-        setSnackBarMessage('Subscripción cancelada')
-        setSnackBarSeverity('success');
-        setSnackBarOpen(true);
-        setTimeout(() => {
-            window.location.reload();
-        }, 1500);
-        return;
-    }
 
     return (
         <Box
@@ -81,40 +128,66 @@ const MercadoPagoToken = ({ onItemClick }: MercadoPagoTokenProps) => {
                     <ArrowBack />
                 </IconButton>
             </Box>
-            <p>DESCRIPCION DEL PLAN EN CURSO</p>
-            <p>Nombre: {planStatus?.type}</p>
-            <p>Fecha de inicio: {
-            new Date(planStatus?.date as string).toLocaleDateString("es-AR", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-            })
-            }</p>
-            <p>Valor: {planStatus?.value}</p>
-            <p>Estado: {planStatus?.status}</p>
-            <p>Clubes creados: {planStatus?.clubsCreated}</p>
-            <p>Clubes restantes: {planStatus?.remainingClubCreations}</p>
-            <p>Canchas creadas: {planStatus?.fieldsCreated}</p>
-            <p>Canchas restantes: {planStatus?.remainingFieldCreations}</p>
-
-            <Button variant="outlined" color="error" onClick={() => setOpenDeleteDialog(true)}>
-                Cancelar plan
-            </Button>
-            <ConfirmationDialog
-                open={openDeleteDialog}
-                onClose={() => setOpenDeleteDialog(false)}
-                onConfirm={handleDelete}
-                message={`¿Estás seguro que querés dar de baja la subscripción?
-                        Todos los datos se van a seguir guardando pero no vas a poder acceder a ellos.
-                        Si tenés turnos agendados, se van a cancelar.
-                        Esta acción no se puede deshacer.`}
-            />
-            <Snackbar open={snackBarOpen} autoHideDuration={5000} onClick={handelSnackClose} onClose={handelSnackClose}>
-                <Alert severity={snackBarSeverity as AlertColor} sx={{ width: '100%', fontSize: '15px' }} onClose={handelSnackClose}>
-                    {snackBarMessage}
-                </Alert>
-            </Snackbar>
+            {
+                isLoading ? (
+                    <CanchasClubLoader width='10%' />
+                ) : (
+                    <><>
+                        <Grid container spacing={2} sx={{
+                            padding: '1.5rem',
+                        }}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    label="Mercado Pago Access Token"
+                                    name="accessToken"
+                                    type="tet"
+                                    value={mercadoTokenData.accessToken}
+                                    error={errors.accessToken.error || integrationStatus === 'ERROR'}
+                                    helperText={errors.accessToken.message}
+                                    onChange={mercadoPagoInputChange} />
+                            </Grid>
+                            <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                <Box
+                                    sx={{
+                                        border: '1px solid #ccc',
+                                        borderRadius: '5px',
+                                        padding: '1rem',
+                                        marginTop: '1rem',
+                                        color: integrationStatus === 'INTEGRADO' ? 'green' : integrationStatus === 'ERROR' ? 'red' : 'primary.main',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        ":hover": {
+                                            cursor: 'pointer',
+                                        }
+                                    }}
+                                    onClick={() => checkMercadoPagoToken(mercadoTokenData.accessToken)}
+                                >
+                                    <Refresh sx={{
+                                        marginRight: '1rem',
+                                    }} />
+                                    ESTADO DE INTEGRACIÓN: {integrationStatus}
+                                </Box>
+                            </Grid>
+                        </Grid>
+                        <Button type="submit" variant="outlined"
+                            sx={{
+                                margin: '1rem',
+                            }}
+                            color="primary" onClick={() => handleMercadoPagoTokenSubmit(mercadoTokenData)}>
+                            Guardar
+                        </Button>
+                    </><Snackbar open={snackBarOpen} autoHideDuration={5000} onClick={handelSnackClose} onClose={handelSnackClose}>
+                            <Alert severity={snackBarSeverity as AlertColor} sx={{ width: '100%', fontSize: '15px' }} onClose={handelSnackClose}>
+                                {snackBarMessage}
+                            </Alert>
+                        </Snackbar>
+                    </>
+                )
+            }
         </Box>
+
+
     );
 };
 

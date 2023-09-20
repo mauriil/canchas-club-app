@@ -79,6 +79,7 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
     }
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        setIsLoading(true);
         event.preventDefault();
         if (formData.password === '') delete formData.password;
         console.log('Datos enviados:', formData);
@@ -169,6 +170,9 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
                                         color="warning"
                                         startIcon={<Lock />}
                                         onClick={handleOpenChangePasswordDialog}
+                                        sx={{
+                                            width: '100%',
+                                        }}
                                     >
                                         Cambiar Contraseña
                                     </Button>
@@ -177,16 +181,18 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
                                         onClose={handleCloseChangePasswordDialog}
                                     />
                                 </Grid>
-                            </Grid>
-                            <CardActions sx={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                            }}>
-                                <Button type="submit" variant="outlined" color="primary" >
+                                <Grid item xs={12} sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}>
+                                    <Button type="submit" variant="outlined" color="primary" sx={{
+                                    width: '100%',
+                                }} >
                                     Guardar Cambios
                                 </Button>
-                            </CardActions>
+                                </Grid>
+                            </Grid>
                         </form>
                     </CardContent>
                 </Card>

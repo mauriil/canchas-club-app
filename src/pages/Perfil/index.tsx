@@ -22,7 +22,6 @@ const Perfil = () => {
 
   const checkPremium = async () => {
     const planStatus = await getPlanStatus();
-    console.log("🚀 ~ file: index.tsx:18 ~ checkPremium ~ planStatus:", planStatus)
     setIsPremium(planStatus.type !== "free" && planStatus.type !== "");
     setIsLoading(false);
   }
