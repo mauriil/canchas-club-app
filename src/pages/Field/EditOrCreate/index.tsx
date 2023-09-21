@@ -23,6 +23,7 @@ import TopBar from '../../../components/TopBar';
 import ConfirmationDialog from '../../../components/ConfirmationDialog';
 import { useNavigate } from 'react-router-dom';
 import FieldDayAvailability from '../FieldDayAvailability';
+import { set } from 'date-fns';
 
 const steps = ['Información básica', 'Fotos', 'Disponibilidad'];
 
@@ -36,6 +37,7 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
     fieldId,
 }) => {
     const navigate = useNavigate();
+    const [buttonNextClicked, setButtonNextClicked] = useState(false);
     const [selectedDay, setSelectedDay] = useState<string>('monday');
     const [activeStep, setActiveStep] = useState(0);
     const [fieldData, setFieldData] = useState<Field>({
@@ -77,6 +79,15 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
     };
 
     const handleNext = () => {
+        if (activeStep === 0) {
+            setButtonNextClicked(true);
+            if (fieldData.name === '' || fieldData.description === '') {
+                setSnackBarMessage('Por favor revisa los campos obligatorios');
+                setSnackBarSeverity('warning');
+                setSnackBarOpen(true);
+                return;
+            }
+        }
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 
@@ -203,6 +214,8 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                                 fullWidth
                                 value={fieldData.name}
                                 sx={{ marginTop: 2, marginBottom: 2 }}
+                                error={fieldData.name === '' && buttonNextClicked}
+                                helperText={fieldData.name === '' && buttonNextClicked ? 'Campo requerido' : ''}
                                 onChange={(e) => setFieldData({ ...fieldData, name: e.target.value })} />
                             <TextField
                                 label="Descripción"
@@ -210,6 +223,8 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                                 multiline
                                 value={fieldData.description}
                                 sx={{ marginBottom: 2 }}
+                                error={fieldData.description === '' && buttonNextClicked}
+                                helperText={fieldData.description === '' && buttonNextClicked ? 'Campo requerido' : ''}
                                 onChange={(e) => setFieldData({ ...fieldData, description: e.target.value })} />
                             <InputLabel htmlFor="sport">Deporte</InputLabel>
                             <Select
@@ -342,7 +357,7 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                             <Typography variant="h6">Disponibilidad:</Typography>
                             <FieldDayAvailability
                                 day={selectedDay}
-                                data={fieldData.availability[selectedDay] || []}
+                                data={fieldData.availability}
                                 onAddData={handleAddDayData}
                                 onDeleteData={handleDeleteDayData}
                                 selectedDay={selectedDay}
@@ -377,7 +392,50 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                             </Box>
                         </Box>
                     )}
-                    <Snackbar
+                    {activeStep === steps.length && (
+                            <Box sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                            }}>
+                                <Typography variant="h6" sx={{ margin: 1 }}>Confirmar y crear:</Typography>
+                                <Typography sx={{ margin: 1 }}>
+                                    Por favor revisa la información antes de crear la cancha.
+                                </Typography>
+
+                                <Typography><h3>{fieldData.description}</h3></Typography>
+                                {JSON.stringify(fieldData)}
+
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        width: "100%",
+                                        marginTop: 3,
+                                    }}
+                                >
+                                    <Button variant="outlined"
+                                        color="secondary"
+                                        fullWidth
+                                        onClick={handleBack} sx={{ mt: 2 }}>
+                                        Atrás
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        fullWidth
+                                        onClick={handleSubmit}
+                                        sx={{ mt: 2 }}
+                                    >
+                                        {editMode ? 'Guardar cambios' : 'Crear cancha'}
+                                    </Button>
+                                </Box>
+
+                            </Box>
+                        )}
+                </Box>
+            </Box>
+            <Snackbar
                         open={snackBarOpen}
                         autoHideDuration={5000}
                         onClose={() => setSnackBarOpen(false)}
@@ -386,8 +444,6 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                             {snackBarMessage}
                         </Alert>
                     </Snackbar>
-                </Box>
-            </Box>
         </>
     );
 };

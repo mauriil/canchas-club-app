@@ -48,6 +48,8 @@ const MiClub = () => {
   const handleCreateClub = async () => {
     try {
       const planStatus: PlanStatus = await getPlanStatus();
+      console.log("🚀 ~ file: index.tsx:51 ~ handleCreateClub ~ planStatus:", planStatus)
+      console.log("🚀 ~ file: index.tsx:53 ~ handleCreateClub ~ planStatus.remainingClubCreations:", planStatus.remainingClubCreations)
       if (planStatus.remainingClubCreations > 0) {
         navigate("/dashboard/miClub/new");
       } else {
