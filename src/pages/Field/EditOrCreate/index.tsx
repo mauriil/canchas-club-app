@@ -24,6 +24,7 @@ import ConfirmationDialog from '../../../components/ConfirmationDialog';
 import { useNavigate } from 'react-router-dom';
 import FieldDayAvailability from '../FieldDayAvailability';
 import { set } from 'date-fns';
+import S3MultipleImageUpload from '../../../components/S3MultipleImageUpload';
 
 const steps = ['Información básica', 'Fotos', 'Disponibilidad'];
 
@@ -121,6 +122,13 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
             updatedData.availability[day].splice(index, 1);
             return updatedData;
         });
+    };
+
+    const handleAddPhotos = (urls: string[]) => {
+        setFieldData((prevData) => ({
+            ...prevData,
+            photos: [...prevData.photos, ...urls],
+        }));
     };
 
     const handleSubmit = async () => {
@@ -318,7 +326,7 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                             marginBottom: 3,
                         }}>
                             <Typography variant="h6">Fotos:</Typography>
-                            {/* Implementa la lógica para subir fotos */}
+                            <S3MultipleImageUpload onImagesUploaded={handleAddPhotos} photosArray={fieldData.photos} folderName={`canchas`} />
                             <Box
                                 sx={{
                                     display: "flex",
