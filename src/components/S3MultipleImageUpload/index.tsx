@@ -3,9 +3,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { useState } from 'react';
 import uploadFilesToS3 from '../../api/uploadFileToS3';
-import { Box, Grid, LinearProgress, Paper, Typography } from '@mui/material';
+import { Box, Grid, Input, LinearProgress, Paper, Typography } from '@mui/material';
 import CanchasClubLoader from '../Loader';
 import getFileFromS3 from '../../api/getFileFromS3';
+import { useDropzone } from 'react-dropzone';
+import { tr } from 'date-fns/locale';
 
 interface MultipleImageUploadProps {
     onImagesUploaded: (urls: string[]) => void;
@@ -18,19 +20,15 @@ function S3MultipleImageUpload({ onImagesUploaded, photosArray, folderName }: Mu
     const [isLoading, setIsLoading] = useState(false);
     const [imageUploadingProgress, setImageUploadingProgress] = useState({});
 
-    const handleFileChange = (e) => {
-        const files = Array.from(e.target.files);
+    const handleUpload = async (files) => {
         setSelectedFiles(files);
-    };
-
-    const handleUpload = async () => {
-        if (selectedFiles.length === 0) {
+        if (files.length === 0) {
             return;
         }
 
         setIsLoading(true);
 
-        const uploadPromises = selectedFiles.map((file) => uploadFilesToS3(folderName, file.name, file, (progress) => {
+        const uploadPromises = files.map((file) => uploadFilesToS3(folderName, file.name, file, (progress) => {
             setImageUploadingProgress((prev) => ({
                 ...prev,
                 [file.name]: progress,
@@ -52,19 +50,21 @@ function S3MultipleImageUpload({ onImagesUploaded, photosArray, folderName }: Mu
         setIsLoading(false);
     };
 
+    const { getRootProps, getInputProps } = useDropzone({
+        accept: "image/*",
+        multiple: true,
+        onDrop: handleUpload,
+    });
+
     return (
         <Box>
-            <input
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleFileChange}
-            />
-            <button onClick={handleUpload} disabled={isLoading || selectedFiles.length === 0}>
-                Subir Imágenes
-            </button>
+            <div {...getRootProps()}>
+                Subir img<input {...getInputProps()} />
+            </div>
             {isLoading && <p>Cargando...</p>}
-            <Grid container spacing={2}>
+            <Grid container spacing={2} sx={{
+                marginTop: 2,
+            }}>
                 {selectedFiles.map((file, index) => (
                     <Grid item key={index} xs={12} sm={6} md={4}>
                         <Paper elevation={3}>
