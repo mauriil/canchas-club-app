@@ -325,7 +325,6 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                             marginTop: 3,
                             marginBottom: 3,
                         }}>
-                            <Typography variant="h6">Fotos:</Typography>
                             <S3MultipleImageUpload onImagesUploaded={handleAddPhotos} photosArray={fieldData.photos} folderName={`canchas`} />
                             <Box
                                 sx={{

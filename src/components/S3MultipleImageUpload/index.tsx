@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { useState } from 'react';
 import uploadFilesToS3 from '../../api/uploadFileToS3';
-import { Box, Grid, Input, LinearProgress, Paper, Typography } from '@mui/material';
+import { Box, Button, Grid, Input, LinearProgress, Paper, Typography } from '@mui/material';
 import CanchasClubLoader from '../Loader';
 import getFileFromS3 from '../../api/getFileFromS3';
 import { useDropzone } from 'react-dropzone';
@@ -19,6 +19,15 @@ function S3MultipleImageUpload({ onImagesUploaded, photosArray, folderName }: Mu
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [imageUploadingProgress, setImageUploadingProgress] = useState({});
+    const [isHovered, setIsHovered] = useState(false);
+
+    const handleMouseEnter = () => {
+        setIsHovered(true);
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+    };
 
     const handleUpload = async (files) => {
         setSelectedFiles(files);
@@ -56,10 +65,24 @@ function S3MultipleImageUpload({ onImagesUploaded, photosArray, folderName }: Mu
         onDrop: handleUpload,
     });
 
+    const handleRemoveImage = (fileName: string) => {
+        const newSelectedFiles = selectedFiles.filter((file) => file.name !== fileName);
+        setSelectedFiles(newSelectedFiles);
+      };
+
     return (
-        <Box>
+        <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}>
             <div {...getRootProps()}>
-                Subir img<input {...getInputProps()} />
+                <input {...getInputProps()} />
+                <Button variant="contained" color="primary" sx={{
+                    marginTop: 2,
+                }}>
+                    Añadir imágenes
+                </Button>
             </div>
             {isLoading && <p>Cargando...</p>}
             <Grid container spacing={2} sx={{
@@ -86,11 +109,31 @@ function S3MultipleImageUpload({ onImagesUploaded, photosArray, folderName }: Mu
                                     </Box>
                                 )}
                                 {imageUploadingProgress[file.name] && imageUploadingProgress[file.name] === 100 && (
-                                    <img
-                                        src={`https://canchas-club.s3.amazonaws.com/${photosArray.filter((photo) => photo.includes(file.name))}`}
-                                        alt={file.name}
-                                        style={{ maxWidth: '50%', maxHeight: '50%' }}
-                                    />
+                                    <Box
+                                        mb={2}
+                                        onMouseEnter={handleMouseEnter}
+                                        onMouseLeave={handleMouseLeave}
+                                        sx={{
+                                            position: 'relative',
+                                        }}
+                                    >
+                                        <img
+                                            src={`https://canchas-club.s3.amazonaws.com/${photosArray.filter((photo) => photo.includes(file.name))}`}
+                                            alt={file.name}
+                                            style={{ maxWidth: '100%', maxHeight: '100%', opacity: isHovered ? 0.7 : 1, }}
+                                        />
+                                        {isHovered && (
+                                            <Button variant="contained" color="error" onClick={() => handleRemoveImage(file.name)} sx={{
+                                                position: 'absolute',
+                                                bottom: '50%',
+                                                left: '50%',
+                                                transform: 'translateX(-50%) translateY(50%)',
+                                              }}>
+                                                Eliminar
+                                            </Button>
+                                        )}
+                                    </Box>
+
                                 )}
                             </Box>
                         </Paper>
