@@ -93,7 +93,7 @@ const ClubManagement = () => {
         try {
           const planStatus: PlanStatus = await getPlanStatus();
           if (planStatus.remainingFieldCreations > 0) {
-            navigate("/dashboard/fields/new");
+            navigate("fields/new");
           } else {
             setSnackBarMessage("No tienes más creaciones de canchas disponibles, actualiza tu plan");
             setSnackBarSeverity("error");

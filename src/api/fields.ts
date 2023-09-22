@@ -25,10 +25,10 @@ export const createField = async (values: User) => {
     try {
         const response = await fetch(`${BASE_API_URL}/fields/`, {
             method: "POST",
-            headers,
+            headers: { ...headers, "Authorization": `Bearer ${token}` },
             body: JSON.stringify(values)
         });
-        return response;
+        return await response.json();
     } catch (error) {
         console.error("Error creating club:", error);
         throw error;

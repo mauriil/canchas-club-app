@@ -15,6 +15,13 @@ import {
     Box,
     Select,
     InputLabel,
+    TableContainer,
+    Table,
+    TableHead,
+    TableRow,
+    TableCell,
+    TableBody,
+    Paper,
 } from '@mui/material';
 
 import { createField, deleteField, editField, getFieldById } from '../../../api/fields';
@@ -64,13 +71,21 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
     const [snackBarMessage, setSnackBarMessage] = useState('');
     const [snackBarSeverity, setSnackBarSeverity] = useState('success');
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [selectedPoster, setSelectedPoster] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (editMode && fieldId) {
-            const fieldId = window.location.pathname.split('/')[3];
+            const fieldId = window.location.pathname.split('/')[5];
             void fetchFieldData(fieldId).then((fieldData: Field) => {
                 setFieldData(fieldData);
+                setSelectedPoster(fieldData.photos[0]);
             });
+        } else {
+            setFieldData((prevData) => ({
+                ...prevData,
+                clubId: window.location.pathname.split('/')[3],
+            }));
         }
     }, [editMode, fieldId]);
 
@@ -136,11 +151,31 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
             if (editMode) {
                 // Implementa la lógica para editar un campo existente
             } else {
-                // Implementa la lógica para crear un nuevo campo
+                setIsLoading(true);
+                try {
+                    const req = await createField(fieldData);
+                    if (req.statusCode >= 400) {
+                        setSnackBarMessage(req.message);
+                        setSnackBarSeverity('error');
+                        setSnackBarOpen(true);
+                        return;
+                    }
+                    setSnackBarMessage('Cancha creada correctamente');
+                    setSnackBarSeverity('success');
+                    setSnackBarOpen(true);
+                    setTimeout(() => {
+                        navigate(`/dashboard/miClub/${window.location.pathname.split('/')[3]}`);
+                    }, 1500);
+                    return;
+                } catch (error) {
+                    console.error('Error al crear la cancha:', error);
+                    setSnackBarMessage('Error al crear la cancha');
+                    setSnackBarSeverity('error');
+                    setSnackBarOpen(true);
+                    setIsLoading(false);
+                    return;
+                }
             }
-            setSnackBarMessage(editMode ? 'Cancha editada correctamente' : 'Cancha creada correctamente');
-            setSnackBarSeverity('success');
-            setSnackBarOpen(true);
         } catch (error) {
             console.error('Error:', error);
             setSnackBarMessage('Error al guardar la cancha');
@@ -159,6 +194,26 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
         }, 1500);
         return;
     }
+
+    const onChoosePoster = (image: string) => {
+        const newPhotosArray = fieldData.photos.filter((photo) => photo !== image);
+        newPhotosArray.unshift(image);
+        setSelectedPoster(image);
+        setFieldData((prevData) => ({
+            ...prevData,
+            photos: newPhotosArray,
+        }));
+        setSnackBarMessage('Póster elegido correctamente');
+        setSnackBarSeverity('success');
+        setSnackBarOpen(true);
+    };
+
+    const handleRemoveImage = (photo: string) => {
+        setFieldData((prevData) => ({
+            ...prevData,
+            photos: prevData.photos.filter((image) => image !== photo),
+        }));
+    };
 
     return (
         <>
@@ -325,7 +380,7 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                             marginTop: 3,
                             marginBottom: 3,
                         }}>
-                            <S3MultipleImageUpload onImagesUploaded={handleAddPhotos} photosArray={fieldData.photos} folderName={`canchas`} />
+                            <S3MultipleImageUpload onImagesUploaded={handleAddPhotos} onRemoveImage={handleRemoveImage} photosArray={fieldData.photos} folderName={`canchas`} />
                             <Box
                                 sx={{
                                     display: "flex",
@@ -363,6 +418,7 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                         }}>
                             <Typography variant="h6">Disponibilidad:</Typography>
                             <FieldDayAvailability
+                                editable={true}
                                 day={selectedDay}
                                 data={fieldData.availability}
                                 onAddData={handleAddDayData}
@@ -410,12 +466,12 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                                 Por favor revisa la información antes de crear la cancha.
                             </Typography>
 
-                            <Typography><h2>{fieldData.name}</h2></Typography>
-                            <Typography><h3>Descripción: {fieldData.description}</h3></Typography>
-                            <Typography><h3>Deporte: {fieldData.sport}</h3></Typography>
-                            <Typography><h3>Tipo de cancha: {fieldData.fieldType}</h3></Typography>
-                            <Typography><h3>Tipo de piso: {fieldData.floorType}</h3></Typography>
-                            <Typography><h3>Iluminación: {fieldData.illumination === true ? 'SI' : 'NO'}</h3></Typography>
+                            <Typography>{fieldData.name}</Typography>
+                            <Typography>Descripción: {fieldData.description}</Typography>
+                            <Typography>Deporte: {fieldData.sport}</Typography>
+                            <Typography>Tipo de cancha: {fieldData.fieldType}</Typography>
+                            <Typography>Tipo de piso: {fieldData.floorType}</Typography>
+                            <Typography>Iluminación: {fieldData.illumination === true ? 'SI' : 'NO'}</Typography>
                             <FieldDayAvailability
                                 editable={false}
                                 data={fieldData.availability}
@@ -426,7 +482,49 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                                 dayData={dayData}
                                 setDayData={setDayData}
                             />
-                            TODO: ADD PHOTOS AND SELECT THE POSTER PHOTO
+                            <TableContainer component={Paper} sx={{
+                                marginTop: 3,
+                                marginBottom: 3,
+                            }}>
+                                <Table>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>Imagen</TableCell>
+                                            <TableCell>Acción</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {fieldData.photos.map((image, index) => (
+                                            <TableRow key={index}>
+                                                <TableCell>
+                                                    <img
+                                                        src={`https://canchas-club.s3.amazonaws.com/${image}`}
+                                                        alt={`Imagen ${index + 1}`}
+                                                        style={{
+                                                            width: '100px',
+                                                            height: 'auto',
+                                                        }}
+                                                    />
+                                                </TableCell>
+                                                <TableCell sx={{display: 'flex', justifyContent: 'center'}}>
+                                                    <Button
+                                                        variant="contained"
+                                                        color="primary"
+                                                        onClick={() => onChoosePoster(image)}
+                                                        disabled={selectedPoster === image}
+                                                        sx={{
+                                                            width: '80%',
+                                                            margin: '5rem',
+                                                        }}
+                                                    >
+                                                        {selectedPoster === image ? 'Póster actual' : 'Elegir como Póster'}
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
 
                             <Box
                                 sx={{
