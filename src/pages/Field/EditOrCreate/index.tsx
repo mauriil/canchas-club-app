@@ -308,8 +308,8 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                                     id: 'illumination',
                                 }}
                             >
-                                <option value="true">Sí</option>
-                                <option value="false">No</option>
+                                <option value="true">SÍ</option>
+                                <option value="false">NO</option>
                             </Select>
                             {/* Otros campos de información básica */}
                             <Button variant="outlined" color="primary" sx={{ marginTop: 1 }} onClick={handleNext}>
@@ -400,57 +400,72 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                         </Box>
                     )}
                     {activeStep === steps.length && (
-                            <Box sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                            }}>
-                                <Typography variant="h6" sx={{ margin: 1 }}>Confirmar y crear:</Typography>
-                                <Typography sx={{ margin: 1 }}>
-                                    Por favor revisa la información antes de crear la cancha.
-                                </Typography>
+                        <Box sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                        }}>
+                            <Typography variant="h6" sx={{ margin: 1 }}>Confirmar y crear:</Typography>
+                            <Typography sx={{ margin: 1 }}>
+                                Por favor revisa la información antes de crear la cancha.
+                            </Typography>
 
-                                <Typography><h3>{fieldData.description}</h3></Typography>
-                                {JSON.stringify(fieldData)}
+                            <Typography><h2>{fieldData.name}</h2></Typography>
+                            <Typography><h3>Descripción: {fieldData.description}</h3></Typography>
+                            <Typography><h3>Deporte: {fieldData.sport}</h3></Typography>
+                            <Typography><h3>Tipo de cancha: {fieldData.fieldType}</h3></Typography>
+                            <Typography><h3>Tipo de piso: {fieldData.floorType}</h3></Typography>
+                            <Typography><h3>Iluminación: {fieldData.illumination === true ? 'SI' : 'NO'}</h3></Typography>
+                            <FieldDayAvailability
+                                editable={false}
+                                data={fieldData.availability}
+                                onAddData={handleAddDayData}
+                                onDeleteData={handleDeleteDayData}
+                                selectedDay={selectedDay}
+                                setSelectedDay={setSelectedDay}
+                                dayData={dayData}
+                                setDayData={setDayData}
+                            />
+                            TODO: ADD PHOTOS AND SELECT THE POSTER PHOTO
 
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        width: "100%",
-                                        marginTop: 3,
-                                    }}
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    width: "100%",
+                                    marginTop: 3,
+                                }}
+                            >
+                                <Button variant="outlined"
+                                    color="secondary"
+                                    fullWidth
+                                    onClick={handleBack} sx={{ mt: 2 }}>
+                                    Atrás
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    fullWidth
+                                    onClick={handleSubmit}
+                                    sx={{ mt: 2 }}
                                 >
-                                    <Button variant="outlined"
-                                        color="secondary"
-                                        fullWidth
-                                        onClick={handleBack} sx={{ mt: 2 }}>
-                                        Atrás
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        fullWidth
-                                        onClick={handleSubmit}
-                                        sx={{ mt: 2 }}
-                                    >
-                                        {editMode ? 'Guardar cambios' : 'Crear cancha'}
-                                    </Button>
-                                </Box>
-
+                                    {editMode ? 'Guardar cambios' : 'Crear cancha'}
+                                </Button>
                             </Box>
-                        )}
+
+                        </Box>
+                    )}
                 </Box>
             </Box>
             <Snackbar
-                        open={snackBarOpen}
-                        autoHideDuration={5000}
-                        onClose={() => setSnackBarOpen(false)}
-                    >
-                        <Alert severity={snackBarSeverity as AlertColor} onClose={() => setSnackBarOpen(false)}>
-                            {snackBarMessage}
-                        </Alert>
-                    </Snackbar>
+                open={snackBarOpen}
+                autoHideDuration={5000}
+                onClose={() => setSnackBarOpen(false)}
+            >
+                <Alert severity={snackBarSeverity as AlertColor} onClose={() => setSnackBarOpen(false)}>
+                    {snackBarMessage}
+                </Alert>
+            </Snackbar>
         </>
     );
 };
