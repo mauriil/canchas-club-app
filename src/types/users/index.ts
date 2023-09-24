@@ -7,6 +7,7 @@ export interface User {
   email: string;
   password: string;
   phone: string;
+  mercadoPagoToken: string;
 }
 export interface LogInUser {
   email: string;
@@ -48,4 +49,11 @@ export interface PlanStatus {
   remainingFieldCreations: number;
   status: string;
   value: number;
+}
+
+export interface EditUser {
+  name?: string;
+  password?: string;
+  phone?: string;
+  mercadoPagoToken?: string;
 }

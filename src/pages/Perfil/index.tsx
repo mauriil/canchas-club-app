@@ -7,41 +7,60 @@ import { getPlanStatus } from "../../api/users";
 import { useEffect, useState } from "react";
 import PerfilPlanStatus from "../../components/Perfil/PerfilPlanStatus";
 import PerfilShowPlans from "../../components/Perfil/PerfilShowPlans";
+import PerfilEdit from "../../components/Perfil/PerfilEdit";
+import MercadoPagoToken from "../../components/Perfil/MercadoPagoToken";
+import CanchasClubLoader from "../../components/Loader";
+import { PlanStatus } from "../../types/users";
 
 const Perfil = () => {
   const { user } = useAuth();
   const [isPremium, setIsPremium] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedOption, setSelectedOption] = useState("menu");
+  const [planStatus, setPlanStatus] = useState<PlanStatus | null>(null);
+  const [planTitle, setPlanTitle] = useState("");
 
   const checkPremium = async () => {
     const planStatus = await getPlanStatus();
-    setIsPremium(planStatus.type !== "free");
+    setIsPremium(planStatus.type !== "free" && planStatus.type !== "");
+    setIsLoading(false);
   };
   useEffect(() => {
     void checkPremium();
   }, []);
 
   const handleItemClick = (option: string) => {
-    switch (option) {
-      case "editProfile":
-        // Lógica para "Editar Perfil"
-        // ...
-        break;
-      case "myPlan":
-        setSelectedOption("myPlan");
-        break;
-      case "showPlans":
-        setSelectedOption("showPlans");
-        break;
-      case "mercadoPagoToken":
-        // Lógica para "Mercado Pago token"
-        // ...
-        break;
-      default:
-        setSelectedOption("menu");
-        break;
+    setSelectedOption(option);
+  };
+
+  const getPlanStatusRequest = async () => {
+    try {
+      const planStatusResponse: PlanStatus = await getPlanStatus();
+      setPlanStatus(planStatusResponse);
+      switch (planStatusResponse.type) {
+        case "premium1":
+          setPlanTitle("CanchaEssentials");
+          break;
+        case "premium2":
+          setPlanTitle("CanchaProgresivo");
+          break;
+        case "premium3":
+          setPlanTitle("CanchaAvanzado");
+          break;
+        default:
+          setPlanTitle("CanchaEssentials");
+          break;
+      }
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      console.error("Error fetching plan status:", error);
     }
   };
+
+  useEffect(() => {
+    void getPlanStatusRequest();
+  }, []);
 
   return (
     <Box
@@ -101,7 +120,7 @@ const Perfil = () => {
             animation: { md: "fadeIn 1s ease-in-out" },
             width: { md: "40%", xs: "100%" },
             backgroundColor: { md: "background.default" },
-            height: { md: "60%" },
+            height: { md: "80%" },
             display: { xs: "none", md: "flex" },
           }}
           marginLeft="3rem"
@@ -118,13 +137,13 @@ const Perfil = () => {
               display: "flex",
               flexDirection: "column",
             }}
-            padding="10rem"
+            padding="5rem"
             borderRadius="15px"
             justifyContent="center"
             alignItems="center"
             flexDirection="column"
           >
-            <AvatarIcon width="8rem" height="8rem" />
+            <AvatarIcon width="5rem" height="5rem" />
             <Typography component="h2" fontSize="2rem">
               {user?.userName}
             </Typography>
@@ -138,16 +157,19 @@ const Perfil = () => {
             flexDirection="column"
           >
             <Typography component="h2" fontSize="2rem">
-              {user?.userName}
+              Plan: {planTitle}
             </Typography>
             <Typography component="h2" fontSize="2rem">
-              {user?.userName}
+              Canchas creadas: {planStatus?.clubsCreated}
             </Typography>
             <Typography component="h2" fontSize="2rem">
-              {user?.userName}
+              Canchas disponibles: {planStatus?.remainingClubCreations}
             </Typography>
             <Typography component="h2" fontSize="2rem">
-              {user?.userName}
+              Canchas creadas: {planStatus?.fieldsCreated}
+            </Typography>
+            <Typography component="h2" fontSize="2rem">
+              Canchas disponibles: {planStatus?.remainingFieldCreations}
             </Typography>
           </Box>
         </Box>
@@ -156,9 +178,16 @@ const Perfil = () => {
             width: { xs: "100%", md: "50%" },
             height: "auto",
             marginRight: { md: "3rem" },
+            backgroundColor: { md: "background.default" },
+            borderRadius: "15px",
+            boxShadow: isLoading
+              ? { md: "0px 0px 25px 1px rgb(0,0,0)" }
+              : "none",
           }}
         >
-          {selectedOption === "menu" ? (
+          {isLoading ? (
+            <CanchasClubLoader width="10%" />
+          ) : selectedOption === "menu" ? (
             <PerfilOptions
               isPremium={isPremium}
               onItemClick={handleItemClick}
@@ -167,6 +196,10 @@ const Perfil = () => {
             <PerfilPlanStatus onItemClick={handleItemClick} />
           ) : selectedOption === "showPlans" ? (
             <PerfilShowPlans onItemClick={handleItemClick} />
+          ) : selectedOption === "editProfile" ? (
+            <PerfilEdit onItemClick={handleItemClick} />
+          ) : selectedOption === "mercadoPagoToken" ? (
+            <MercadoPagoToken onItemClick={handleItemClick} />
           ) : null}
         </Box>
       </Box>

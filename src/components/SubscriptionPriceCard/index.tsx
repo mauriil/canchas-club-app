@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import '../../App.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import { Alert, AlertColor, Box, Snackbar, Typography } from '@mui/material';
-import AvatarIcon from '../Avatar';
+import Avanzado from '../../assets/images/CanchasClub_Iconografia-AVANZADO.svg';
+import Progresivo from '../../assets/images/CanchasClub_Iconografia-PROGRESIV.svg';
+import Essentials from '../../assets/images/CanchasClub_Iconografia-ESSENTIAL.svg';
 import { createPremiumSubscription } from '../../api/users';
 
 interface SubscriptionPriceProps {
@@ -34,6 +36,7 @@ const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
   const handelSnackClose = () => {
     setSnackBarOpen(false);
   }
+  const [logoUrl, setLogoUrl] = useState('');
   const handleBuyClick = async (id: string) => {
     onSubscribeClick();
     const req = await createPremiumSubscription(id);
@@ -47,6 +50,23 @@ const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
     onSubscribeResolve(true);
     return;
   };
+
+  useEffect(() => {
+    switch (icon) {
+      case 'Essentials':
+        setLogoUrl(Essentials);
+        break;
+      case 'Progresivo':
+        setLogoUrl(Progresivo);
+        break;
+      case 'Avanzado':
+        setLogoUrl(Avanzado);
+        break;
+      default:
+        setLogoUrl(Essentials);
+        break;
+    }
+  }, [icon]);
 
   return (
     <>
@@ -77,7 +97,7 @@ const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
           alignItems: 'center',
           marginTop: '1rem',
         }}>
-          <AvatarIcon width="35px" height="35px" />
+          <img src={logoUrl} alt={icon} width={'50px'}/>
         </Box>
         <CardContent>
           <ul>

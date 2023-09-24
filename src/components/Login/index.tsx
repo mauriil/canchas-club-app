@@ -104,7 +104,7 @@ export default function LogIn() {
         </Typography>
 
         {loading ? (
-          <CanchasClubLoader />
+          <CanchasClubLoader width="50%" />
         ) : (
           <Box component="form" onSubmit={onSubmit} noValidate sx={{ mt: 1 }} width={"100%"}>
             <TextField
@@ -168,10 +168,10 @@ export default function LogIn() {
         <Copyright sx={{ mt: 4, mb: 3 }} />
       </Box>
       <Snackbar open={snackBarOpen} autoHideDuration={5000} onClick={handelSnackClose} onClose={handelSnackClose}>
-          <Alert severity={snackBarSeverity as AlertColor} sx={{ width: '100%', fontSize: '15px' }} onClose={handelSnackClose}>
-            {snackBarMessage}
-          </Alert>
-        </Snackbar>
+        <Alert severity={snackBarSeverity as AlertColor} sx={{ width: '100%', fontSize: '15px' }} onClose={handelSnackClose}>
+          {snackBarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 }

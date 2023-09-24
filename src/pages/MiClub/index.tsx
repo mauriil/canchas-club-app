@@ -8,6 +8,7 @@ import { Club } from "../../types/clubs";
 import { Link, useNavigate } from "react-router-dom";
 import { getPlanStatus } from "../../api/users";
 import { PlanStatus } from "../../types/users";
+import CanchasClubLoader from "../../components/Loader";
 
 const MiClub = () => {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
@@ -16,6 +17,7 @@ const MiClub = () => {
   const handelSnackClose = () => {
     setSnackBarOpen(false);
   }
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const [clubs, setClubs] = useState<Club[]>([]);
 
@@ -30,19 +32,24 @@ const MiClub = () => {
         } else {
           console.error("Error fetching clubs:", clubsResponse.statusText);
         }
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching clubs:", error);
+        setIsLoading(false);
       }
     };
 
     fetchData().catch(error => {
       console.error("Error in fetchData:", error);
+      setIsLoading(false);
     });
   }, []);
 
   const handleCreateClub = async () => {
     try {
       const planStatus: PlanStatus = await getPlanStatus();
+      console.log("🚀 ~ file: index.tsx:51 ~ handleCreateClub ~ planStatus:", planStatus)
+      console.log("🚀 ~ file: index.tsx:53 ~ handleCreateClub ~ planStatus.remainingClubCreations:", planStatus.remainingClubCreations)
       if (planStatus.remainingClubCreations > 0) {
         navigate("/dashboard/miClub/new");
       } else {
@@ -78,7 +85,10 @@ const MiClub = () => {
         flexGrow={1}
         overflow="auto"
       >
-        {clubs.length > 0 ? (
+        {isLoading ? (
+          <CanchasClubLoader width="80%" />
+        ) :
+        clubs.length > 0 ? (
           clubs.map((club: Club) => (
             <Link key={club._id} to={`${club._id}`}>
               <ClubAvatar

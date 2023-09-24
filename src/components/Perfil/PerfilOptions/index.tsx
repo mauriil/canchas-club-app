@@ -7,6 +7,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import PerfilButton from "../PerfilButton";
+import { useAuth } from "../../../customHooks/useAuth";
 
 interface UserProfileOptionsProps {
   isPremium: boolean;
@@ -17,18 +18,8 @@ const UserProfileOptions = ({
   isPremium,
   onItemClick,
 }: UserProfileOptionsProps) => {
+  const { logOut } = useAuth();
   const navigate = useNavigate();
-
-  const logOut = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    Cookies.remove(
-      "access-token",
-      import.meta.env.VITE_ENV === "development"
-        ? {}
-        : { path: "/", domain: import.meta.env.VITE_COOKIE_DOMAIN }
-    );
-    navigate("/index/login");
-  };
 
   return (
     <Box
@@ -42,16 +33,26 @@ const UserProfileOptions = ({
         backgroundColor: { md: "background.paper" },
         boxShadow: { md: "0px 0px 25px 1px rgb(0,0,0)" },
       }}
-      marginTop={{ xs: "2rem" }}
       padding={{ md: "3rem" }}
     >
-      <PerfilButton text="Editar Perfil" icon={<PersonOutlineIcon />} />
+      <PerfilButton
+        text="Editar Perfil"
+        icon={<PersonOutlineIcon />}
+        onClick={() => onItemClick("editProfile")}
+      />
       {isPremium ? (
-        <PerfilButton
-          text="Mi plan"
-          icon={<AccountBalanceWalletIcon />}
-          onClick={() => onItemClick("myPlan")}
-        />
+        <>
+          <PerfilButton
+            text="Mi plan"
+            icon={<AccountBalanceWalletIcon />}
+            onClick={() => onItemClick("myPlan")}
+          />
+          <PerfilButton
+            text="Mercado Pago token"
+            icon={<KeyIcon />}
+            onClick={() => onItemClick("mercadoPagoToken")}
+          />
+        </>
       ) : (
         <PerfilButton
           text="Soy dueño de un club"
@@ -59,7 +60,6 @@ const UserProfileOptions = ({
           onClick={() => onItemClick("showPlans")}
         />
       )}
-      <PerfilButton text="Mercado Pago token" icon={<KeyIcon />} />
       <PerfilButton
         onClick={logOut}
         text="Cerrar sesion"
@@ -67,6 +67,7 @@ const UserProfileOptions = ({
       />
     </Box>
   );
+  navigate("/index/login");
 };
 
 export default UserProfileOptions;

@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { Field } from "react-hook-form";
 import { LogInUser, User } from "../types/users";
 import { ForgotPasswordBody } from "../types/users";
 import Cookies from "js-cookie";
@@ -23,10 +25,10 @@ export const createField = async (values: User) => {
     try {
         const response = await fetch(`${BASE_API_URL}/fields/`, {
             method: "POST",
-            headers,
+            headers: { ...headers, "Authorization": `Bearer ${token}` },
             body: JSON.stringify(values)
         });
-        return response;
+        return await response.json();
     } catch (error) {
         console.error("Error creating club:", error);
         throw error;
@@ -47,16 +49,28 @@ export const editField = async (values: LogInUser, clubId: string) => {
     }
 }
 
-export const deleteField = async (values: ForgotPasswordBody, clubId: string) => {
+export const deleteField = async (fieldId: string | undefined) => {
     try {
-        const response = await fetch(`${BASE_API_URL}/fields/${clubId}`, {
+        const response = await fetch(`${BASE_API_URL}/fields/${fieldId}`, {
             method: "DELETE",
             headers,
-            body: JSON.stringify(values)
         });
         return response;
     } catch (error) {
         console.error("Error deleting club:", error);
+        throw error;
+    }
+}
+
+export const getFieldById = async (fieldId: string | undefined): Promise<Field> => {
+    try {
+        const response = await fetch(`${BASE_API_URL}/fields/${fieldId}`, {
+            method: "GET",
+            headers: { ...headers, "Authorization": `Bearer ${token}` },
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error getting club by id:", error);
         throw error;
     }
 }

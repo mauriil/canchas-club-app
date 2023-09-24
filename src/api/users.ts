@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { PlanStatus, User } from "../types/users";
+import { EditUser, PlanStatus, User } from "../types/users";
 import Cookies from "js-cookie";
 
 const cookies: {
@@ -19,6 +19,47 @@ const headers = {
     mode: 'cors',
     "Authorization": `Bearer ${token}`
 };
+
+export const getUser = async (): Promise<User> => {
+    try {
+        const response = await fetch(`${BASE_API_URL}/users/${userId}`, {
+            method: "GET",
+            headers,
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching getUser:", error);
+        throw error;
+    }
+}
+
+export const updateUser = async (user: EditUser): Promise<User> => {
+    try {
+        const response = await fetch(`${BASE_API_URL}/users/${userId}`, {
+            method: "PATCH",
+            headers,
+            body: JSON.stringify(user),
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching updateUser:", error);
+        throw error;
+    }
+}
+
+export const updateUserPassword = async (oldPassword: string, newPassword: string) => {
+    try {
+        const response = await fetch(`${BASE_API_URL}/auth/newPassword/${userId}`, {
+            method: "PATCH",
+            headers,
+            body: JSON.stringify({oldPassword, newPassword}),
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching updateUserPassword:", error);
+        throw error;
+    }
+}
 
 export const getPlanStatus = async (): Promise<PlanStatus> => {
     try {

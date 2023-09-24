@@ -1,7 +1,12 @@
 import { Box } from "@mui/material";
 import canchasClubLoaderGif from "../../assets/images/canchasClubLoader.gif";
 
-const CanchasClubLoader = () => {
+interface CanchasClubLoaderProps {
+    width?: string;
+    height?: string;
+}
+
+const CanchasClubLoader = ({width, height}: CanchasClubLoaderProps) => {
 
     return (
         <Box
@@ -12,7 +17,7 @@ const CanchasClubLoader = () => {
                 overflow: 'auto',
             }}
         >
-            <img src={canchasClubLoaderGif} alt="Cargando..." />
+            <img src={canchasClubLoaderGif} alt="Cargando..." height={height ? height : '100%'} width={width ? width : '100%'}/>
         </Box>
     );
 };

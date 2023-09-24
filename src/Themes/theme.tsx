@@ -78,6 +78,7 @@ export const theme = createTheme({
               backgroundColor: "#f44336",
               borderColor: "#f44336",
               boxShadow: "0px 0px 25px 1px rgb(0,0,0)",
+              color: "#ffffff",
             },
           },
         },

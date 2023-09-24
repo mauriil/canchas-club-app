@@ -60,12 +60,15 @@ export default function SignIn() {
   const onSubmit = handleSubmit(async (values) => {
     setLoading(true);
     const registerResponse = await signUp(values as User);
-    setLoading(false);
     if (!registerResponse.status) {
       setSnackBarMessage(registerResponse.errors[0]);
       setSnackBarSeverity("error");
       setSnackBarOpen(true);
     }
+    setSnackBarMessage('Bienvenido a Canchas Club!');
+    setSnackBarSeverity("success");
+    setSnackBarOpen(true);
+    setLoading(false);
 
   });
 
@@ -103,7 +106,7 @@ export default function SignIn() {
         </Typography>
 
         {loading ? (
-          <CanchasClubLoader />
+          <CanchasClubLoader width="50%"/>
         ) : (
           <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={onSubmit} width={"100%"}>
             <TextField
@@ -115,7 +118,7 @@ export default function SignIn() {
               label="Nombre completo"
               autoComplete="name"
               autoFocus
-              sx={{ background: "transparent", minWidth: "400px" }}
+              sx={{ background: "transparent" }}
               {...register("name", { required: true })}
             />
             {errors.name && (
@@ -129,7 +132,6 @@ export default function SignIn() {
               id="phone"
               label="Teléfono"
               autoComplete="phone"
-              autoFocus
               sx={{ background: "transparent" }}
               {...register("phone", { required: true })}
             />
@@ -144,7 +146,6 @@ export default function SignIn() {
               id="email"
               label="Email"
               autoComplete="email"
-              autoFocus
               sx={{ background: "transparent" }}
               {...register("email", {
                 required: true,
