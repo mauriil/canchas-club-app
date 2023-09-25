@@ -1,23 +1,37 @@
-import { NavLink } from "react-router-dom";
-import { Box } from "@mui/material";
+import { Box, Divider } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import React from "react";
+import RoomIcon from "@mui/icons-material/Room";
+import { Club } from "../../types/clubs";
+import { Room } from "@mui/icons-material";
 
 const BookingCard = ({ booking }) => {
+  const image = booking.fieldId.photos[0];
+
   return (
-    <Card sx={{ height: 400, maxWidth: 345, minWidth: 300 }}>
+    <Card
+      sx={{
+        borderRadius: "0px 0px 25px 25px",
+        height: 300,
+        maxWidth: 345,
+        minWidth: 300,
+        display: "flex",
+        borderTop: "solid",
+        borderWidth: "0.5rem",
+        borderColor: "#00a6c0",
+      }}
+    >
       <Box
         sx={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          width: "100%",
-          height: "250px",
+          width: "35%",
+          height: "100%",
           backgroundColor: "white",
           overflow: "hidden",
         }}
@@ -25,31 +39,45 @@ const BookingCard = ({ booking }) => {
         <CardMedia
           component="img"
           sx={{ height: "auto", width: "100%" }}
-          src={booking.image}
-          title={booking.title}
+          src={`https://canchas-club.s3.amazonaws.com/${image}`}
+          title={booking.fieldId.description}
         />
       </Box>
-      <Box sx={{ height: 150 }}>
-        <CardContent sx={{ height: 100 }}>
-          <Typography gutterBottom variant="h5" component="div">
-            {booking.title}
+      <Box
+        display="flex"
+        flexDirection="column"
+        justifyContent="space-between"
+        sx={{ height: "100%", width: "65%" }}
+      >
+        <CardContent sx={{ height: "60%" }}>
+          <Typography gutterBottom variant="h4" component="div">
+            {`${booking.fieldId.sport} ${booking.clubId.name}`}
+          </Typography>
+          <Divider sx={{ margin: "1rem 0rem", width: "100%" }} />
+          <Box display="flex" alignItems="center">
+            <RoomIcon fontSize="large" color="primary" />
+            <Typography variant="h6" color="primary.light">
+              {booking.clubId.address}
+            </Typography>
+          </Box>
+          <Divider sx={{ margin: "1rem 0rem" }} />
+          <Typography variant="h4" color="primary">
+            {`${booking.time.from} hs`}
           </Typography>
           <Typography variant="h4" color="primary">
-            ${booking.price}
+            {booking.fieldId.name}
           </Typography>
         </CardContent>
-        <NavLink to={`${booking.id}`}>
-          <CardActions>
-            <Button
-              sx={{ width: "100%" }}
-              size="large"
-              color="primary"
-              variant="contained"
-            >
-              Descripcion
-            </Button>
-          </CardActions>
-        </NavLink>
+        <CardActions sx={{ width: "100%" }}>
+          <Button
+            sx={{ width: "100%", marginBottom: "2rem" }}
+            size="large"
+            color="primary"
+            variant="contained"
+          >
+            RESERVADO
+          </Button>
+        </CardActions>
       </Box>
     </Card>
   );

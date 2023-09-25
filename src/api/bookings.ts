@@ -18,11 +18,11 @@ const headers = {
     "Authorization": `Bearer ${token}`
 };
 
-export const getAllBookingsByUser = async (userId: number) => {
+export const getAllBookingsByUser = async () => {
     try {
         const response = await fetch(`${BASE_API_URL}/bookings/bytenant/${userId}`, {
             method: "GET",
-            headers: { ...headers, "Authorization": `Bearer ${token}` },
+            headers: { ...headers },
         });
         return response;
     } catch (error) {

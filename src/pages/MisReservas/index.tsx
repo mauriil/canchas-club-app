@@ -1,23 +1,28 @@
-import { Grid } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { useEffect, useState } from "react";
 import { getAllBookingsByUser } from "../../api/bookings";
 import { useAuth } from "../../customHooks/useAuth";
+import BookingCard from "../../components/BookingCard";
+import { Booking } from "../../types/booking";
 
 const MisReservas = () => {
-  const [booking, setBooking] = useState({});
+  const [booking, setBooking] = useState<Booking[]>([]);
   const { user } = useAuth();
 
   const getBookings = async () => {
-    const id = +user?.userId | 0;
-    const bookingsOfUser = await getAllBookingsByUser(id);
+    const req = await getAllBookingsByUser();
+    const bookingsOfUser: [Booking] = await req.json();
+    console.log(bookingsOfUser);
     setBooking(bookingsOfUser);
   };
-
+  // 64fe68c0cbd250f517046850
   useEffect(() => {
     void getBookings();
   }, []);
-
   return (
+    // <Box></Box>
+
+    // <BookingCard booking={booking[0]} />
     <Grid
       container
       rowSpacing={2}
@@ -29,13 +34,13 @@ const MisReservas = () => {
         justifyContent: "center",
       }}
     >
-      {booking.map((booking) => {
+      {booking.map((booking, index) => {
         return (
           <Grid
             display="flex"
             justifyContent="center"
             alignItems="center"
-            key={booking.id}
+            key={index}
             item
             xs={12}
             sm={6}
