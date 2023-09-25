@@ -242,7 +242,7 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
         setSnackBarSeverity('success');
         setSnackBarOpen(true);
         setTimeout(() => {
-            navigate("/dashboard/miClub");
+            navigate(`/dashboard/miClub/${window.location.pathname.split('/')[3]}`);
         }, 1500);
         return;
     }
