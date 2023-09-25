@@ -38,7 +38,8 @@ function App() {
               <Route path="/dashboard/miClub/new" element={<EditOrCreateClub />} />
               <Route path="/dashboard/miClub/:clubId" element={<ClubManagement />} />
               <Route path="/dashboard/miClub/:clubId/edit" element={<EditOrCreateClub editMode={true} />} />
-              <Route path="/dashboard/miClub/:clubId/fields/new" element={<EditOrCreateField />} />
+              <Route path="/dashboard/miClub/:clubId/fields" element={<EditOrCreateField />} />
+              <Route path="/dashboard/miClub/:clubId/fields/:fieldId" element={<EditOrCreateField editMode={true} />} />
               <Route path="miPerfil" element={<Perfil />} />
             </Route>
           </Route>

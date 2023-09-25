@@ -96,12 +96,16 @@ const ClubManagement = () => {
         );
     }
 
+    const handleEditField = async (fieldId: string) => {
+        navigate(`fields/${fieldId}`);
+    };
+
     const handleAddField = async () => {
         try {
             setIsLoading(true);
             const planStatus: PlanStatus = await getPlanStatus();
             if (planStatus.remainingFieldCreations > 0) {
-                navigate("fields/new");
+                navigate("fields");
             } else {
                 setSnackBarMessage("No tienes más creaciones de canchas disponibles, actualiza tu plan");
                 setSnackBarSeverity("error");
@@ -207,7 +211,7 @@ const ClubManagement = () => {
                                     justifyContent: "space-around",
                                     marginTop: "1rem",
                                 }}>
-                                    <Button variant="outlined" color="primary" startIcon={<EditIcon />}>
+                                    <Button variant="outlined" color="primary" startIcon={<EditIcon />} onClick={() => handleEditField(field._id) }>
                                         Editar
                                     </Button>
                                     <Button variant="outlined" color="error" startIcon={<DeleteIcon />} onClick={() => {setOpenDeleteDialog(true); setFieldToDelete(field._id)}}>

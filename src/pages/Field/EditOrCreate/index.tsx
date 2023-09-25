@@ -76,10 +76,15 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        if (editMode && fieldId) {
+        if (editMode) {
+            setIsLoading(true);
             const fieldId = window.location.pathname.split('/')[5];
             void fetchFieldData(fieldId).then((fieldData: Field) => {
-                setFieldData(fieldData);
+                setFieldData((prevData) => ({
+                    ...prevData,
+                    ...fieldData,
+                    clubId: window.location.pathname.split('/')[3],
+                }));
                 setSelectedPoster(fieldData.photos[0]);
             });
         } else {
@@ -88,10 +93,11 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                 clubId: window.location.pathname.split('/')[3],
             }));
         }
-    }, [editMode, fieldId]);
+    }, [editMode]);
 
     const fetchFieldData = async (fieldId: string): Promise<Field> => {
         const fieldData = await getFieldById(fieldId);
+        setIsLoading(false);
         return fieldData as unknown as Field;
     };
 
@@ -172,7 +178,30 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
     const handleSubmit = async () => {
         try {
             if (editMode) {
-                // Implementa la lógica para editar un campo existente
+                setIsLoading(true);
+                try {
+                    const req = await editField(fieldData);
+                    if (req.statusCode >= 400) {
+                        setSnackBarMessage(req.message);
+                        setSnackBarSeverity('error');
+                        setSnackBarOpen(true);
+                        return;
+                    }
+                    setSnackBarMessage('Cancha editada correctamente');
+                    setSnackBarSeverity('success');
+                    setSnackBarOpen(true);
+                    setTimeout(() => {
+                        navigate(`/dashboard/miClub/${window.location.pathname.split('/')[3]}`);
+                    }, 1500);
+                    return;
+                } catch (error) {
+                    console.error('Error al crear la cancha:', error);
+                    setSnackBarMessage('Error al crear la cancha');
+                    setSnackBarSeverity('error');
+                    setSnackBarOpen(true);
+                    setIsLoading(false);
+                    return;
+                }
             } else {
                 setIsLoading(true);
                 try {
@@ -304,7 +333,7 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                                         fullWidth
                                         value={fieldData.name}
                                         sx={{ marginTop: 2, marginBottom: 2 }}
-                                        error={fieldData.name === '' || fieldData.name.length < 4 && buttonNextClicked}
+                                        error={fieldData.name === '' && buttonNextClicked || fieldData.name.length < 4 && buttonNextClicked}
                                         helperText={fieldData.name === '' && buttonNextClicked ? 'Campo requerido' : ''}
                                         onChange={(e) => setFieldData({ ...fieldData, name: e.target.value })} />
                                     <TextField
