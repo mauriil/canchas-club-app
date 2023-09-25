@@ -103,6 +103,28 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                 setSnackBarOpen(true);
                 return;
             }
+            if (fieldData.name.length < 4) {
+                setSnackBarMessage('El nombre debe tener al menos 4 caracteres');
+                setSnackBarSeverity('warning');
+                setSnackBarOpen(true);
+                return;
+            }
+        }
+        if (activeStep === 1) {
+            if (fieldData.photos.length === 0) {
+                setSnackBarMessage('Por favor sube al menos una foto');
+                setSnackBarSeverity('warning');
+                setSnackBarOpen(true);
+                return;
+            }
+        }
+        if (activeStep === 2) {
+            if (fieldData.availability.monday.length === 0 && fieldData.availability.tuesday.length === 0 && fieldData.availability.wednesday.length === 0 && fieldData.availability.thursday.length === 0 && fieldData.availability.friday.length === 0 && fieldData.availability.saturday.length === 0 && fieldData.availability.sunday.length === 0) {
+                setSnackBarMessage('Por favor ingresa al menos un horario de disponibilidad');
+                setSnackBarSeverity('warning');
+                setSnackBarOpen(true);
+                return;
+            }
         }
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
@@ -277,7 +299,7 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                                 fullWidth
                                 value={fieldData.name}
                                 sx={{ marginTop: 2, marginBottom: 2 }}
-                                error={fieldData.name === '' && buttonNextClicked}
+                                error={fieldData.name === '' || fieldData.name.length < 4 && buttonNextClicked}
                                 helperText={fieldData.name === '' && buttonNextClicked ? 'Campo requerido' : ''}
                                 onChange={(e) => setFieldData({ ...fieldData, name: e.target.value })} />
                             <TextField

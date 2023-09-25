@@ -53,7 +53,7 @@ export const deleteField = async (fieldId: string | undefined) => {
     try {
         const response = await fetch(`${BASE_API_URL}/fields/${fieldId}`, {
             method: "DELETE",
-            headers,
+            headers: { ...headers, "Authorization": `Bearer ${token}` },
         });
         return response;
     } catch (error) {
