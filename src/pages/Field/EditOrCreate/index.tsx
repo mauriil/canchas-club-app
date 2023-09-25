@@ -141,12 +141,18 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
     };
 
     const [dayData, setDayData] = useState({
-        openHour: '',
-        closeHour: '',
+        openHour: '08:00',
+        closeHour: '08:30',
         price: 0,
     });
 
     const handleAddDayData = () => {
+        if (dayData.openHour === '' || dayData.closeHour === '' || dayData.price === 0) {
+            setSnackBarMessage('Por favor revisa los horarios y el precio');
+            setSnackBarSeverity('warning');
+            setSnackBarOpen(true);
+            return;
+        }
         setFieldData((prevData) => ({
             ...prevData,
             availability: {

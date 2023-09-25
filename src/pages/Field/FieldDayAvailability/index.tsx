@@ -18,6 +18,7 @@ import {
   Box,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import HalfHourTimeSelector from './HalfHoursSelector.jsx';
 
 interface FieldDayAvailabilityProps {
   editable: boolean;
@@ -54,7 +55,7 @@ const FieldDayAvailability: React.FC<FieldDayAvailabilityProps> = ({
 }) => {
   const handleAddDayData = () => {
     onAddData(selectedDay, dayData);
-    setDayData({ openHour: '', closeHour: '', price: 0 });
+    setDayData({ openHour: '08:00', closeHour: '08:30', price: 0 });
   };
   const spanishDays = {
     monday: 'Lunes',
@@ -102,26 +103,18 @@ const FieldDayAvailability: React.FC<FieldDayAvailabilityProps> = ({
             </Select>
           </FormControl><Grid container spacing={2}>
             <Grid item xs={4}>
-              <TextField
-                fullWidth
-                type='time'
-                InputLabelProps={{
-                  shrink: true,
-                }}
+              <HalfHourTimeSelector
                 label="Hora de apertura"
                 value={dayData.openHour}
-                onChange={(e) => setDayData({ ...dayData, openHour: e.target.value })} />
+                onChange={(e) => setDayData({ ...dayData, openHour: e.target.value })}
+              />
             </Grid>
             <Grid item xs={4}>
-              <TextField
-                fullWidth
+              <HalfHourTimeSelector
                 label="Hora de cierre"
-                type='time'
-                InputLabelProps={{
-                  shrink: true,
-                }}
                 value={dayData.closeHour}
-                onChange={(e) => setDayData({ ...dayData, closeHour: e.target.value })} />
+                onChange={(e) => setDayData({ ...dayData, closeHour: e.target.value })}
+              />
             </Grid>
             <Grid item xs={4}>
               <TextField
@@ -134,10 +127,19 @@ const FieldDayAvailability: React.FC<FieldDayAvailabilityProps> = ({
                     min: 0,
                   },
                 }}
-                onChange={(e) => setDayData({
-                  ...dayData,
-                  price: parseFloat(e.target.value) || 0,
-                })} />
+                onSelect={(e) => {
+                  e.target.value = "";
+                }}
+                onChange={(e) => {
+                  const inputValue = e.target.value;
+                  const isValidPrice = /^\d*\.?\d*$/.test(inputValue);
+                  if (isValidPrice || inputValue !== "") {
+                    setDayData({
+                      ...dayData,
+                      price: parseFloat(inputValue),
+                    });
+                  }
+                }} />
             </Grid>
           </Grid><Button
             variant="contained"
