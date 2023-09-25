@@ -193,7 +193,7 @@ const ClubManagement = () => {
                             <AccordionSummary>
                                 <Box display="flex" alignItems="center">
                                     <Box ml={2}> {/* Espacio entre la imagen y el título */}
-                                        <Avatar alt="Cancha" src="url_de_la_imagen" sx={{ width: 60, height: 60 }} />
+                                        <img src={`https://canchas-club.s3.amazonaws.com/${field.photos[0]}`} alt="Cancha" width="60px" height="60px" />
                                     </Box>
                                     <Typography>{field.name}</Typography>
                                 </Box>
