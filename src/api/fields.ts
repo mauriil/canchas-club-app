@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { Field } from "react-hook-form";
+import { Field } from "../types/fields";
 import { LogInUser, User } from "../types/users";
 import { ForgotPasswordBody } from "../types/users";
 import Cookies from "js-cookie";
@@ -21,7 +21,7 @@ const headers = {
     mode: 'cors'
 };
 
-export const createField = async (values: User) => {
+export const createField = async (values: Field) => {
     try {
         const response = await fetch(`${BASE_API_URL}/fields/`, {
             method: "POST",
@@ -35,11 +35,11 @@ export const createField = async (values: User) => {
     }
 }
 
-export const editField = async (values: LogInUser, clubId: string) => {
+export const editField = async (values: Field) => {
     try {
-        const response = await fetch(`${BASE_API_URL}/fields/${clubId}`, {
-            method: "PUT",
-            headers,
+        const response = await fetch(`${BASE_API_URL}/fields/${values._id}`, {
+            method: "PATCH",
+            headers: { ...headers, "Authorization": `Bearer ${token}` },
             body: JSON.stringify(values)
         });
         return response;
@@ -53,7 +53,7 @@ export const deleteField = async (fieldId: string | undefined) => {
     try {
         const response = await fetch(`${BASE_API_URL}/fields/${fieldId}`, {
             method: "DELETE",
-            headers,
+            headers: { ...headers, "Authorization": `Bearer ${token}` },
         });
         return response;
     } catch (error) {

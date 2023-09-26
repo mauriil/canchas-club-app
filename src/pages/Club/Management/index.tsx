@@ -6,7 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import { Club } from "../../../types/clubs";
 import { useNavigate, useParams } from "react-router-dom";
-import { getAllByClubId } from "../../../api/fields";
+import { deleteField, getAllByClubId } from "../../../api/fields";
 import { Field } from "../../../types/fields";
 import { getClubById } from "../../../api/clubs";
 import TopBar from "../../../components/TopBar";
@@ -15,6 +15,7 @@ import ClubAvatar from "../../../components/ClubAvatar";
 import CanchasClubLoader from "../../../components/Loader";
 import { PlanStatus } from "../../../types/users";
 import { getPlanStatus } from "../../../api/users";
+import ConfirmationDialog from "../../../components/ConfirmationDialog";
 
 const ClubManagement = () => {
     const navigate = useNavigate();
@@ -45,6 +46,9 @@ const ClubManagement = () => {
     const handelSnackClose = () => {
         setSnackBarOpen(false);
     }
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [fieldToDelete, setFieldToDelete] = useState<string | undefined>(undefined);
+    const [isLoading, setIsLoading] = useState(false);
     function handleShareClick(): void {
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         navigator.clipboard.writeText(`${import.meta.env.VITE_APP_URL}${clubData.alias}`)
@@ -58,24 +62,27 @@ const ClubManagement = () => {
             });
     }
 
-    useEffect(() => {
-        async function fetchClubData() {
-            try {
-                const clubInfo = await getClubById(clubId);
-                const fieldsOfClubInfo = await getAllByClubId(clubId);
-                if (fieldsOfClubInfo.ok && clubInfo.ok) {
-                    const clubData = await clubInfo.json() as Club
-                    setClubData(clubData);
-                    const fields = await fieldsOfClubInfo.json() as Field[];
-                    setFields(fields);
-                } else {
-                    console.error("Error fetching club data:", fieldsOfClubInfo.statusText, clubInfo.statusText);
-                }
-            } catch (error) {
-                console.error("Error fetching club data:", error);
+    async function fetchClubData() {
+        try {
+            setIsLoading(true);
+            const clubInfo = await getClubById(clubId);
+            const fieldsOfClubInfo = await getAllByClubId(clubId);
+            if (fieldsOfClubInfo.ok && clubInfo.ok) {
+                const clubData = await clubInfo.json() as Club
+                setClubData(clubData);
+                const fields = await fieldsOfClubInfo.json() as Field[];
+                setFields(fields);
+                setIsLoading(false);
+            } else {
+                console.error("Error fetching club data:", fieldsOfClubInfo.statusText, clubInfo.statusText);
+                setIsLoading(false);
             }
+        } catch (error) {
+            console.error("Error fetching club data:", error);
         }
+    }
 
+    useEffect(() => {
         void fetchClubData();
     }, [clubId]);
 
@@ -83,30 +90,50 @@ const ClubManagement = () => {
         navigate(`edit`);
     };
 
-    if (clubData.name === "") {
+    if (isLoading) {
         return (
-            <CanchasClubLoader width="10%"/>
+            <CanchasClubLoader width="10%" />
         );
     }
 
+    const handleEditField = async (fieldId: string) => {
+        navigate(`fields/${fieldId}`);
+    };
+
     const handleAddField = async () => {
         try {
-          const planStatus: PlanStatus = await getPlanStatus();
-          if (planStatus.remainingFieldCreations > 0) {
-            navigate("fields/new");
-          } else {
-            setSnackBarMessage("No tienes más creaciones de canchas disponibles, actualiza tu plan");
-            setSnackBarSeverity("error");
-            setSnackBarOpen(true);
-          }
+            setIsLoading(true);
+            const planStatus: PlanStatus = await getPlanStatus();
+            if (planStatus.remainingFieldCreations > 0) {
+                navigate("fields");
+            } else {
+                setSnackBarMessage("No tienes más creaciones de canchas disponibles, actualiza tu plan");
+                setSnackBarSeverity("error");
+                setSnackBarOpen(true);
+            }
         } catch (error) {
-          console.error("Error creating club:", error);
+            console.error("Error creating field:", error);
         }
-      };
+    };
+
+    const handleDeleteField = async () => {
+        if (fieldToDelete === undefined) return
+        try {
+            setIsLoading(true);
+            await deleteField(fieldToDelete);
+            setSnackBarMessage("Cancha eliminada");
+            setSnackBarSeverity("success");
+            setSnackBarOpen(true);
+            setOpenDeleteDialog(false);
+            void fetchClubData();
+        } catch (error) {
+            console.error("Error creating club:", error);
+        }
+    };
 
     return (
         <>
-            <TopBar/>
+            <TopBar />
 
             <Box
                 sx={{
@@ -130,7 +157,7 @@ const ClubManagement = () => {
                         title={clubData.name}
                         logo={clubData.logo}
                         colors={clubData.colors}
-                        />
+                    />
                     <Box
                         sx={{
                             display: "flex",
@@ -147,7 +174,7 @@ const ClubManagement = () => {
                             <Button variant="outlined" color="secondary" startIcon={<Share />} onClick={handleShareClick} >
                                 Social link
                             </Button>
-                            <Snackbar open={snackBarOpen} autoHideDuration={5000} onClick={handelSnackClose} onClose={handelSnackClose}>
+                            <Snackbar open={snackBarOpen} autoHideDuration={4000} onClick={handelSnackClose} onClose={handelSnackClose}>
                                 <Alert severity={snackBarSeverity as AlertColor} sx={{ width: '100%', fontSize: '15px' }} onClose={handelSnackClose}>
                                     {snackBarMessage}
                                 </Alert>
@@ -161,45 +188,57 @@ const ClubManagement = () => {
                     Canchas
                 </Typography>
                 {fields.length > 0 ? (
-                fields.map((field) => (
-                    <Accordion key={field._id} sx={{ maxHeight: 'calc(100vh - 300px)', backgroundColor: "#F5F5F5" }}>
-                        <AccordionSummary>
-                            <Box display="flex" alignItems="center">
-                                <Box ml={2}> {/* Espacio entre la imagen y el título */}
-                                    <Avatar alt="Cancha" src="url_de_la_imagen" sx={{ width: 60, height: 60 }} />
+                    fields.map((field) => (
+                        <Accordion key={field._id} sx={{ maxHeight: 'calc(100vh - 300px)', backgroundColor: "#F5F5F5" }}>
+                            <AccordionSummary>
+                                <Box display="flex" alignItems="center">
+                                    <Box ml={2}> {/* Espacio entre la imagen y el título */}
+                                        <img src={`https://canchas-club.s3.amazonaws.com/${field.photos[0]}`} alt="Cancha" width="60px" height="60px" />
+                                    </Box>
+                                    <Typography>{field.name}</Typography>
                                 </Box>
-                                <Typography>{field.name}</Typography>
-                            </Box>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <Box>
-                                <Typography><strong>Nombre:</strong> {field.name}</Typography>
-                                <Typography><strong>Deporte:</strong> {field.sport}</Typography>
-                                <Typography><strong>Descripción:</strong> {field.description}</Typography>
-                            </Box>
-                            <Box sx={{
-                                marginLeft: "auto",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "space-around",
-                                marginTop: "1rem",
-                            }}>
-                                <Button variant="outlined" color="primary" startIcon={<EditIcon />}>
-                                    Editar
-                                </Button>
-                                <Button variant="outlined" color="error" startIcon={<DeleteIcon />}>
-                                    Eliminar
-                                </Button>
-                            </Box>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <Box>
+                                    <Typography><strong>Nombre:</strong> {field.name}</Typography>
+                                    <Typography><strong>Deporte:</strong> {field.sport}</Typography>
+                                    <Typography><strong>Descripción:</strong> {field.description}</Typography>
+                                </Box>
+                                <Box sx={{
+                                    marginLeft: "auto",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-around",
+                                    marginTop: "1rem",
+                                }}>
+                                    <Button variant="outlined" color="primary" startIcon={<EditIcon />} onClick={() => handleEditField(field._id) }>
+                                        Editar
+                                    </Button>
+                                    <Button variant="outlined" color="error" startIcon={<DeleteIcon />} onClick={() => {setOpenDeleteDialog(true); setFieldToDelete(field._id)}}>
+                                        Eliminar
+                                    </Button>
+                                </Box>
 
-                        </AccordionDetails>
-                    </Accordion>
-                )))
-            : (
-                <Typography variant="body1" sx={{ marginBottom: "0.5rem" }}>
-                    No hay canchas registradas
-                </Typography>
-            )}
+                            </AccordionDetails>
+                        </Accordion>
+                    )))
+                    : (
+                        <Typography variant="body1" sx={{ marginBottom: "0.5rem" }}>
+                            No hay canchas registradas
+                        </Typography>
+                    )}
+
+
+                <ConfirmationDialog
+                    open={openDeleteDialog}
+                    onClose={() => setOpenDeleteDialog(false)}
+                    onConfirm={handleDeleteField}
+                    message={`¿Estás seguro que querés elimminar la cancha?
+                                    Todos los datos se van a eliminar.
+                                    Esta acción no se puede deshacer.`}
+                />
+
+
 
                 {/* Botón para Agregar Cancha */}
                 <Button variant="contained" color="primary" startIcon={<AddIcon />} sx={{
