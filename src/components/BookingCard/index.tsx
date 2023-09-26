@@ -36,9 +36,8 @@ const BookingCard = ({ booking }) => {
           overflow: "hidden",
         }}
       >
-        <CardMedia
-          component="img"
-          sx={{ height: "auto", width: "100%" }}
+        <img
+          style={{ objectFit: "cover", width: "100%", height: "100%" }}
           src={`https://canchas-club.s3.amazonaws.com/${image}`}
           title={booking.fieldId.description}
         />
