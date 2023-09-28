@@ -1,7 +1,10 @@
+import { Club } from "../clubs";
+import { Field } from "../fields";
+
 export interface Booking {
-    clubId: string;
+    clubId: Club;
     createdAt: string;
-    fieldId: string;
+    fieldId: Field;
     paymentId: string;
     recurrent: boolean;
     status: string;
