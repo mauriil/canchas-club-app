@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import Title from "../../components/Title";
 import { useEffect } from "react";
+import MercadoPagoBrick from "../../components/MercadoPagoBrick";
 
 const Home = () => {
   useEffect(() => {
@@ -20,6 +21,7 @@ const Home = () => {
       height="100%"
     >
       <Title firtLineTitle="HOME" />
+      <MercadoPagoBrick isOpen={true}/>
     </Box>
   );
 };
