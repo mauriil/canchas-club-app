@@ -5,6 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import RoomIcon from "@mui/icons-material/Room";
+import PaddleImage from "../../assets/icons/paddle.svg";
 
 const BookingCard = ({ booking }) => {
   const image = booking.fieldId.photos[0];
@@ -47,7 +48,7 @@ const BookingCard = ({ booking }) => {
       >
         <CardContent sx={{ height: "60%" }}>
           <Typography gutterBottom variant="h4" component="div">
-            {`${booking.fieldId.sport} ${booking.clubId.name}`}
+          <img src={PaddleImage} alt="Deporte" height={'30px'} width={'30px'}/>{`${booking.clubId.name}`}
           </Typography>
           <Divider sx={{ margin: "1rem 0rem", width: "100%" }} />
           <Box display="flex" alignItems="center">
