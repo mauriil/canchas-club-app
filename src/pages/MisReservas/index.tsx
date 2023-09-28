@@ -3,18 +3,28 @@ import { useEffect, useState } from "react";
 import { getAllBookingsByUser } from "../../api/bookings";
 import BookingCard from "../../components/BookingCard";
 import { Booking } from "../../types/booking";
+import CanchasClubLoader from "../../components/Loader";
 
 const MisReservas = () => {
   const [booking, setBooking] = useState<Booking[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const getBookings = async () => {
+    setIsLoading(true);
     const req = await getAllBookingsByUser();
     const bookingsOfUser: Booking[] = (await req.json()) as Array<Booking>;
     setBooking(bookingsOfUser);
+    setIsLoading(false);
   };
   useEffect(() => {
     void getBookings();
   }, []);
+
+  if (isLoading) {
+    return (
+      <CanchasClubLoader width="10%" />
+    );
+  }
   return (
     <Box
       width="100vw"
