@@ -1,35 +1,41 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import React from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import { initMercadoPago, CardPayment } from '@mercadopago/sdk-react';
+import { createPayment, createSubscription } from '../../api/mercadoPago';
 
 interface MercadoPagoBrickProps {
     isOpen: boolean;
     // onClose: () => void;
+    ownerId: string;
+    tenantId: string;
+    isSubscription: boolean;
+    amount: number;
+    onSuccessfulPayment: (paymentId: string) => void;
 }
 
-const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ isOpen }) => {
+const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ isOpen, ownerId, tenantId, isSubscription,  onSuccessfulPayment, amount }) => {
     initMercadoPago('TEST-1182f1bf-c98e-430c-964f-80d2d0b506cb');
     const initialization = {
-        amount: 100,
+        amount,
+        payer: {
+            firstName: "NOMBREDDELALQUILANTE",
+            email: "EMAILDELALQUILANTE@hotmail.com",
+        },
     };
 
-    const onSubmit = async (formData) => {
+    const onSubmit = async (formData: any) => {
         console.log("🚀 ~ file: index.tsx:20 ~ onSubmit ~ formData:", formData)
-        // callback called when clicking on the submit data button
-        const mp = fetch('/process_payment', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        })
-
-        const resp = await mp.json()
-        console.log("🚀 ~ file: index.tsx:29 ~ onSubmit ~ resp:", resp)
-        return resp
+        const paymentPayload = { ...formData, ownerId, tenantId, isSubscription, amount, title: 'Reserva en NOMBREDECANCHA' }
+        // const payment = await createPayment(paymentPayload);
+        const payment = await createSubscription(paymentPayload);
+        console.log("🚀 ~ file: index.tsx:31 ~ onSubmit ~ payment:", payment)
+        void onSuccessfulPayment(payment.paymentId)
     }
 
 
@@ -65,8 +71,6 @@ const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ isOpen }) => {
                     p: 4,
                 }}
             >
-                {/* Agrega aquí los pasos para pagar con Mercado Pago SDK */}
-                {/* Por ejemplo, formularios y pasos de pago */}
                 <CardPayment
                     initialization={initialization}
                     onSubmit={onSubmit}

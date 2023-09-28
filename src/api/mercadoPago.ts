@@ -32,3 +32,31 @@ export const checkMercadoPagoAccessToken = async (accessToken: string) => {
         throw error;
     }
 }
+
+export const createPayment = async (payload: string) => {
+    try {
+        const response = await fetch(`${BASE_API_URL}/payments`, {
+            method: "POST",
+            headers,
+            body: JSON.stringify(payload),
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching getUser:", error);
+        throw error;
+    }
+}
+
+export const createSubscription = async (payload: string) => {
+    try {
+        const response = await fetch(`${BASE_API_URL}/payments`, {
+            method: "POST",
+            headers,
+            body: JSON.stringify(payload),
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching getUser:", error);
+        throw error;
+    }
+}
