@@ -48,7 +48,7 @@ const BookingCard = ({ booking }) => {
       >
         <CardContent sx={{ height: "60%" }}>
           <Typography gutterBottom variant="h4" component="div">
-          <img src={PaddleImage} alt="Deporte" height={'30px'} width={'30px'}/>{`${booking.clubId.name}`}
+          <img src={PaddleImage} alt="Deporte" height={'30px'} width={'30px'}/>{`${booking.fieldId.clubId.name}`}
           </Typography>
           <Divider sx={{ margin: "1rem 0rem", width: "100%" }} />
           <Box display="flex" alignItems="center">

@@ -187,6 +187,7 @@ const UserProfilePlanStatus = ({ onItemClick }: UserProfilePlanStatusProps) => {
                 open={openDeleteDialog}
                 onClose={() => setOpenDeleteDialog(false)}
                 onConfirm={handleDelete}
+                title="Baja de subscripción"
                 message={`¿Estás seguro que querés dar de baja la subscripción?
                         Todos los datos se van a seguir guardando pero no vas a poder acceder a ellos.
                         Si tenés turnos agendados, se van a cancelar.

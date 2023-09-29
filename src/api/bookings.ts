@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import Cookies from "js-cookie";
+import { Booking } from "../types/booking";
 
 const cookies: {
     [key: string]: string;
@@ -27,6 +29,20 @@ export const getAllBookingsByUser = async () => {
         return response;
     } catch (error) {
         console.error("Error getting bookings by user:", error);
+        throw error;
+    }
+}
+
+export const createBooking = async (values: Booking) => {
+    try {
+        const response = await fetch(`${BASE_API_URL}/bookings`, {
+            method: "POST",
+            headers,
+            body: JSON.stringify(values)
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error creating club:", error);
         throw error;
     }
 }

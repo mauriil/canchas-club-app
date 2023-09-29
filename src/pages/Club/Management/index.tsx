@@ -233,6 +233,7 @@ const ClubManagement = () => {
                     open={openDeleteDialog}
                     onClose={() => setOpenDeleteDialog(false)}
                     onConfirm={handleDeleteField}
+                    title={'Eliminar Cancha'}
                     message={`¿Estás seguro que querés elimminar la cancha?
                                     Todos los datos se van a eliminar.
                                     Esta acción no se puede deshacer.`}

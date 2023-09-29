@@ -16,10 +16,11 @@ interface MercadoPagoBrickProps {
     tenantId: string;
     isSubscription: boolean;
     amount: number;
+    title: string;
     onSuccessfulPayment: (paymentId: string) => void;
 }
 
-const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ isOpen, ownerId, tenantId, isSubscription,  onSuccessfulPayment, amount }) => {
+const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ isOpen, ownerId, tenantId, isSubscription,  onSuccessfulPayment, amount, title }) => {
     initMercadoPago('TEST-1182f1bf-c98e-430c-964f-80d2d0b506cb');
     const initialization = {
         amount,
@@ -30,11 +31,8 @@ const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ isOpen, ownerId, te
     };
 
     const onSubmit = async (formData: any) => {
-        console.log("🚀 ~ file: index.tsx:20 ~ onSubmit ~ formData:", formData)
-        const paymentPayload = { ...formData, ownerId, tenantId, isSubscription, amount, title: 'Reserva en NOMBREDECANCHA' }
-        // const payment = await createPayment(paymentPayload);
-        const payment = await createSubscription(paymentPayload);
-        console.log("🚀 ~ file: index.tsx:31 ~ onSubmit ~ payment:", payment)
+        const paymentPayload = { ...formData, ownerId, tenantId, isSubscription, amount, title }
+        const payment = await createPayment(paymentPayload);
         void onSuccessfulPayment(payment.paymentId)
     }
 
@@ -65,7 +63,6 @@ const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ isOpen, ownerId, te
                     transform: 'translate(-50%, -50%)',
                     width: 400,
                     bgcolor: 'background.paper',
-                    border: '2px solid #00a6c0',
                     borderRadius: 2,
                     boxShadow: 24,
                     p: 4,

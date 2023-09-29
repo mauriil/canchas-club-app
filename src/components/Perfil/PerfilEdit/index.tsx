@@ -202,6 +202,7 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
                 open={openDeleteDialog}
                 onClose={() => setOpenDeleteDialog(false)}
                 onConfirm={handleDelete}
+                title={'Cancelar Subscripción'}
                 message={`¿Estás seguro que querés dar de baja la subscripción?
                         Todos los datos se van a seguir guardando pero no vas a poder acceder a ellos.
                         Si tenés turnos agendados, se van a cancelar.

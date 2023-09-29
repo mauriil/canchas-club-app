@@ -47,7 +47,7 @@ export const createPayment = async (payload: string) => {
     }
 }
 
-export const createSubscription = async (payload: string) => {
+export const createSubscription = async (payload: object) => {
     try {
         const response = await fetch(`${BASE_API_URL}/payments`, {
             method: "POST",

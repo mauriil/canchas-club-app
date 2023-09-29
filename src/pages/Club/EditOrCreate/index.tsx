@@ -276,6 +276,7 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                             open={openDeleteDialog}
                             onClose={() => setOpenDeleteDialog(false)}
                             onConfirm={handleDelete}
+                            title={`Eliminar club ${clubData.name}`}
                             message={`¿Estás seguro que querés eliminar el club ${clubData.name}?
                             Todas las configuraciones y las canchas asociadas se eliminarán, asi como también todos aquellos turnos futuros confirmados y/o los turnos fijos se cancelarán.
                             Esta acción no se puede deshacer.`}

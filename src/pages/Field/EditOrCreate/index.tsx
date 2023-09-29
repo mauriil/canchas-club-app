@@ -312,6 +312,7 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                                 open={openDeleteDialog}
                                 onClose={() => setOpenDeleteDialog(false)}
                                 onConfirm={handleDelete}
+                                title={'Eliminar cancha'}
                                 message={`¿Estás seguro que querés eliminar la cancha ${fieldData.name}?
                             Todas las configuraciones se eliminarán, asi como también todos aquellos turnos futuros confirmados y/o los turnos fijos se cancelarán.
                             Esta acción no se puede deshacer.`}

@@ -20,9 +20,9 @@ const headers = {
     "Authorization": `Bearer ${token}`
 };
 
-export const getUser = async (): Promise<User> => {
+export const getUser = async (userIdToGet: string = userId): Promise<User> => {
     try {
-        const response = await fetch(`${BASE_API_URL}/users/${userId}`, {
+        const response = await fetch(`${BASE_API_URL}/users/${userIdToGet}`, {
             method: "GET",
             headers,
         });
