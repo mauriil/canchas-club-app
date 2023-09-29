@@ -14,6 +14,7 @@ import { getUser } from '../../api/users';
 import { createBooking } from '../../api/bookings';
 import ConfirmationDialog from '../ConfirmationDialog';
 import { useNavigate } from 'react-router-dom';
+import MercadoPagoBrick from '../MercadoPagoBrick';
 
 interface BookingStepsProps {
     isOpen: boolean;
@@ -25,6 +26,7 @@ interface BookingStepsProps {
         day: string;
     };
     amount: number;
+    ownerId: string;
     onSuccessfulBooking: (bookingId: string) => void;
 }
 
@@ -35,6 +37,7 @@ const BookingSteps: React.FC<BookingStepsProps> = ({
     fieldId,
     onSuccessfulBooking,
     time,
+    ownerId,
 }) => {
     const [bookingId, setBookingId] = useState<string>('');
     const [snackBarOpen, setSnackBarOpen] = useState(false);
@@ -50,6 +53,7 @@ const BookingSteps: React.FC<BookingStepsProps> = ({
     const [openDialog, setOpenDialog] = useState(false);
     const [dialogTitle, setDialogTitle] = useState("");
     const [dialogDescription, setDialogDescription] = useState("");
+    const [mercadoPagoBrikIsOpen, setMercadoPagoBrikIsOpen] = useState(false);
 
     const handleConfirm = () => {
         setOpenDialog(false);
@@ -120,6 +124,31 @@ const BookingSteps: React.FC<BookingStepsProps> = ({
         // Ejemplo: onClose();
     };
 
+    const handleSimpleBooking = async (paymentId: string) => {
+        const bookingReq = await createBooking({
+            tenantId,
+            ownerId: fieldData.clubId.userId,
+            fieldId,
+            time,
+            paymentId,
+            recurrent: false,
+            status: 'pending',
+        });
+
+        if (bookingReq.statusCode >= 400) {
+            setSnackBarMessage(bookingReq.message);
+            setSnackBarSeverity('error');
+            setSnackBarOpen(true);
+            setIsLoading(false);
+            return;
+        }
+        setMercadoPagoBrikIsOpen(false);
+        setBookingId(bookingReq._id);
+        setOpenDialog(true);
+        setDialogTitle('Reserva creada');
+        setDialogDescription(`Muchas gracias por tu reserva!`);
+    };
+
     const handleBooking = async () => {
         setIsLoading(true);
         //TODO: Agregar logica para crear cuenta express
@@ -154,7 +183,6 @@ const BookingSteps: React.FC<BookingStepsProps> = ({
                 status: 'pending',
             });
 
-            console.log("🚀 ~ file: index.tsx:158 ~ handleBooking ~ bookingReq:", bookingReq)
             if (bookingReq.statusCode >= 400) {
                 setSnackBarMessage(bookingReq.message);
                 setSnackBarSeverity('error');
@@ -167,13 +195,9 @@ const BookingSteps: React.FC<BookingStepsProps> = ({
             setOpenDialog(true);
             setDialogTitle('Reserva creada');
             setDialogDescription(`Esta reserva se encuentra en estado "pendiente".
-            por favor chequea tu correo para ver los pasos a seguir para confirmarla`);
+            Por favor chequea tu correo para ver los pasos a seguir para confirmarla`);
         } else {
-            // Realizar reserva simple
-            // Luego, llamar a onSuccessfulBooking() con el ID de la reserva recurrente
-            // Ejemplo: const recurrentReservationId = await createRecurrentReservation();
-            // onSuccessfulBooking(recurrentReservationId);
-            setIsLoading(false);
+            setMercadoPagoBrikIsOpen(true)
         }
     };
 
@@ -238,6 +262,8 @@ const BookingSteps: React.FC<BookingStepsProps> = ({
                     )}
                 </Box>
             </Modal>
+
+            <MercadoPagoBrick isOpen={mercadoPagoBrikIsOpen} onSuccessfulPayment={handleSimpleBooking} amount={amount} tenantId={tenantId} ownerId={ownerId} title={`Reserva de cancha`} />
 
             <ConfirmationDialog
                 open={openDialog}
