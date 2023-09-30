@@ -54,7 +54,7 @@ const BookingCard = ({ booking }) => {
           <Box display="flex" alignItems="center">
             <RoomIcon fontSize="large" color="primary" />
             <Typography variant="h6" color="primary.light">
-              {booking.clubId.address}
+              {booking.fieldId.clubId.address}
             </Typography>
           </Box>
           <Divider sx={{ margin: "1rem 0rem" }} />

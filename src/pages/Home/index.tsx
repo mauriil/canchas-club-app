@@ -7,12 +7,12 @@ import BookingSteps from "../../components/BookingSteps";
 const Home = () => {
   useEffect(() => {
     // reload to prevent bug in login
-    if(localStorage.getItem("dashboardFirstLoad") === "true") return;
+    if (localStorage.getItem("dashboardFirstLoad") === "true") return;
     window.location.reload();
     localStorage.setItem("dashboardFirstLoad", "true");
 
   }
-  , []);
+    , []);
 
   const [mercadoPagoBrickIsOpen, setMercadoPagoBrickIsOpen] = useState(true);
   const handleSuccessfulBooking = (bookingId: string) => {
@@ -29,7 +29,14 @@ const Home = () => {
       height="100%"
     >
       <Title firtLineTitle="HOME" />
-      <BookingSteps onSuccessfulBooking={handleSuccessfulBooking} isOpen={mercadoPagoBrickIsOpen} tenantId="64ac321b26c685de7deedc9c" fieldId="64c3fbfd6ff6d6503333e6da" ownerId="64c3fa1e58d34d55ba344fdb" time={{day: '2023-09-30', from: '10:00', to: '11:00'}} amount={100}/>
+      {/* <BookingSteps
+        onSuccessfulBooking={handleSuccessfulBooking}
+        isOpen={mercadoPagoBrickIsOpen}
+        tenantId="64ac321b26c685de7deedc9c"
+        ownerId="64c3fa1e58d34d55ba344fdb"
+        fieldId="64c3fbfd6ff6d6503333e6da"
+        time={{ day: '2023-09-30', from: '10:00', to: '11:00' }}
+        amount={100} /> */}
     </Box>
   );
 };
