@@ -118,6 +118,7 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
 
     const handleSubmit = async () => {
         setSubmittingForm(true);
+        clubData.location.coordinates = [];
         clubData.location.coordinates.push(parseFloat(clubData.longitude), parseFloat(clubData.latitude));
         if (editMode) {
             try {
