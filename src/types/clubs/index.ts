@@ -3,6 +3,10 @@ export interface ColorsClub {
   primary: string;
   secondary: string;
 }
+export interface LocationObject {
+  type: string;
+  coordinates: number[];
+}
 export interface Club {
   userId?: string;
   address: string;
@@ -10,8 +14,7 @@ export interface Club {
   city: string;
   country: string;
   description: string;
-  latitude: string;
-  longitude: string;
+  location: LocationObject;
   logo: string;
   name: string;
   _id?: string | undefined;
