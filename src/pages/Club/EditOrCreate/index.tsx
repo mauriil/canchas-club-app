@@ -20,6 +20,7 @@ import { Club } from '../../../types/clubs';
 import ConfirmationDialog from '../../../components/ConfirmationDialog';
 import CanchasClubLoader from '../../../components/Loader';
 import { set } from 'date-fns';
+import DepartmentDropdown from '../../../components/DepartmentDropdown';
 
 const steps = ['Información básica', 'Colores y logo', 'Días cerrados'];
 
@@ -49,8 +50,8 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
             type: 'Point',
             coordinates: [0, 0]
         },
-        city: '',
-        country: 'ARG',
+        province: '',
+        department: '',
         alias: '',
         colors: {
             primary: '#FFFFFF',
@@ -91,7 +92,8 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
             setButtonNextClicked(true);
             if (clubData.name === ''
                 || clubData.address === ''
-                || clubData.city === ''
+                || clubData.province === ''
+                || clubData.department === ''
                 || clubData.description === ''
                 || clubData.alias === '') {
                 setSnackBarMessage('Por favor completa todos los campos');
@@ -113,6 +115,7 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
             ...prevData,
             latitude: position.lat.toString(),
             longitude: position.lng.toString(),
+            address: position.address,
         }));
     };
 
@@ -333,10 +336,16 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                                     helperText={clubData.alias === '' && buttonNextClicked ? 'Campo requerido' : ''}
                                 />
                                 <ProvinceDropdown
-                                    value={clubData.city}
-                                    onChange={(province: any) => handleInputChange('city', province)}
-                                    error={clubData.city === '' && buttonNextClicked}
-                                    errorValue={clubData.city === '' && buttonNextClicked ? 'Campo requerido' : ''}
+                                    value={clubData.province}
+                                    onChange={(province: any) => handleInputChange('province', province)}
+                                    error={clubData.province === '' && buttonNextClicked}
+                                    errorValue={clubData.province === '' && buttonNextClicked ? 'Campo requerido' : ''}
+                                />
+                                <DepartmentDropdown
+                                    province={clubData.province}
+                                    value={clubData.department}
+                                    onChange={(department: any) => handleInputChange('department', department)}
+                                    error={clubData.department === '' && buttonNextClicked}
                                 />
                                 <AddressAutocomplete
                                     value={clubData.address}
@@ -528,7 +537,8 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                                 />
                                 <Typography><h3>{clubData.description}</h3></Typography>
                                 <Typography>Dirección: {clubData.address}</Typography>
-                                <Typography>Provincia: {clubData.city}</Typography>
+                                <Typography>Provincia: {clubData.province}</Typography>
+                                <Typography>Departamento: {clubData.department}</Typography>
                                 <Typography>Alias: {clubData.alias}</Typography>
 
                                 <Box

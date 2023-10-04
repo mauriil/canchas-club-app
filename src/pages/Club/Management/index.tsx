@@ -28,14 +28,16 @@ const ClubManagement = () => {
             description: "",
             logo: "",
             alias: "",
-            city: "",
-            latitude: "0",
-            longitude: "0",
-            country: "",
+            province: "",
+            department: "",
             closedDays: [""],
             colors: {
                 primary: "",
                 secondary: "",
+            },
+            location: {
+                type: "Point",
+                coordinates: [0, 0],
             },
         },
     );
@@ -96,7 +98,7 @@ const ClubManagement = () => {
         );
     }
 
-    const handleEditField = async (fieldId: string) => {
+    const handleEditField = (fieldId: string) => {
         navigate(`fields/${fieldId}`);
     };
 

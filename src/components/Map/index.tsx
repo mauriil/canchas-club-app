@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 
 const Map = ({ latitude, longitude, onMarkerDragEnd }) => {
   const mapRef = useRef(null);
+  const geocoder = new window.google.maps.Geocoder();
 
   useEffect(() => {
     const mapOptions = {
@@ -24,7 +25,11 @@ const Map = ({ latitude, longitude, onMarkerDragEnd }) => {
         lat: e.latLng.lat(),
         lng: e.latLng.lng(),
       };
-      onMarkerDragEnd(newPosition);
+      
+      geocoder.geocode({ location: newPosition }, (results, status) => {
+        newPosition.address = results[0].formatted_address;
+        onMarkerDragEnd(newPosition);
+      });
     });
   }, [latitude, longitude, onMarkerDragEnd]);
 

@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Club } from "../types/clubs";
-import { ForgotPasswordBody } from "../types/users";
 import Cookies from "js-cookie";
 
 const cookies: {
