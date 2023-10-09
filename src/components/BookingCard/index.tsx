@@ -62,7 +62,7 @@ const BookingCard = ({ booking }) => {
             {`${booking.time.from} hs`}
           </Typography>
           <Typography variant="h4" color="primary">
-            {booking.fieldId.name}
+            {booking.fieldId.clubId.name}
           </Typography>
         </CardContent>
         <CardActions sx={{ width: "100%" }}>
