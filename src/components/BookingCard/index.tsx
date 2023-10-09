@@ -21,6 +21,7 @@ const BookingCard = ({ booking }) => {
         borderTop: "solid",
         borderWidth: "0.5rem",
         borderColor: "#00a6c0",
+        backgroundColor: "white",
       }}
     >
       <Box
