@@ -669,7 +669,7 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                 autoHideDuration={5000}
                 onClose={() => setSnackBarOpen(false)}
             >
-                <Alert severity={snackBarSeverity as AlertColor} onClose={() => setSnackBarOpen(false)}>
+                <Alert severity={snackBarSeverity as AlertColor} onClose={() => setSnackBarOpen(false)} sx={{ width: '100%', fontSize: '15px' }} >
                     {snackBarMessage}
                 </Alert>
             </Snackbar>

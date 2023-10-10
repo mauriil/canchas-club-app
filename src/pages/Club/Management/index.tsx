@@ -135,7 +135,7 @@ const ClubManagement = () => {
 
     return (
         <>
-            <TopBar />
+            <TopBar backUrl="/dashboard/miClub" />
 
             <Box
                 sx={{
@@ -167,6 +167,9 @@ const ClubManagement = () => {
                             justifyContent: "space-around",
                             margin: "1rem",
                             marginBottom: "1rem",
+                            "& > *": {
+                                marginLeft: "1.5rem",
+                            },
                         }}
                     >
                         <>
@@ -213,10 +216,10 @@ const ClubManagement = () => {
                                     justifyContent: "space-around",
                                     marginTop: "1rem",
                                 }}>
-                                    <Button variant="outlined" color="primary" startIcon={<EditIcon />} onClick={() => handleEditField(field._id) }>
+                                    <Button sx={{ width: '40%' }} variant="outlined" color="primary" startIcon={<EditIcon />} onClick={() => handleEditField(field._id) }>
                                         Editar
                                     </Button>
-                                    <Button variant="outlined" color="error" startIcon={<DeleteIcon />} onClick={() => {setOpenDeleteDialog(true); setFieldToDelete(field._id)}}>
+                                    <Button sx={{ width: '40%' }} variant="outlined" color="error" startIcon={<DeleteIcon />} onClick={() => {setOpenDeleteDialog(true); setFieldToDelete(field._id)}}>
                                         Eliminar
                                     </Button>
                                 </Box>

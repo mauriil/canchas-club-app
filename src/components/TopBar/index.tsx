@@ -4,10 +4,18 @@ import Box from "@mui/material/Box";
 import { ArrowBack } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
-export default function TopBar() {
+interface TopBarProps {
+    backUrl?: string;
+}
+
+export default function TopBar({ backUrl }: TopBarProps) {
     const navigate = useNavigate();
     function handleGoBack(): void {
-        navigate(-1);
+        if (backUrl) {
+            navigate(backUrl);
+        } else {
+            navigate(-1);
+        }
     }
 
     return (
