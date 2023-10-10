@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
@@ -20,14 +21,17 @@ function S3MultipleImageUpload({ onImagesUploaded, photosArray, folderName, onRe
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [imageUploadingProgress, setImageUploadingProgress] = useState({});
-    const [isHovered, setIsHovered] = useState(false);
+    const [imageHovered, setImageHovered] = useState(Array.from({ length: photosArray.length }, () => false));
 
-    const handleMouseEnter = () => {
-        setIsHovered(true);
+
+    const handleMouseEnter = (index) => {
+        const newHoveredState = Array.from({ length: photosArray.length }, () => false);
+        newHoveredState[index] = true;
+        setImageHovered(newHoveredState);
     };
 
     const handleMouseLeave = () => {
-        setIsHovered(false);
+        setImageHovered(Array.from({ length: photosArray.length }, () => false));
     };
 
     const handleUpload = async (files) => {
@@ -82,6 +86,8 @@ function S3MultipleImageUpload({ onImagesUploaded, photosArray, folderName, onRe
             </div>
             <Grid container spacing={2} sx={{
                 marginTop: 2,
+                justifyContent: 'center',
+                justifyItems: 'center',
             }}>
                 {selectedFiles.map((file, index) => (
                     imageUploadingProgress[file.name] && imageUploadingProgress[file.name] !== 100 &&
@@ -108,23 +114,25 @@ function S3MultipleImageUpload({ onImagesUploaded, photosArray, folderName, onRe
                 ))}
                 {photosArray.length !== 0 && (
                     photosArray.map((photo, index) => (
-                        <Grid item key={index} xs={12} sm={6} md={4}>
-                            <Paper elevation={3}>
+                        <Grid item key={index} >
+                            <Paper elevation={8} sx={{ width: '300px', height: '200px' }}>
                                 <Box
                                     mb={2}
-                                    onMouseEnter={handleMouseEnter}
-                                    onMouseLeave={handleMouseLeave}
+                                    onMouseEnter={() => handleMouseEnter(index)}
+                                    onMouseLeave={() => handleMouseLeave(index)}
                                     sx={{
                                         position: 'relative',
+                                        width: '100%',
+                                        height: '100%',
                                     }}
                                 >
                                     <img
                                         src={`https://canchas-club.s3.amazonaws.com/${photo}`}
                                         alt={photo}
-                                        style={{ maxWidth: '100%', maxHeight: '100%', opacity: isHovered ? 0.7 : 1, }}
+                                        style={{ width: '100%', height: '100%', objectFit: 'contain', opacity: imageHovered[index] ? 0.7 : 1 }}
                                         loading='lazy'
                                     />
-                                    {isHovered && (
+                                    {imageHovered[index] && (
                                         <Button variant="contained" color="error" onClick={() => onRemoveImage(photo)} sx={{
                                             position: 'absolute',
                                             bottom: '50%',
