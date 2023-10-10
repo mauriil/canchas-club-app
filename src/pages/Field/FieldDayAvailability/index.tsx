@@ -75,7 +75,9 @@ const FieldDayAvailability: React.FC<FieldDayAvailabilityProps> = ({
   };
 
   return (
-    <Box>
+    <Box sx={{
+      width: '100%',
+    }}>
       {editable && (
         <>
           <FormControl fullWidth sx={{

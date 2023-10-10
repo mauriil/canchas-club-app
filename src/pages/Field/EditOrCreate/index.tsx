@@ -330,9 +330,12 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                                 <Box sx={{
                                     display: "flex",
                                     flexDirection: "column",
-                                    justifyContent: "space-between",
+                                    justifyContent: "center",
                                     marginTop: 3,
                                     marginBottom: 3,
+                                    backgroundColor: 'white',
+                                    padding: '2rem',
+                                    borderRadius: '1rem',
                                 }}>
                                     <Typography variant="h6">Información básica:</Typography>
                                     <TextField
@@ -430,7 +433,11 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                                         <option value="false">NO</option>
                                     </Select>
                                     {/* Otros campos de información básica */}
-                                    <Button variant="outlined" color="primary" sx={{ marginTop: 1 }} onClick={handleNext}>
+                                    <Button variant="outlined" color="primary" sx={{
+                                         marginTop: 1,
+                                         width: '70%',
+                                         alignSelf: 'center',
+                                     }} onClick={handleNext}>
                                         Siguiente
                                     </Button>
                                 </Box>
@@ -442,6 +449,9 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                                     justifyContent: "space-between",
                                     marginTop: 3,
                                     marginBottom: 3,
+                                    backgroundColor: 'white',
+                                    padding: '2rem',
+                                    borderRadius: '1rem',
                                 }}>
                                     <S3MultipleImageUpload onImagesUploaded={handleAddPhotos} onRemoveImage={handleRemoveImage} photosArray={fieldData.photos} folderName={`canchas`} />
                                     <Box
@@ -457,6 +467,11 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                                             color="secondary"
                                             fullWidth
                                             onClick={handleBack}
+                                            sx={{
+                                                width: '30%',
+                                                alignSelf: 'center',
+                                                marginRight: '2rem',
+                                            }}
                                         >
                                             Atrás
                                         </Button>
@@ -465,6 +480,10 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                                             color="primary"
                                             fullWidth
                                             onClick={handleNext}
+                                            sx={{
+                                                width: '30%',
+                                                alignSelf: 'center',
+                                            }}
                                         >
                                             Siguiente
                                         </Button>
@@ -478,6 +497,9 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                                     justifyContent: "space-between",
                                     marginTop: 3,
                                     marginBottom: 3,
+                                    backgroundColor: 'white',
+                                    padding: '2rem',
+                                    borderRadius: '1rem',
                                 }}>
                                     <Typography variant="h6">Disponibilidad:</Typography>
                                     <FieldDayAvailability
@@ -504,6 +526,11 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                                             color="secondary"
                                             fullWidth
                                             onClick={handleBack}
+                                            sx={{
+                                                width: '30%',
+                                                alignSelf: 'center',
+                                                marginRight: '2rem',
+                                            }}
                                         >
                                             Atrás
                                         </Button>
@@ -512,6 +539,10 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                                             color="primary"
                                             fullWidth
                                             onClick={handleNext}
+                                            sx={{
+                                                width: '30%',
+                                                alignSelf: 'center',
+                                            }}
                                         >
                                             Siguiente
                                         </Button>
@@ -523,8 +554,12 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                                     display: "flex",
                                     flexDirection: "column",
                                     alignItems: "center",
+                                    marginTop: 3,
+                                    backgroundColor: 'white',
+                                    padding: '2rem',
+                                    borderRadius: '1rem',
                                 }}>
-                                    <Typography variant="h6" sx={{ margin: 1 }}>Confirmar y crear:</Typography>
+                                    <Typography variant="h6" sx={{ margin: 1 }}>Confirmar y {editMode ? 'editar' : 'crear'}:</Typography>
                                     <Typography sx={{ margin: 1 }}>
                                         Por favor revisa la información antes de crear la cancha.
                                     </Typography>
@@ -597,10 +632,17 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                                             marginTop: 3,
                                         }}
                                     >
-                                        <Button variant="outlined"
+                                        <Button
+                                            variant="outlined"
                                             color="secondary"
                                             fullWidth
-                                            onClick={handleBack} sx={{ mt: 2 }}>
+                                            onClick={handleBack}
+                                            sx={{
+                                                width: '30%',
+                                                alignSelf: 'center',
+                                                marginRight: '2rem',
+                                            }}
+                                        >
                                             Atrás
                                         </Button>
                                         <Button
@@ -608,9 +650,12 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                                             color="primary"
                                             fullWidth
                                             onClick={handleSubmit}
-                                            sx={{ mt: 2 }}
+                                            sx={{
+                                                width: '30%',
+                                                alignSelf: 'center',
+                                            }}
                                         >
-                                            {editMode ? 'Guardar cambios' : 'Crear cancha'}
+                                            {editMode ? 'Guardar' : 'Crear'}
                                         </Button>
                                     </Box>
 
