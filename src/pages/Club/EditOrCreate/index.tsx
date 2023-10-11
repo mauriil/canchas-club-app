@@ -21,6 +21,7 @@ import ConfirmationDialog from '../../../components/ConfirmationDialog';
 import CanchasClubLoader from '../../../components/Loader';
 import { set } from 'date-fns';
 import DepartmentDropdown from '../../../components/DepartmentDropdown';
+import ClosedDaysAccordion from '../../../components/ClubClosedDaysPicker/ClosedDayAccordion';
 
 const steps = ['Información básica', 'Colores y logo', 'Días cerrados'];
 
@@ -305,7 +306,10 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                                     display: "flex",
                                     flexDirection: "column",
                                     alignItems: "center",
-                                    width: "100%"
+                                    width: "100%",
+                                    backgroundColor: "white",
+                                    borderRadius: "10px",
+                                    padding: "20px",
                                 }}>
                                 <Typography variant="h6" sx={{ marginBottom: 2 }}>Información básica:</Typography>
                                 <TextField
@@ -377,6 +381,9 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                                     flexDirection: "column",
                                     alignItems: "center",
                                     width: "100%",
+                                    backgroundColor: "white",
+                                    borderRadius: "10px",
+                                    padding: "20px",
                                 }}>
                                 <Typography variant="h6" sx={{ marginBottom: 2 }}>Colores y logo:</Typography>
                                 <Box
@@ -481,6 +488,10 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                                     display: "flex",
                                     flexDirection: "column",
                                     alignItems: "center",
+                                    width: "100%",
+                                    backgroundColor: "white",
+                                    borderRadius: "10px",
+                                    padding: "20px",
                                 }}>
                                 <Typography variant="h6">Días cerrados:</Typography>
                                 <ClubClosedDaysPicker
@@ -520,6 +531,10 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                                 display: "flex",
                                 flexDirection: "column",
                                 alignItems: "center",
+                                width: "100%",
+                                backgroundColor: "white",
+                                borderRadius: "10px",
+                                padding: "20px",
                             }}>
                                 <Typography variant="h6" sx={{ margin: 1 }}>Confirmar y crear:</Typography>
                                 <Typography sx={{ margin: 1 }}>
@@ -540,7 +555,7 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                                 <Typography>Provincia: {clubData.province}</Typography>
                                 <Typography>Departamento: {clubData.department}</Typography>
                                 <Typography>Alias: {clubData.alias}</Typography>
-
+                                <ClosedDaysAccordion selectedDates={clubData.closedDays} />
                                 <Box
                                     sx={{
                                         display: "flex",

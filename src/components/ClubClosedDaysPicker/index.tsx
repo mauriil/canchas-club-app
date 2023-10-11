@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import React, { useState } from 'react';
@@ -7,6 +8,7 @@ import { Box, Button, Typography, Accordion, AccordionSummary, AccordionDetails 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import './ClubClosedDaysPicker.css';
+import ClosedDaysAccordion from './ClosedDayAccordion';
 
 const ClosedDaysPicker = ({ selectedDays, onChange }) => {
   const fetchArgentinianHolidays = async () => {
@@ -34,11 +36,11 @@ const ClosedDaysPicker = ({ selectedDays, onChange }) => {
       ? selectedDates.filter((d) => d !== dateISOString)
       : [...selectedDates, dateISOString];
 
-      updatedDates.sort((a: string | number | Date, b: string | number | Date) => {
-        const dateA = new Date(a);
-        const dateB = new Date(b);
-        return dateA - dateB;
-      });
+    updatedDates.sort((a: string | number | Date, b: string | number | Date) => {
+      const dateA = new Date(a);
+      const dateB = new Date(b);
+      return dateA - dateB;
+    });
 
     setSelectedDates(updatedDates);
     onChange(updatedDates);
@@ -54,25 +56,6 @@ const ClosedDaysPicker = ({ selectedDays, onChange }) => {
       <div className="selected-day"></div>
     ) : null;
   };
-
-  function formatDateToARGString(dateString) {
-    const daysOfWeek = [
-      'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'
-    ];
-
-    const months = [
-      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio',
-      'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-    ];
-
-    const date = new Date(dateString);
-    const dayOfWeek = daysOfWeek[date.getDay() + 1];
-    const day = date.getDate() + 1;
-    const month = months[date.getMonth()];
-    const year = date.getFullYear();
-
-    return `${dayOfWeek} ${day} de ${month} de ${year}`;
-  }
 
   return (
     <Box
@@ -117,25 +100,8 @@ const ClosedDaysPicker = ({ selectedDays, onChange }) => {
       >
         Limpiar días seleccionados
       </Button>
-      {selectedDates.length > 0 && (<Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={
-          {
-            borderRadius: "15px",
-            marginTop: "1rem",
-            width: "70vw",
-          }
-        }>
-          <Typography variant="h6">Días seleccionados</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <ul>
-            {selectedDates.map((date) => (
-              <li key={date}>{formatDateToARGString(date)}</li>
-            ))}
-          </ul>
-        </AccordionDetails>
-      </Accordion>
-
+      {selectedDates.length > 0 && (
+        <ClosedDaysAccordion selectedDates={selectedDates} />
       )}
     </Box>
   );

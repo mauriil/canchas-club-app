@@ -35,7 +35,7 @@ const Map = ({ latitude, longitude, onMarkerDragEnd }) => {
 
   return (
     <>
-      <h3 style={{marginBottom: '1rem'}}>Arrastra y suelta el marcador para presisar la ubicación del club </h3>
+      <h3 style={{marginBottom: '1rem', textAlign: 'center'}}>Arrastra y suelta el marcador para presisar la ubicación del club </h3>
       <div
         ref={mapRef}
         style={{ width: '100%', height: '400px' }} />
