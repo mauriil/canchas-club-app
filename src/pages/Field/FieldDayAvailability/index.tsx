@@ -16,6 +16,9 @@ import {
   TableRow,
   Paper,
   Box,
+  Snackbar,
+  Alert,
+  AlertColor,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import HalfHourTimeSelector from './HalfHoursSelector.jsx';
@@ -53,9 +56,40 @@ const FieldDayAvailability: React.FC<FieldDayAvailabilityProps> = ({
   dayData,
   setDayData,
 }) => {
+  const [snackBarOpen, setSnackBarOpen] = useState(false);
+  const [snackBarMessage, setSnackBarMessage] = useState("");
+  const [snackBarSeverity, setSnackBarSeverity] = useState("success");
+  const handelSnackClose = () => {
+    setSnackBarOpen(false);
+  }
+
   const handleAddDayData = () => {
-    onAddData(selectedDay, dayData);
-    setDayData({ openHour: '08:00', closeHour: '08:30', price: 0 });
+    const overlappingData = data[selectedDay].filter((item) => {
+      const existingStart = new Date(`2021-01-01T${item.openHour}:00`);
+      const existingEnd = new Date(`2021-01-01T${item.closeHour}:00`);
+      const newStart = new Date(`2021-01-01T${dayData.openHour}:00`);
+      const newEnd = new Date(`2021-01-01T${dayData.closeHour}:00`);
+
+      if (newStart >= existingStart && newStart < existingEnd) {
+        return true;
+      }
+      if (newEnd > existingStart && newEnd <= existingEnd) {
+        return true;
+      }
+      if (newStart <= existingStart && newEnd >= existingEnd) {
+        return true;
+      }
+      return false;
+    });
+
+    if (overlappingData.length > 0) {
+      setSnackBarMessage("El horario que intenta agregar se superpone con otro horario ya existente");
+      setSnackBarSeverity("error");
+      setSnackBarOpen(true);
+    } else {
+      onAddData(selectedDay, dayData);
+      setDayData({ openHour: '08:00', closeHour: '08:30', price: 0 });
+    }
   };
   const spanishDays = {
     monday: 'Lunes',
@@ -195,6 +229,11 @@ const FieldDayAvailability: React.FC<FieldDayAvailabilityProps> = ({
       </TableContainer>
 
 
+      <Snackbar open={snackBarOpen} autoHideDuration={5000} onClick={handelSnackClose} onClose={handelSnackClose}>
+        <Alert severity={snackBarSeverity as AlertColor} sx={{ width: '100%', fontSize: '15px' }} onClose={handelSnackClose}>
+          {snackBarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

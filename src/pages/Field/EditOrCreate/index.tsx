@@ -163,6 +163,24 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                 ],
             },
         }));
+        // order by day and openHour
+        setFieldData((prevData) => ({
+            ...prevData,
+            availability: {
+                ...prevData.availability,
+                [selectedDay]: prevData.availability[selectedDay].sort((a, b) => {
+                    const aDate = new Date(`2021-01-01T${a.openHour}:00`);
+                    const bDate = new Date(`2021-01-01T${b.openHour}:00`);
+                    if (aDate < bDate) {
+                        return -1;
+                    }
+                    if (aDate > bDate) {
+                        return 1;
+                    }
+                    return 0;
+                }),
+            },
+        }));
         setDayData({ openHour: '', closeHour: '', price: 0 });
     };
 
