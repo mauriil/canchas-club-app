@@ -3,6 +3,7 @@ export interface UserResp {
   userId: string;
 }
 export interface User {
+  _id?: string;
   name: string;
   email: string;
   password: string;

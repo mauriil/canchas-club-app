@@ -8,7 +8,7 @@ import { createClub, deleteClub, editClub, getClubById } from '../../../api/club
 import { useDropzone } from 'react-dropzone';
 import uploadFileToS3 from '../../../api/uploadFileToS3';
 import TopBar from '../../../components/TopBar';
-import { Alert, AlertColor, Avatar, Box, Button, CircularProgress, LinearProgress, Snackbar, Step, StepLabel, Stepper, TextField, Typography } from '@mui/material';
+import { Alert, AlertColor, Avatar, Box, Button, CircularProgress, FormControl, InputLabel, LinearProgress, MenuItem, Select, Snackbar, Step, StepLabel, Stepper, TextField, Typography } from '@mui/material';
 import ProvinceDropdown from '../../../components/ProvinceDropdown';
 import AddressAutocomplete from '../../../components/AddressAutocomplete';
 import Map from '../../../components/Map';
@@ -54,6 +54,7 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
         province: '',
         department: '',
         alias: '',
+        reservationMode: 'full',
         colors: {
             primary: '#FFFFFF',
             secondary: '#FFFFFF'
@@ -269,7 +270,7 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                         marginBottom: 3,
                     }}>
                         <Typography variant="h4" gutterBottom sx={{ marginRight: 3 }}>
-                            {editMode ? `Editar club ${clubData.name}` : 'Crear un nuevo club'}
+                            {editMode ? `${clubData.name}` : 'Crear un nuevo club'}
                         </Typography>
                         {editMode ?
                             <Button
@@ -339,6 +340,18 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                                     error={clubData.alias === '' && buttonNextClicked}
                                     helperText={clubData.alias === '' && buttonNextClicked ? 'Campo requerido' : ''}
                                 />
+                                {/* This feature is ready but not enabled yet
+                                <FormControl fullWidth sx={{ marginBottom: 2, }}>
+                                    <InputLabel>Modo de reserva</InputLabel>
+                                    <Select
+                                        value={clubData.reservationMode}
+                                        onChange={(e) => handleInputChange('reservationMode', e.target.value)}
+                                    >
+                                        <MenuItem value="full">Reserva con pago total online</MenuItem>
+                                        <MenuItem value="partial">Reserva con pago parcial online</MenuItem>
+                                        <MenuItem value="withoutGuarantee">Sin pago</MenuItem>
+                                    </Select>
+                                </FormControl> */}
                                 <ProvinceDropdown
                                     value={clubData.province}
                                     onChange={(province: any) => handleInputChange('province', province)}

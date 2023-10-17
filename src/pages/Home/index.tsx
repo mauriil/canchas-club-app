@@ -32,11 +32,12 @@ const Home = () => {
       {/* <BookingSteps
         onSuccessfulBooking={handleSuccessfulBooking}
         isOpen={mercadoPagoBrickIsOpen}
-        tenantId="64ac321b26c685de7deedc9c"
+        tenantId="64c01c2d09c55ac75bd60d7e"
         ownerId="64c3fa1e58d34d55ba344fdb"
         fieldId="64c3fbfd6ff6d6503333e6da"
-        time={{ day: '2023-09-30', from: '10:00', to: '11:00' }}
-        amount={100} /> */}
+        reservationMode="full"
+        time={{ day: '2023-10-20', from: '14:00', to: '15:00' }}
+        amount={50} /> */}
     </Box>
   );
 };

@@ -119,6 +119,7 @@ export default function SignIn() {
               autoComplete="name"
               autoFocus
               sx={{ background: "transparent" }}
+              error={!!errors.name}
               {...register("name", { required: true })}
             />
             {errors.name && (
@@ -133,6 +134,7 @@ export default function SignIn() {
               label="Teléfono"
               autoComplete="phone"
               sx={{ background: "transparent" }}
+              error={!!errors.phone}
               {...register("phone", { required: true })}
             />
             {errors.phone && (
@@ -147,6 +149,7 @@ export default function SignIn() {
               label="Email"
               autoComplete="email"
               sx={{ background: "transparent" }}
+              error={!!errors.email}
               {...register("email", {
                 required: true,
                 pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
@@ -163,6 +166,8 @@ export default function SignIn() {
               id="password"
               label="Contraseña"
               autoComplete="current-password"
+              sx={{ background: "transparent" }}
+              error={!!errors.password}
               {...register("password", { required: true, minLength: 6 })}
             />
             {errors.password && (

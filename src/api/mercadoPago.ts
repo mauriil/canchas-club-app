@@ -33,7 +33,7 @@ export const checkMercadoPagoAccessToken = async (accessToken: string) => {
     }
 }
 
-export const createPayment = async (payload: string) => {
+export const createPayment = async (payload: unknown) => {
     try {
         const response = await fetch(`${BASE_API_URL}/payments`, {
             method: "POST",
@@ -53,6 +53,32 @@ export const createSubscription = async (payload: object) => {
             method: "POST",
             headers,
             body: JSON.stringify(payload),
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching getUser:", error);
+        throw error;
+    }
+}
+
+export const getMercadoPagoPayment = async (id: string) => {
+    try {
+        const response = await fetch(`${BASE_API_URL}/payments/mercadopago/getPayment/${id}`, {
+            method: "GET",
+            headers,
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching getUser:", error);
+        throw error;
+    }
+}
+
+export const refundPayment = async (id: string) => {
+    try {
+        const response = await fetch(`${BASE_API_URL}/payments/refund/${id}`, {
+            method: "GET",
+            headers,
         });
         return await response.json();
     } catch (error) {

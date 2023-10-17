@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 interface AuthContextType {
-  signUp: (user: User) => Promise<{ status: boolean; errors: string[] }>;
+  signUp: (user: User) => Promise<{ status: boolean; errors: string[], id?: string }>;
   signIn: (user: LogInUser) => Promise<{ status: boolean; errors: string[] }>;
   forgotPassword: (user: ForgotPasswordRequestBody) => Promise<boolean>;
   logOut: () => void;
@@ -60,7 +60,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           userId: data.id,
         });
         setIsAuthenticated(true);
-        return { status: true, errors: [] };
+        return { status: true, errors: [], id: data.id };
       }
     });
   };

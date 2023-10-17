@@ -15,6 +15,7 @@ export interface Club {
   department: string;
   description: string;
   location: LocationObject;
+  reservationMode: string;
   logo: string;
   name: string;
   _id?: string | undefined;

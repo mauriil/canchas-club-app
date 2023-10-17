@@ -28,6 +28,7 @@ const ClubManagement = () => {
             description: "",
             logo: "",
             alias: "",
+            reservationMode: "full",
             province: "",
             department: "",
             closedDays: [""],

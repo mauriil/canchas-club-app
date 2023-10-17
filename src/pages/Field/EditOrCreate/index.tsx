@@ -313,7 +313,7 @@ const CreateOrUpdateField: React.FC<CreateOrUpdateFieldProps> = ({
                             marginBottom: 3,
                         }}>
                             <Typography variant="h4" gutterBottom sx={{ marginRight: 3 }}>
-                                {editMode ? `Editar cancha ${fieldData.name}` : 'Crear nueva cancha'}
+                                {editMode ? `${fieldData.name}` : 'Crear nueva cancha'}
                             </Typography>
                             {editMode ?
                                 <Button

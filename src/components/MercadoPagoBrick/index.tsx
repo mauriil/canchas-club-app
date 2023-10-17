@@ -3,38 +3,42 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import React from 'react';
+import React, { useEffect } from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import { initMercadoPago, CardPayment } from '@mercadopago/sdk-react';
-import { createPayment, createSubscription } from '../../api/mercadoPago';
+import { initMercadoPago, CardPayment, Payment } from '@mercadopago/sdk-react';
+import { createPayment } from '../../api/mercadoPago';
 
 interface MercadoPagoBrickProps {
     isOpen: boolean;
     // onClose: () => void;
     ownerId: string;
     tenantId: string;
+    tenantName: string;
+    tenantEmail: string;
     amount: number;
     title: string;
-    onSuccessfulPayment: (paymentId: string) => void;
+    reservationMode: string;
+    onSuccessfulPayment: (paymentId: string, status: string) => void;
 }
 
-const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ isOpen, ownerId, tenantId, onSuccessfulPayment, amount, title }) => {
-    initMercadoPago('TEST-1182f1bf-c98e-430c-964f-80d2d0b506cb');
+const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ isOpen, ownerId, tenantId, tenantName, tenantEmail, onSuccessfulPayment, amount, title, reservationMode }) => {
+    initMercadoPago('APP_USR-08595a8c-9d17-41db-b547-a6831dbd72e6');
+    amount = reservationMode === "full" ? (amount + amount * 0.05) : reservationMode === "partial" ? (amount / 2 + amount * 0.05) : 0;
     const initialization = {
         amount,
         payer: {
-            firstName: "NOMBREDDELALQUILANTE",
-            email: "EMAILDELALQUILANTE@hotmail.com",
+            firstName: tenantName,
+            email: tenantEmail,
         },
+        description: title,
     };
 
     const onSubmit = async (formData: any) => {
-        const paymentPayload = { ...formData, ownerId, tenantId, amount, title, isSubscription: false }
+        const paymentPayload = { ...formData.formData, ownerId, tenantId, amount, title, reservationMode }
         const payment = await createPayment(paymentPayload);
-        void onSuccessfulPayment(payment.paymentId)
+        void onSuccessfulPayment(payment.paymentId, payment.status)
     }
-
 
     const onError = async (error) => {
         // callback called for all Brick error cases
@@ -49,10 +53,20 @@ const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ isOpen, ownerId, te
         */
     };
 
+    const handleNoBoostPayment = async () => {
+        const paymentPayload = { ownerId, tenantId, amount, title, reservationMode }
+        const payment = await createPayment(paymentPayload);
+        void onSuccessfulPayment(payment.paymentId, payment.status)
+    }
+
+    if (isOpen && reservationMode === "withoutGuarantee") {
+        void handleNoBoostPayment();
+    }
+
     return (
         <Modal
-            open={isOpen}
-            //onClose={onClose}
+            open={isOpen && reservationMode !== "withoutGuarantee"}
+        //onClose={onClose}
         >
             <Box
                 sx={{
@@ -67,12 +81,19 @@ const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ isOpen, ownerId, te
                     p: 4,
                 }}
             >
-                <CardPayment
+                <Payment
                     initialization={initialization}
                     onSubmit={onSubmit}
                     onReady={onReady}
                     onError={onError}
                     locale='es-AR'
+                    customization={{
+                        paymentMethods: {
+                            creditCard: "all",
+                            debitCard: "all",
+                            mercadoPago: "all",
+                        }
+                    }}
                 />
             </Box>
         </Modal>
