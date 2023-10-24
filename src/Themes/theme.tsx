@@ -96,6 +96,21 @@ export const theme = createTheme({
           },
         },
         {
+          props: { color: "success", variant: "outlined" },
+          style: {
+            color: "black",
+            borderRadius: `15px`,
+            borderColor: "#4caf50",
+            fontSize: "1.2rem",
+            ":hover": {
+              backgroundColor: "#4caf50",
+              borderColor: "#4caf50",
+              boxShadow: "0px 0px 25px 1px rgb(0,0,0)",
+              color: "#ffffff",
+            },
+          },
+        },
+        {
           props: { color: "info" },
           style: {
             backgroundColor: "#2196f3",

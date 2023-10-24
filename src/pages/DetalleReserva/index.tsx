@@ -16,6 +16,7 @@ import {
     Alert,
     Snackbar,
     AlertColor,
+    Box,
 } from '@mui/material';
 import { Booking } from '../../types/booking';
 import { cancelBooking, checkAvailability, getBooking } from '../../api/bookings';
@@ -34,13 +35,13 @@ const BookingDetails = () => {
     const [snackBarSeverity, setSnackBarSeverity] = useState('success');
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [openRepeatDialog, setOpenRepeatDialog] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const bookingId = window.location.pathname.split('/')[3];
         void getBooking(bookingId).then((bookingData) => {
-            console.log("🚀 ~ file: index.tsx:24 ~ voidgetBooking ~ bookingData:", bookingData)
             setBooking(bookingData);
+            setLoading(false);
         });
     }, []);
 
@@ -142,11 +143,19 @@ const BookingDetails = () => {
     };
 
     return (
-        <div>
+        <>
             <TopBar />
 
             {loading ?
-                <CanchasClubLoader width="10%"/>
+             <Box
+             width="100vw"
+             height="100vh"
+             display="flex"
+             justifyContent="center"
+             alignItems="center"
+           >
+                <CanchasClubLoader width="80%"/>
+              </Box>
                 :
                 <>
                     <Grid container spacing={3} sx={{ mt: 1 }}>
@@ -181,7 +190,8 @@ const BookingDetails = () => {
                                     booking.status === 'pending' ? 'info' :
                                         booking.status === 'approved - accredited' ? 'success' :
                                             booking.status === 'completed' ? 'success' :
-                                                booking.status === 'cancelled' ? 'error' : 'info'
+                                                booking.status === 'no-show' ? 'warning' :
+                                                    booking.status === 'cancelled' ? 'error' : 'info'
                                 } sx={{
                                     width: '100%',
                                     '& .MuiAlert-message': { textAlign: "center", width: "inherit" }
@@ -293,7 +303,7 @@ const BookingDetails = () => {
                     {snackBarMessage}
                 </Alert>
             </Snackbar>
-        </div>
+        </>
     );
 };
 

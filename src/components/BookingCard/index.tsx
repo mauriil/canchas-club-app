@@ -1,4 +1,4 @@
-import { Box, Divider } from "@mui/material";
+import { Alert, Box, Divider } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -27,6 +27,7 @@ const BookingCard = ({ booking }) => {
         borderColor: "#00a6c0",
         backgroundColor: "white",
       }}
+      onClick={() => navigateToBookingDetail(booking._id)}
     >
       <Box
         sx={{
@@ -42,8 +43,7 @@ const BookingCard = ({ booking }) => {
         <img
           style={{ objectFit: "cover", width: "100%", height: "100%" }}
           src={`https://canchas-club.s3.amazonaws.com/${image}`}
-          title={booking.fieldId.description}
-        />
+          title={booking.fieldId.description} />
       </Box>
       <Box
         display="flex"
@@ -53,7 +53,7 @@ const BookingCard = ({ booking }) => {
       >
         <CardContent sx={{ height: "60%" }}>
           <Typography gutterBottom variant="h4" component="div">
-          <img src={PaddleImage} alt="Deporte" height={'30px'} width={'30px'}/>{`${booking.fieldId.clubId.name}`}
+            {`${booking.fieldId.clubId.name}`}
           </Typography>
           <Divider sx={{ margin: "1rem 0rem", width: "100%" }} />
           <Box display="flex" alignItems="center">
@@ -64,21 +64,28 @@ const BookingCard = ({ booking }) => {
           </Box>
           <Divider sx={{ margin: "1rem 0rem" }} />
           <Typography variant="h4" color="primary">
-            {`${booking.time.from} hs`}
+            {`${booking.time.from} - ${booking.time.to} hs`}
           </Typography>
           <Typography variant="h4" color="primary">
-            {booking.fieldId.clubId.name}
+            {booking.fieldId.name}
           </Typography>
         </CardContent>
         <CardActions sx={{ width: "100%" }}>
           <Button
             sx={{ width: "100%", marginBottom: "2rem" }}
-            size="large"
-            color="primary"
+            fullWidth
             variant="contained"
-            onClick={() => navigateToBookingDetail(booking._id)}
+            color={booking.status === 'pending' ? 'primary' :
+              booking.status === 'approved - accredited' ? 'success' :
+                booking.status === 'completed' ? 'success' :
+                  booking.status === 'no-show' ? 'warning' :
+                    booking.status === 'cancelled' ? 'error' : 'primary'}
           >
-            RESERVADO
+            {booking.status === 'pending' ? 'Pendiente' :
+              booking.status === 'approved - accredited' ? 'Confirmado' :
+                booking.status === 'completed' ? 'Completado' :
+                  booking.status === 'no-show' ? 'No se presento' :
+                    booking.status === 'cancelled' ? 'Cancelado' : ''}
           </Button>
         </CardActions>
       </Box>

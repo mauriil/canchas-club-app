@@ -20,11 +20,11 @@ const MisReservas = () => {
     void getBookings();
   }, []);
 
-  if (isLoading) {
-    return (
-      <CanchasClubLoader width="10%" />
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <CanchasClubLoader width="25%" />
+  //   );
+  // }
   return (
     <Box
       width="100vw"
@@ -33,41 +33,46 @@ const MisReservas = () => {
       justifyContent="center"
       alignItems="center"
     >
-      {booking.length > 0 ? (
-        <Grid
-          container
-          rowSpacing={2}
-          columnSpacing={{ xs: 0, sm: 2, md: 3 }}
-          sx={{
-            flexGrow: 1,
-            paddingLeft: 0,
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          {booking.map((booking, index) => {
-            return (
-              <Grid
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                key={index}
-                item
-                xs={12}
-                sm={6}
-                lg={4}
-                xl={3}
-              >
-                <BookingCard booking={booking} />
-              </Grid>
-            );
-          })}
-        </Grid>
-      ) : (
-        <Typography variant="h3" color="primary">
-          No tenés ninguna reserva de canchas realizada
-        </Typography>
-      )}
+      {isLoading ? <CanchasClubLoader width="80%" /> :
+
+        booking.length > 0 ? (
+          <Grid
+            container
+            rowSpacing={2}
+            columnSpacing={{ xs: 0, sm: 2, md: 3 }}
+            sx={{
+              flexGrow: 1,
+              paddingLeft: 0,
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            {booking.map((booking, index) => {
+              return (
+                <Grid
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  key={index}
+                  item
+                  xs={12}
+                  sm={6}
+                  lg={4}
+                  xl={3}
+                >
+                  <BookingCard booking={booking} />
+                </Grid>
+              );
+            })}
+          </Grid>
+        ) : (
+          <Typography variant="h3" color="primary">
+            No tenés ninguna reserva de canchas realizada
+          </Typography>
+        )
+
+      }
+
     </Box>
   );
 };
