@@ -8,6 +8,7 @@ import ForgotPassword from "./components/ForgotPassword";
 import { AuthProvider } from "./contexts/userContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MisReservas from "./pages/MisReservas";
+import DetalleReserva from "./pages/DetalleReserva";
 import MiClub from "./pages/MiClub";
 import Perfil from "./pages/Perfil";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -34,6 +35,7 @@ function App() {
               <Route index element={<Navigate to="home" />} />
               <Route path="home" element={<Home />} />
               <Route path="misReservas" element={<MisReservas />} />
+              <Route path="detalleReserva/:bookingId" element={<DetalleReserva />} />
               <Route path="miClub" element={<MiClub />} />
               <Route path="/dashboard/miClub/new" element={<EditOrCreateClub />} />
               <Route path="/dashboard/miClub/:clubId" element={<ClubManagement />} />

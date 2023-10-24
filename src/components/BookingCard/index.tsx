@@ -10,6 +10,10 @@ import PaddleImage from "../../assets/icons/paddle.svg";
 const BookingCard = ({ booking }) => {
   const image = booking.fieldId.photos[0];
 
+  const navigateToBookingDetail = (bookingId: string) => {
+    window.location.href = `detalleReserva/${bookingId}`;
+  };
+
   return (
     <Card
       sx={{
@@ -72,6 +76,7 @@ const BookingCard = ({ booking }) => {
             size="large"
             color="primary"
             variant="contained"
+            onClick={() => navigateToBookingDetail(booking._id)}
           >
             RESERVADO
           </Button>
