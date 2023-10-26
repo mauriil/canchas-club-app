@@ -5,7 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import RoomIcon from "@mui/icons-material/Room";
-import PaddleImage from "../../assets/icons/paddle.svg";
+import { parseDate } from "../../helpers/dates/parseDate";
 
 const BookingCard = ({ booking }) => {
   const image = booking.fieldId.photos[0];
@@ -28,6 +28,12 @@ const BookingCard = ({ booking }) => {
         backgroundColor: "white",
       }}
       onClick={() => navigateToBookingDetail(booking._id)}
+      onMouseOver={() => {
+        document.body.style.cursor = "pointer";
+      }}
+      onMouseOut={() => {
+        document.body.style.cursor = "default";
+      }}
     >
       <Box
         sx={{
@@ -52,21 +58,29 @@ const BookingCard = ({ booking }) => {
         sx={{ height: "100%", width: "65%" }}
       >
         <CardContent sx={{ height: "60%" }}>
-          <Typography gutterBottom variant="h4" component="div">
+          <Typography gutterBottom variant="h2" component="div">
             {`${booking.fieldId.clubId.name}`}
           </Typography>
           <Divider sx={{ margin: "1rem 0rem", width: "100%" }} />
           <Box display="flex" alignItems="center">
             <RoomIcon fontSize="large" color="primary" />
-            <Typography variant="h6" color="primary.light">
+            <Typography variant="h5" color="primary">
               {booking.fieldId.clubId.address}
             </Typography>
           </Box>
           <Divider sx={{ margin: "1rem 0rem" }} />
-          <Typography variant="h4" color="primary">
+          <Typography variant="h4" color="primary" sx={{
+            mb: "1rem",
+            mt: "2rem"
+          }}>
+            {parseDate(booking.time.day)}
+          </Typography>
+          <Typography variant="h2" color="primary" sx={{
+            mb: "1rem"
+          }}>
             {`${booking.time.from} - ${booking.time.to} hs`}
           </Typography>
-          <Typography variant="h4" color="primary">
+          <Typography variant="h2" color="primary">
             {booking.fieldId.name}
           </Typography>
         </CardContent>

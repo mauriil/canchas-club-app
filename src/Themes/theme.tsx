@@ -126,5 +126,58 @@ export const theme = createTheme({
       ],
     },
   },
-  typography: {},
+  typography: {
+    // fontFamily: "Roboto",
+    h1: {
+      fontSize: "3rem",
+      fontWeight: "bold",
+      color: "#283739",
+    },
+    h2: {
+      fontSize: "2rem",
+      fontWeight: "bold",
+      color: "#283739",
+    },
+    h3: {
+      fontSize: "1.5rem",
+      fontWeight: "bold",
+      color: "#283739",
+    },
+    h4: {
+      fontSize: "1.2rem",
+      fontWeight: "bold",
+      color: "#283739",
+    },
+    h5: {
+      fontSize: "1rem",
+      fontWeight: "bold",
+      color: "#283739",
+    },
+    h6: {
+      fontSize: "0.8rem",
+      fontWeight: "bold",
+      color: "#283739",
+    },
+    subtitle1: {
+      fontSize: "1.2rem",
+      color: "#283739",
+    },
+    subtitle2: {
+      fontSize: "1rem",
+      color: "#283739",
+    },
+    body1: {
+      fontSize: "1.2rem",
+      color: "#283739",
+    },
+    body2: {
+      fontSize: "1rem",
+      color: "#283739",
+    },
+    button: {
+      fontSize: "1.2rem",
+      fontWeight: "bold",
+      color: "#283739",
+    },
+  },
 });

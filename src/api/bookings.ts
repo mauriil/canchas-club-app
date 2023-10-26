@@ -22,7 +22,7 @@ const headers = {
 
 export const getAllBookingsByUser = async () => {
     try {
-        const response = await fetch(`${BASE_API_URL}/bookings/bytenant/${userId}`, {
+        const response = await fetch(`${BASE_API_URL}/bookings/byuser/${userId}`, {
             method: "GET",
             headers: { ...headers },
         });

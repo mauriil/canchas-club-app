@@ -1,17 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Typography,
     Grid,
     Paper,
     Button,
-    TextField,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
     Divider,
     Alert,
     Snackbar,
@@ -24,7 +19,9 @@ import TopBar from '../../components/TopBar';
 import { useNavigate } from 'react-router-dom';
 import ConfirmationDialog from '../../components/ConfirmationDialog';
 import CanchasClubLoader from '../../components/Loader';
-import { set } from 'date-fns';
+import RoomIcon from "@mui/icons-material/Room";
+import { parseDate } from '../../helpers/dates/parseDate';
+import BookingSteps from '../../components/BookingSteps';
 
 
 const BookingDetails = () => {
@@ -36,6 +33,15 @@ const BookingDetails = () => {
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [openRepeatDialog, setOpenRepeatDialog] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [mercadoPagoBrickIsOpen, setMercadoPagoBrickIsOpen] = useState(false);
+    const [amount, setAmount] = useState(0);
+
+    const handleSuccessfulBooking = (bookingId: string) => {
+        setMercadoPagoBrickIsOpen(false);
+        setTimeout(() => {
+            navigate(`/dashboard/detalleReserva/${bookingId}`);
+        }, 1000);
+    }
 
     useEffect(() => {
         const bookingId = window.location.pathname.split('/')[3];
@@ -73,7 +79,7 @@ const BookingDetails = () => {
         const nextWeekDay = nextWeekDate.getDate();
         const nextWeekMonth = nextWeekDate.getMonth() + 1;
         const nextWeekYear = nextWeekDate.getFullYear();
-        const nextWeekDateString = `${nextWeekYear}-${nextWeekMonth < 10 ? 0 + nextWeekMonth : nextWeekMonth}-${nextWeekDay < 10 ? 0 + nextWeekDay : nextWeekDay}`;
+        const nextWeekDateString = `${nextWeekYear}-${nextWeekMonth < 10 ? nextWeekMonth.toString().padStart(2, '0') : nextWeekMonth}-${nextWeekDay < 10 ? nextWeekDay.toString().padStart(2, '0') : nextWeekDay}`;
 
         return {
             day: nextWeekDateString,
@@ -97,7 +103,8 @@ const BookingDetails = () => {
         }
 
         if (reqAvailability) {
-            // TODO: OPEN MERCADO PAGO BRICK AND MAKE BOOKING PAYMENT AND ALL THE PAYMENT PROCESS
+            setAmount(reqAvailability.amount);
+            setMercadoPagoBrickIsOpen(true);
         } else {
             setSnackBarMessage('Lo sentimmos. El turno no está disponible');
             setSnackBarSeverity('error');
@@ -108,54 +115,20 @@ const BookingDetails = () => {
 
     }
 
-    const parseDate = (date: string) => {
-        const fecha: Date = new Date(date);
-        if (isNaN(fecha.getTime())) return '';
-        fecha.setDate(fecha.getDate() + 1);
-        const daysOfWeek: string[] = [
-            'domingo',
-            'lunes',
-            'martes',
-            'miércoles',
-            'jueves',
-            'viernes',
-            'sábado',
-        ];
-        const months: string[] = [
-            'enero',
-            'febrero',
-            'marzo',
-            'abril',
-            'mayo',
-            'junio',
-            'julio',
-            'agosto',
-            'septiembre',
-            'octubre',
-            'noviembre',
-            'diciembre',
-        ];
-        const nombreDia: string = daysOfWeek[fecha.getDay()].charAt(0).toUpperCase() + daysOfWeek[fecha.getDay()].slice(1);
-        const diaMes: number = fecha.getDate();
-        const nombreMes: string = months[fecha.getMonth()].charAt(0).toUpperCase() + months[fecha.getMonth()].slice(1);
-
-        return `${nombreDia} ${diaMes} de ${nombreMes}`;
-    };
-
     return (
         <>
             <TopBar />
 
             {loading ?
-             <Box
-             width="100vw"
-             height="100vh"
-             display="flex"
-             justifyContent="center"
-             alignItems="center"
-           >
-                <CanchasClubLoader width="80%"/>
-              </Box>
+                <Box
+                    width="100vw"
+                    height="100vh"
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                >
+                    <CanchasClubLoader width="80%" />
+                </Box>
                 :
                 <>
                     <Grid container spacing={3} sx={{ mt: 1 }}>
@@ -167,7 +140,7 @@ const BookingDetails = () => {
                                 alignItems: 'center',
                                 backgroundColor: '#f5f5f5',
                             }}>
-                                <Typography variant="h6" gutterBottom>
+                                <Typography variant="h3" gutterBottom>
                                     Detalles
                                 </Typography>
                                 <Divider sx={{
@@ -213,7 +186,7 @@ const BookingDetails = () => {
                                 marginBottom: '1rem',
                                 backgroundColor: '#f5f5f5',
                             }}>
-                                <Typography variant="h6" gutterBottom>
+                                <Typography variant="h3" gutterBottom>
                                     Cliente
                                 </Typography>
                                 <Divider sx={{
@@ -237,7 +210,7 @@ const BookingDetails = () => {
                                 marginBottom: '1rem',
                                 backgroundColor: '#f5f5f5',
                             }}>
-                                <Typography variant="h6" gutterBottom>
+                                <Typography variant="h3" gutterBottom>
                                     Club
                                 </Typography>
                                 <Divider sx={{
@@ -247,8 +220,17 @@ const BookingDetails = () => {
                                 <Typography variant="body1" gutterBottom>
                                     {booking.fieldId?.clubId.name}
                                 </Typography>
-                                <Typography variant="body1" gutterBottom>
-                                    {booking.fieldId?.clubId.address}
+                                <Typography variant="body1" gutterBottom color='primary' fontWeight='bold'
+                                    onMouseOver={(e) => {
+                                        e.currentTarget.style.cursor = 'pointer';
+                                    }}
+                                    onClick={() => {
+                                        window.open(`https://www.google.com/maps/search/?api=1&query=${booking.fieldId?.clubId.location.coordinates[1]},${booking.fieldId?.clubId.location.coordinates[0]}`, '_blank');
+                                    }}
+                                    sx={{
+                                        textAlign: 'center',
+                                    }}>
+                                    <RoomIcon fontSize="small" color="primary" /> {booking.fieldId?.clubId.address}
                                 </Typography>
                             </Paper>
                         </Grid>
@@ -293,6 +275,16 @@ const BookingDetails = () => {
                 ${parseDate(getNextSameBookingDay().day)} de ${booking.time?.from} a ${booking.time?.to}
                 ¿Estás seguro?`}
             />
+
+            <BookingSteps
+                onSuccessfulBooking={handleSuccessfulBooking}
+                isOpen={mercadoPagoBrickIsOpen}
+                tenantId={booking.tenantId?._id}
+                ownerId={booking.fieldId?.clubId.userId._id}
+                fieldId={booking.fieldId?._id}
+                reservationMode="full"
+                time={{ day: getNextSameBookingDay().day, from: booking.time?.from, to: booking.time?.to }}
+                amount={amount} />
 
             <Snackbar
                 open={snackBarOpen}

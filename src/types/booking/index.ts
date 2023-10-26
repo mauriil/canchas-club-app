@@ -1,6 +1,3 @@
-import { Club } from "../clubs";
-import { Field } from "../fields";
-
 export interface Booking {
     ownerId: string;
     createdAt?: string;

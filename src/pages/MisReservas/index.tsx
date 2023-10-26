@@ -1,6 +1,6 @@
 import { Box, Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getAllBookingsByUser } from "../../api/bookings";
+import { getAllBookingsByOwner, getAllBookingsByUser } from "../../api/bookings";
 import BookingCard from "../../components/BookingCard";
 import { Booking } from "../../types/booking";
 import CanchasClubLoader from "../../components/Loader";
@@ -13,6 +13,7 @@ const MisReservas = () => {
     setIsLoading(true);
     const req = await getAllBookingsByUser();
     const bookingsOfUser: Booking[] = (await req.json()) as Array<Booking>;
+
     setBooking(bookingsOfUser);
     setIsLoading(false);
   };
@@ -20,11 +21,6 @@ const MisReservas = () => {
     void getBookings();
   }, []);
 
-  // if (isLoading) {
-  //   return (
-  //     <CanchasClubLoader width="25%" />
-  //   );
-  // }
   return (
     <Box
       width="100vw"

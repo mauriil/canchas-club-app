@@ -13,9 +13,9 @@ import { User } from '../../types/users';
 import { getUser } from '../../api/users';
 import { createBooking } from '../../api/bookings';
 import ConfirmationDialog from '../ConfirmationDialog';
-import { useNavigate } from 'react-router-dom';
 import MercadoPagoBrick from '../MercadoPagoBrick';
 import NewUserModal from '../NewUserAccount';
+import { parseDate } from '../../helpers/dates/parseDate';
 
 interface BookingStepsProps {
     isOpen: boolean;
@@ -64,7 +64,7 @@ const BookingSteps: React.FC<BookingStepsProps> = ({
         onSuccessfulBooking(bookingId);
     }
 
-    const fetchFieldData = async () => {
+    const fetchFieldData = async (fieldId: string) => {
         try {
             const field = await getFieldById(fieldId);
             setFieldData(field);
@@ -88,43 +88,13 @@ const BookingSteps: React.FC<BookingStepsProps> = ({
         }
     }
 
-    const parseDate = (date: string) => {
-        const fecha: Date = new Date(date);
-        fecha.setDate(fecha.getDate() + 1);
-        const daysOfWeek: string[] = [
-            'domingo',
-            'lunes',
-            'martes',
-            'miércoles',
-            'jueves',
-            'viernes',
-            'sábado',
-        ];
-        const months: string[] = [
-            'enero',
-            'febrero',
-            'marzo',
-            'abril',
-            'mayo',
-            'junio',
-            'julio',
-            'agosto',
-            'septiembre',
-            'octubre',
-            'noviembre',
-            'diciembre',
-        ];
-        const nombreDia: string = daysOfWeek[fecha.getDay()].charAt(0).toUpperCase() + daysOfWeek[fecha.getDay()].slice(1);
-        const diaMes: number = fecha.getDate();
-        const nombreMes: string = months[fecha.getMonth()].charAt(0).toUpperCase() + months[fecha.getMonth()].slice(1);
-
-        return `${nombreDia} ${diaMes} de ${nombreMes}`;
-    };
+    useEffect(() => {
+        void fetchFieldData(fieldId);
+    }, [fieldId]);
 
     useEffect(() => {
-        void fetchFieldData();
         void fetchTenantData(tenantId);
-    }, []);
+    }, [tenantId]);
 
     const closeModal = () => {
         // Agrega lógica para cerrar el modal si es necesario
