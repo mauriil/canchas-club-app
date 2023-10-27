@@ -29,6 +29,7 @@ interface BookingStepsProps {
     amount: number;
     ownerId: string;
     onSuccessfulBooking: (bookingId: string) => void;
+    onFailedBooking: () => void;
     reservationMode: string;
 }
 
@@ -38,6 +39,7 @@ const BookingSteps: React.FC<BookingStepsProps> = ({
     amount,
     fieldId,
     onSuccessfulBooking,
+    onFailedBooking,
     time,
     ownerId,
     reservationMode,
@@ -70,6 +72,7 @@ const BookingSteps: React.FC<BookingStepsProps> = ({
             setFieldData(field);
             setIsLoading(false);
         } catch (error) {
+            onFailedBooking();
             console.error(error);
         }
     };
@@ -84,6 +87,7 @@ const BookingSteps: React.FC<BookingStepsProps> = ({
                 setIsLoading(false);
             }
         } catch (error) {
+            onFailedBooking();
             console.error(error);
         }
     }
@@ -119,6 +123,7 @@ const BookingSteps: React.FC<BookingStepsProps> = ({
             setSnackBarSeverity('error');
             setSnackBarOpen(true);
             setIsLoading(false);
+            onFailedBooking();
             return;
         }
         if (status === 'approved - accredited') {

@@ -13,6 +13,7 @@ import MiClub from "./pages/MiClub";
 import Perfil from "./pages/Perfil";
 import NotFoundPage from "./pages/NotFoundPage";
 import Home from "./pages/Home";
+import Reservar from "./pages/Reservar";
 import ClubManagement from "./pages/Club/Management";
 import EditOrCreateClub from "./pages/Club/EditOrCreate";
 import EditOrCreateField from "./pages/Field/EditOrCreate";
@@ -31,6 +32,10 @@ function App() {
             <Route path="*" element={<NotFoundPage />} />
           </Route>
           <Route element={<ProtectedRoute />}>
+          <Route path="/reserva" element={<Dashboard />}>
+              <Route path="/reserva/:day/:from/:to/:fieldId" element={<Reservar />} />
+          </Route>
+
             <Route path="/dashboard" element={<Dashboard />}>
               <Route index element={<Navigate to="home" />} />
               <Route path="home" element={<Home />} />
