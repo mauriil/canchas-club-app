@@ -48,12 +48,14 @@ const NewUserModal: React.FC<NewUserModalProps> = ({
             setSnackBarMessage(registerResponse.errors[0]);
             setSnackBarSeverity("error");
             setSnackBarOpen(true);
+        } else {
+            setSnackBarMessage('Bienvenido a Canchas Club!');
+            setSnackBarSeverity("success");
+            setSnackBarOpen(true);
+            onSuccessfulUserCreation(registerResponse.id as string);
         }
-        setSnackBarMessage('Bienvenido a Canchas Club!');
-        setSnackBarSeverity("success");
-        setSnackBarOpen(true);
+
         setIsLoading(false);
-        onSuccessfulUserCreation(registerResponse.id as string);
         onClose();
     });
 
@@ -64,12 +66,13 @@ const NewUserModal: React.FC<NewUserModalProps> = ({
             setSnackBarMessage(loginResponse.errors[0]);
             setSnackBarSeverity("error");
             setSnackBarOpen(true);
+        } else {
+            setSnackBarMessage('Bienvenido a Canchas Club!');
+            setSnackBarSeverity("success");
+            setSnackBarOpen(true);
+            onSuccessfulUserCreation(loginResponse.id as string);
         }
-        setSnackBarMessage('Bienvenido a Canchas Club!');
-        setSnackBarSeverity("success");
-        setSnackBarOpen(true);
         setIsLoading(false);
-        onSuccessfulUserCreation(loginResponse.id as string);
         onClose();
     });
 
@@ -156,7 +159,7 @@ const NewUserModal: React.FC<NewUserModalProps> = ({
                         ) :
                             <>
                                 <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={onSubmit} width={"100%"}>
-                                <Typography variant="h2" sx={{ mb: 2 }}> Registrate para continuar </Typography>
+                                    <Typography variant="h2" sx={{ mb: 2 }}> Registrate para continuar </Typography>
                                     <TextField
                                         type="text"
                                         margin="normal"

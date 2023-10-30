@@ -75,10 +75,13 @@ const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ isOpen, ownerId, te
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
                     width: 400,
+                    maxHeight: '90vh',
                     bgcolor: 'background.paper',
                     borderRadius: 2,
                     boxShadow: 24,
                     p: 4,
+                    overflow: 'auto',
+                    WebkitOverflowScrolling: 'touch',
                 }}
             >
                 <Payment
