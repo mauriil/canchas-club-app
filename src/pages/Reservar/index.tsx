@@ -150,9 +150,9 @@ const Home = () => {
   const tenantId = token ? JSON.parse(atob(token.split(".")[1])).sub : null;
 
   const [mercadoPagoBrickIsOpen, setMercadoPagoBrickIsOpen] = useState(true);
-  const handleSuccessfulBooking = (bookingId: string) => {
+  const handleSuccessfulBooking = async (bookingId: string) => {
     const preBookingId = window.location.pathname.split('/')[2];
-    void cancelBooking(preBookingId);
+    await cancelBooking(preBookingId);
     setMercadoPagoBrickIsOpen(false);
     setTimeout(() => {
       navigate(`/dashboard/detalleReserva/${bookingId}`);
