@@ -151,6 +151,8 @@ const Home = () => {
 
   const [mercadoPagoBrickIsOpen, setMercadoPagoBrickIsOpen] = useState(true);
   const handleSuccessfulBooking = (bookingId: string) => {
+    const preBookingId = window.location.pathname.split('/')[2];
+    void cancelBooking(preBookingId);
     setMercadoPagoBrickIsOpen(false);
     setTimeout(() => {
       navigate(`/dashboard/detalleReserva/${bookingId}`);
