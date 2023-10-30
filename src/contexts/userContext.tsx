@@ -23,7 +23,7 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 interface AuthContextType {
   signUp: (user: User) => Promise<{ status: boolean; errors: string[], id?: string }>;
-  signIn: (user: LogInUser) => Promise<{ status: boolean; errors: string[] }>;
+  signIn: (user: LogInUser) => Promise<{ status: boolean; errors: string[], id?: string }>;
   forgotPassword: (user: ForgotPasswordRequestBody) => Promise<boolean>;
   logOut: () => void;
   user: UserResp | null;
@@ -82,7 +82,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           userId: data.id,
         });
         setIsAuthenticated(true);
-        return { status: true, errors: [] };
+        return { status: true, errors: [], id: data.id };
       }
     });
   };
@@ -108,6 +108,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         )
       )
         return;
+      if (/\/reserva\/.*/.test(window.location.pathname)) return;
+
       const cookies: {
         [key: string]: string;
       } = Cookies.get();

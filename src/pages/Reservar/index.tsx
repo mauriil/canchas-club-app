@@ -1,17 +1,21 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Alert, AlertColor, Box, Snackbar } from "@mui/material";
-import Title from "../../components/Title";
 import { useEffect, useState } from "react";
 import MercadoPagoBrick from "../../components/MercadoPagoBrick";
 import BookingSteps from "../../components/BookingSteps";
 import Cookies from "js-cookie";
 import { getFieldById } from "../../api/fields";
 import { useNavigate } from "react-router-dom";
+import { cancelBooking, getBooking } from "../../api/bookings";
+import CanchasClubLoader from "../../components/Loader";
 
 
 const Home = () => {
+  const [loading, setLoading] = useState(true);
   const [field, setField] = useState<any>(null);
   const [day, setDay] = useState<any>(null);
   const [from, setFrom] = useState<any>(null);
@@ -35,40 +39,75 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    const day = window.location.pathname.split('/')[2];
-    setDay(day);
-    const from = window.location.pathname.split('/')[3];
-    setFrom(from);
-    const to = window.location.pathname.split('/')[4];
-    setTo(to);
-    const fieldId = window.location.pathname.split('/')[5];
+    const handleBeforeUnload = () => {
+      const bookingId = window.location.pathname.split('/')[2];
+      void cancelBooking(bookingId)
+    };
 
-    void getFieldById(fieldId).then((fieldData) => {
-      if (fieldData.statusCode >= 400) {
-        setSnackBarMessage(fieldData.message);
-        setSnackBarSeverity('error');
-        setSnackBarOpen(true);
-        setTimeout(() => {
-          navigate(`/dashboard/home`);
-        }, 3000);
-        return;
-      }
-      setField(fieldData);
-      setOwnerId(fieldData.clubId.userId);
+    window.addEventListener('beforeunload', handleBeforeUnload);
 
-      checkPrice(fieldData)
-    });
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, []);
 
-  const checkPrice = (field: any) => {
-    const day = window.location.pathname.split('/')[2];
-    const from = window.location.pathname.split('/')[3];
-    const to = window.location.pathname.split('/')[4];
+  useEffect(() => {
+    const bookingId = window.location.pathname.split('/')[2];
+
+    getBooking(bookingId)
+      .then((bookingData) => {
+        if (bookingData.statusCode >= 400) {
+          setSnackBarMessage(bookingData.message);
+          setSnackBarSeverity('error');
+          setSnackBarOpen(true);
+          setTimeout(() => {
+            navigate(`/dashboard/home`);
+          }, 3000);
+          return;
+        }
+
+        setField(bookingData.fieldId);
+        setDay(bookingData.time.day);
+        setFrom(bookingData.time.from);
+        setTo(bookingData.time.to);
+
+        getFieldById(bookingData.fieldId._id)
+          .then((fieldData) => {
+            if (fieldData.statusCode >= 400) {
+              setSnackBarMessage(fieldData.message);
+              setSnackBarSeverity('error');
+              setSnackBarOpen(true);
+              setTimeout(() => {
+                navigate(`/dashboard/home`);
+              }, 3000);
+              return;
+            }
+            setOwnerId(fieldData.clubId.userId);
+
+            if (checkPrice) {
+              checkPrice(fieldData, bookingData.time);
+            }
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.error('Error al obtener los datos del campo:', error);
+          });
+      })
+      .catch((error) => {
+        console.error('Error al obtener los datos de la reserva:', error);
+      });
+
+  }, []);
+
+
+  const checkPrice = (field: any, timeOfPreBooking: any) => {
+    const day = timeOfPreBooking.day;
+    const from = timeOfPreBooking.from;
+    const to = timeOfPreBooking.to;
     const parsedDate = new Date(day);
     parsedDate.setDate(parsedDate.getDate() + 1);
     const weekDay = parsedDate.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
 
-    // Obtener el objeto correspondiente al día de la semana
     const hoursOfDay = field.availability[weekDay];
 
     if (hoursOfDay) {
@@ -109,7 +148,6 @@ const Home = () => {
   } = Cookies.get();
   const token = cookies["access-token"];
   const tenantId = token ? JSON.parse(atob(token.split(".")[1])).sub : null;
-  console.log("🚀 ~ file: index.tsx:24 ~ Home ~ tenantId:", tenantId)
 
   const [mercadoPagoBrickIsOpen, setMercadoPagoBrickIsOpen] = useState(true);
   const handleSuccessfulBooking = (bookingId: string) => {
@@ -127,16 +165,23 @@ const Home = () => {
       width="100%"
       height="100%"
     >
-      <BookingSteps
-        onSuccessfulBooking={handleSuccessfulBooking}
-        onFailedBooking={() => { handleFailedBooking }}
-        isOpen={mercadoPagoBrickIsOpen}
-        tenantId={tenantId}
-        ownerId={ownerId}
-        fieldId={field?._id}
-        reservationMode="full"
-        time={{ day, from, to }}
-        amount={price} />
+
+      {loading ? (
+        <CanchasClubLoader width="80%" />
+      ) :
+        (
+          <BookingSteps
+            onSuccessfulBooking={handleSuccessfulBooking}
+            onFailedBooking={() => { handleFailedBooking }}
+            isOpen={mercadoPagoBrickIsOpen}
+            tenantId={tenantId}
+            ownerId={ownerId}
+            fieldId={field?._id}
+            reservationMode="full"
+            time={{ day, from, to }}
+            amount={price} />
+        )
+      }
 
       <Snackbar open={snackBarOpen} autoHideDuration={5000} onClick={handelSnackClose} onClose={handelSnackClose}>
         <Alert severity={snackBarSeverity as AlertColor} sx={{ width: '100%', fontSize: '15px' }} onClose={handelSnackClose}>

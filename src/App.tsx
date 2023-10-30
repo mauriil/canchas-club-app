@@ -17,6 +17,7 @@ import Reservar from "./pages/Reservar";
 import ClubManagement from "./pages/Club/Management";
 import EditOrCreateClub from "./pages/Club/EditOrCreate";
 import EditOrCreateField from "./pages/Field/EditOrCreate";
+import BackGround from "./pages/Reservar/background";
 
 function App() {
   return (
@@ -31,11 +32,10 @@ function App() {
             <Route path="forgotPassword" element={<ForgotPassword />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
-          <Route element={<ProtectedRoute />}>
-          <Route path="/reserva" element={<Dashboard />}>
-              <Route path="/reserva/:day/:from/:to/:fieldId" element={<Reservar />} />
+          <Route path="/reserva" element={<BackGround />}>
+              <Route path="/reserva/:bookingId" element={<Reservar />} />
           </Route>
-
+          <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />}>
               <Route index element={<Navigate to="home" />} />
               <Route path="home" element={<Home />} />
