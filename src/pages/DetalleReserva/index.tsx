@@ -36,6 +36,13 @@ const BookingDetails = () => {
     const [mercadoPagoBrickIsOpen, setMercadoPagoBrickIsOpen] = useState(false);
     const [amount, setAmount] = useState(0);
 
+    useEffect(() => {
+        // reload to prevent bug in login
+        if (localStorage.getItem("dashboardFirstLoad") === "true") return;
+        window.location.reload();
+        localStorage.setItem("dashboardFirstLoad", "true");
+      }, []);
+
     const handleSuccessfulBooking = (bookingId: string) => {
         setMercadoPagoBrickIsOpen(false);
         setTimeout(() => {

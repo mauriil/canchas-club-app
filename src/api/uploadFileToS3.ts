@@ -31,8 +31,12 @@ async function putPresignedUrl(userId: string, folder: string, fileName: string)
     return await response.text();
 }
 
+function sanitizeFileName(fileName: string) {
+    return fileName.replace(/[^a-z0-9.]/gi, '_').toLowerCase();
+}
+
 async function uploadFileToS3(folder: string, fileName: string, file, onProgress) {
-    const presignedUrl = await putPresignedUrl(userId, folder, fileName);
+    const presignedUrl = await putPresignedUrl(userId, folder, sanitizeFileName(fileName));
 
     const options = {
         onUploadProgress: (progressEvent: { loaded: number; total: number; }) => {
