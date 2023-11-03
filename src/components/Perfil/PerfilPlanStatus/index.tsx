@@ -44,7 +44,7 @@ const UserProfilePlanStatus = ({ onItemClick }: UserProfilePlanStatusProps) => {
                     break;
                 case 'premium3':
                     setLogoUrl(Avanzado);
-                    setPlanTitle('CanchaAvanzado');
+                    setPlanTitle('Dueño de club');
                     break;
                 default:
                     setLogoUrl(Essentials);
@@ -110,7 +110,17 @@ const UserProfilePlanStatus = ({ onItemClick }: UserProfilePlanStatusProps) => {
                 </IconButton>
             </Box>
             {isLoading ? (
-                <CanchasClubLoader width="10%" />
+                <Box sx={{
+                    width: '100%',
+                    height: 'auto',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    marginTop: '1rem',
+                }}>
+                    <CanchasClubLoader width="80%" />
+                </Box>
             ) : (
                 <Card>
                     <Box sx={{
@@ -154,21 +164,6 @@ const UserProfilePlanStatus = ({ onItemClick }: UserProfilePlanStatusProps) => {
                         </Typography>
                         <Typography variant="body1" align="center" >
                             {planStatus?.status}
-                        </Typography>
-                        <Typography variant="h6" align="center" sx={{
-                            color: 'primary.main',
-                            fontWeight: 'bold',
-                        }}>
-                            Fecha de renovación
-                        </Typography>
-                        <Typography variant="body1" align="center">
-                            {
-                                new Date(planStatus?.date as string).toLocaleDateString("es-AR", {
-                                    year: "numeric",
-                                    month: "long",
-                                    day: "numeric",
-                                })
-                            }
                         </Typography>
                     </CardContent>
                     <CardActions>

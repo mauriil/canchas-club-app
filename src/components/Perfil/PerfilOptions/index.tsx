@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import { Shield } from "@mui/icons-material";
 import BusinessIcon from "@mui/icons-material/Business";
 import KeyIcon from "@mui/icons-material/Key";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -44,14 +45,19 @@ const UserProfileOptions = ({
         <>
           <PerfilButton
             text="Mi plan"
-            icon={<AccountBalanceWalletIcon />}
+            icon={<Shield />}
             onClick={() => onItemClick("myPlan")}
           />
           <PerfilButton
+            text="Datos bancarios"
+            icon={<AccountBalanceWalletIcon />}
+            onClick={() => onItemClick("myAccountSettings")}
+          />
+          {/* <PerfilButton
             text="Mercado Pago token"
             icon={<KeyIcon />}
             onClick={() => onItemClick("mercadoPagoToken")}
-          />
+          /> */}
         </>
       ) : (
         <PerfilButton

@@ -10,16 +10,15 @@ import PerfilShowPlans from "../../components/Perfil/PerfilShowPlans";
 import PerfilEdit from "../../components/Perfil/PerfilEdit";
 import MercadoPagoToken from "../../components/Perfil/MercadoPagoToken";
 import CanchasClubLoader from "../../components/Loader";
-import { PlanStatus } from "../../types/users";
+import fondoDeportesDesktop from "../../assets/images/canchasClubFondoDeportesDesktop.jpg";
+import fondoDeportesMobile from "../../assets/images/canchasClubFondoDeportesMobile.jpg";
+import PerfilBankAccount from "../../components/Perfil/PerfilBankAccount";
 
 const Perfil = () => {
   const { user } = useAuth();
   const [isPremium, setIsPremium] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedOption, setSelectedOption] = useState("menu");
-  const [planStatus, setPlanStatus] = useState<PlanStatus | null>(null);
-  const [planTitle, setPlanTitle] = useState("");
-
   const checkPremium = async () => {
     const planStatus = await getPlanStatus();
     setIsPremium(planStatus.type !== "free" && planStatus.type !== "");
@@ -33,42 +32,13 @@ const Perfil = () => {
     setSelectedOption(option);
   };
 
-  const getPlanStatusRequest = async () => {
-    try {
-      const planStatusResponse: PlanStatus = await getPlanStatus();
-      setPlanStatus(planStatusResponse);
-      switch (planStatusResponse.type) {
-        case "premium1":
-          setPlanTitle("CanchaEssentials");
-          break;
-        case "premium2":
-          setPlanTitle("CanchaProgresivo");
-          break;
-        case "premium3":
-          setPlanTitle("CanchaAvanzado");
-          break;
-        default:
-          setPlanTitle("CanchaEssentials");
-          break;
-      }
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-      console.error("Error fetching plan status:", error);
-    }
-  };
-
-  useEffect(() => {
-    void getPlanStatusRequest();
-  }, []);
-
   return (
     <Box
       sx={{
         flexDirection: { md: "row", xs: "column" },
         backgroundColor: { xs: "background.paper" },
         backgroundImage: {
-          md: `url(https://canchas-club.s3.amazonaws.com/CanchasClub_IdentidadMarca/FONDO+DEPORTES/CanchasClub_FondoDeportes_EDITABLE-01.jpg)`,
+          md: `url(${fondoDeportesDesktop})`,
         },
         backgroundSize: {
           md: "cover",
@@ -93,7 +63,7 @@ const Perfil = () => {
           borderBottomLeftRadius: "20px",
           borderBottomRightRadius: "20px",
           boxShadow: "0px 0px 25px 1px rgb(0,0,0)",
-          backgroundImage: `url(https://canchas-club.s3.amazonaws.com/CanchasClub_IdentidadMarca/FONDO+DEPORTES/CanchasClub_FondoDeportes_EDITABLE-02.jpg)`,
+          backgroundImage: `url(${fondoDeportesMobile})`,
           backgroundSize: "cover",
         }}
       >
@@ -116,68 +86,10 @@ const Perfil = () => {
       >
         <Box
           sx={{
-            boxShadow: { md: "0px 0px 25px 1px rgb(0,0,0)" },
-            animation: { md: "fadeIn 1s ease-in-out" },
-            width: { md: "40%", xs: "100%" },
-            backgroundColor: { md: "background.default" },
-            height: { md: "80%" },
-            display: { xs: "none", md: "flex" },
-          }}
-          marginLeft="3rem"
-          borderRadius="15px"
-          justifyContent="space-around"
-          alignItems="center"
-          flexDirection="column"
-        >
-          <Box
-            sx={{
-              width: "100%",
-              backgroundColor: { md: "background.default" },
-              height: "23%",
-              display: "flex",
-              flexDirection: "column",
-            }}
-            padding="5rem"
-            borderRadius="15px"
-            justifyContent="center"
-            alignItems="center"
-            flexDirection="column"
-          >
-            <AvatarIcon width="5rem" height="5rem" />
-            <Typography component="h2" fontSize="2rem">
-              {user?.userName}
-            </Typography>
-          </Box>
-          <Box
-            padding="3rem"
-            width="100%"
-            height="100%"
-            display="flex"
-            justifyContent="space-around"
-            flexDirection="column"
-          >
-            <Typography component="h2" fontSize="2rem">
-              Plan: {planTitle}
-            </Typography>
-            <Typography component="h2" fontSize="2rem">
-              Canchas creadas: {planStatus?.clubsCreated}
-            </Typography>
-            <Typography component="h2" fontSize="2rem">
-              Canchas disponibles: {planStatus?.remainingClubCreations}
-            </Typography>
-            <Typography component="h2" fontSize="2rem">
-              Canchas creadas: {planStatus?.fieldsCreated}
-            </Typography>
-            <Typography component="h2" fontSize="2rem">
-              Canchas disponibles: {planStatus?.remainingFieldCreations}
-            </Typography>
-          </Box>
-        </Box>
-        <Box
-          sx={{
-            width: { xs: "100%", md: "50%" },
+            width: { xs: "100%", md: "100%" },
             height: "auto",
-            marginRight: { md: "3rem" },
+            marginRight: { md: "5rem" },
+            marginLeft: { md: "5rem" },
             backgroundColor: { md: "background.default" },
             borderRadius: "15px",
             boxShadow: isLoading
@@ -186,7 +98,17 @@ const Perfil = () => {
           }}
         >
           {isLoading ? (
-            <CanchasClubLoader width="10%" />
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: "1rem",
+              }}
+            >
+              <CanchasClubLoader width="80%" />
+            </Box>
           ) : selectedOption === "menu" ? (
             <PerfilOptions
               isPremium={isPremium}
@@ -200,6 +122,8 @@ const Perfil = () => {
             <PerfilEdit onItemClick={handleItemClick} />
           ) : selectedOption === "mercadoPagoToken" ? (
             <MercadoPagoToken onItemClick={handleItemClick} />
+          ) : selectedOption === "myAccountSettings" ? (
+            <PerfilBankAccount onItemClick={handleItemClick} />
           ) : null}
         </Box>
       </Box>

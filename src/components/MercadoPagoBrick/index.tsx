@@ -23,7 +23,7 @@ interface MercadoPagoBrickProps {
 }
 
 const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ isOpen, ownerId, tenantId, tenantName, tenantEmail, onSuccessfulPayment, amount, title, reservationMode }) => {
-    initMercadoPago('APP_USR-08595a8c-9d17-41db-b547-a6831dbd72e6');
+    initMercadoPago(import.meta.env.VITE_MERCADO_PAGO_ACCESS_TOKEN);
     amount = reservationMode === "full" ? (amount + amount * 0.05) : reservationMode === "partial" ? (amount / 2 + amount * 0.05) : 0;
     const initialization = {
         amount,

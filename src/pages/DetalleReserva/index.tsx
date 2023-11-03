@@ -70,6 +70,7 @@ const BookingDetails = () => {
             setLoading(false);
             return;
         }
+        setLoading(false);
         setSnackBarMessage('Turno cancelado correctamente');
         setSnackBarSeverity('success');
         setSnackBarOpen(true);

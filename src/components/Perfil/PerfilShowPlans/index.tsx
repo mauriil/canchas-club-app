@@ -15,6 +15,7 @@ import { ArrowBack } from "@mui/icons-material";
 import { useState } from "react";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import CanchasClubLoader from "../../Loader";
+import { updateUser } from "../../../api/users";
 
 interface PerfiilShowPlansProps {
   onItemClick: (option: string) => void;
@@ -30,18 +31,24 @@ const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
     setSnackBarOpen(false);
   };
 
-  const buySubscription = (buyStatus: boolean) => {
+  const buySubscription = async () => {
     setLoading(false);
-    if (buyStatus) {
-      setSnackBarMessage("¡Suscripción en curso!");
-      setSnackBarSeverity("success");
+    const activatePremium = await updateUser({
+      plan: {
+        type: "premium3",
+        status: "active",
+      }
+    })
+    if (activatePremium.statusCode >= 400) {
+      setSnackBarMessage(activatePremium.message);
+      setSnackBarSeverity('error');
       setSnackBarOpen(true);
-      setDialogOpen(true);
       return;
     }
-    setSnackBarMessage("¡Suscripción fallida!");
-    setSnackBarSeverity("error");
+    setSnackBarMessage("¡Panel dueño de club desbloqueado!");
+    setSnackBarSeverity("success");
     setSnackBarOpen(true);
+    setDialogOpen(true);
   };
 
   const handleDialogClose = () => {
@@ -50,38 +57,15 @@ const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
   };
   const servicios = [
     {
-      id: "premium1",
-      icono: "Essentials",
-      nombre: "CanchaEssentials",
-      items: [
-        "Administra hasta 3 canchas",
-        "Configuración de horarios y disponibilidad",
-        "Visibilidad básica en la plataforma",
-        "Soporte por correo electrónico",
-      ],
-      precio: 50,
-    },
-    {
-      id: "premium2",
-      icono: "Progresivo",
-      nombre: "CanchaProgresivo",
-      items: [
-        "Administra de 4 a 9 canchas",
-        "Plataforma avanzada de gestión de turnos",
-        "Visibilidad mejorada en la plataforma",
-        "Soporte prioritario",
-      ],
-      precio: 75,
-    },
-    {
       id: "premium3",
       icono: "Avanzado",
-      nombre: "CanchaAvanzado",
+      nombre: "Dueño de club",
       items: [
         "Administra un número ilimitado de canchas",
         "Plataforma avanzada de gestión y promoción",
         "Visibilidad premium y destacada en la plataforma",
         "Asistencia personalizada y orientación estratégica",
+        "Pago único"
       ],
       precio: 100,
     },
@@ -97,6 +81,9 @@ const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
       sx={{
         backgroundColor: { md: "background.paper" },
         boxShadow: { md: "0px 0px 25px 1px rgb(0,0,0)" },
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
       }}
     >
       <Box
@@ -104,11 +91,12 @@ const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          backgroundColor: "transparent",
+          backgroundColor: "#F5F5F5",
           borderBottom: "1px solid #E0E0E0",
           width: "100%",
           padding: "1rem",
-          marginTop: "1rem",
+          borderTopLeftRadius: "20px",
+          borderTopRightRadius: "20px",
         }}
       >
         <IconButton onClick={() => onItemClick("menu")}>
@@ -117,40 +105,23 @@ const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
       </Box>
 
       {loading ? (
-        <CanchasClubLoader />
+        <CanchasClubLoader width="80%" />
       ) : (
         <Box
           sx={{
             padding: "1rem",
             margin: 1,
-            paddingBottom: "10rem",
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              backgroundColor: "#F5F5F5",
-              borderBottom: "1px solid #E0E0E0",
-              width: "100%",
-              padding: "1rem",
-              borderTopLeftRadius: "20px",
-              borderTopRightRadius: "20px",
-            }}
-          >
-            <IconButton onClick={() => onItemClick("menu")}>
-              <ArrowBack />
-            </IconButton>
-          </Box>
 
           {loading ? (
-            <CanchasClubLoader width="10%" />
+            <CanchasClubLoader width="80%" />
           ) : (
             <Box
               sx={{
-                margin: 1,
                 paddingBottom: "10rem",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
               <Grid2 container spacing={2}>
@@ -162,9 +133,8 @@ const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
                       title={servicio.nombre}
                       items={servicio.items}
                       price={servicio.precio}
-                      onSubscribeClick={() => setLoading(true)}
                       onSubscribeResolve={(buyStatus) => {
-                        buySubscription(buyStatus);
+                        buySubscription();
                       }}
                     />
                   </Grid2>
@@ -172,48 +142,15 @@ const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
               </Grid2>
             </Box>
           )}
-
-          <Box>
-            <Dialog open={dialogOpen} onClose={handleDialogClose}>
-              <DialogTitle>¡Suscripción exitosa!</DialogTitle>
-              <DialogContent>
-                <p>
-                  Tu pedido de suscripción se ha realizado con éxito. Por favor
-                  revisa tu casilla de e-mail para seguir instrucciones
-                </p>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleDialogClose} color="primary">
-                  Cerrar
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </Box>
-
-          <Snackbar
-            open={snackBarOpen}
-            autoHideDuration={5000}
-            onClick={handelSnackClose}
-            onClose={handelSnackClose}
-          >
-            <Alert
-              severity={snackBarSeverity as AlertColor}
-              sx={{ width: "100%", fontSize: "15px" }}
-              onClose={handelSnackClose}
-            >
-              {snackBarMessage}
-            </Alert>
-          </Snackbar>
         </Box>
       )}
 
       <Box>
         <Dialog open={dialogOpen} onClose={handleDialogClose}>
-          <DialogTitle>¡Suscripción exitosa!</DialogTitle>
+          <DialogTitle>¡Pago exitoso!</DialogTitle>
           <DialogContent>
             <p>
-              Tu pedido de suscripción se ha realizado con éxito. Por favor
-              revisa tu casilla de e-mail para seguir instrucciones
+              Tu pedido se ha realizado con éxito. Disfruta los beneficios que te ofece Canchas Club para dueños de clubes.
             </p>
           </DialogContent>
           <DialogActions>

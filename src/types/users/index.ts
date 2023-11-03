@@ -9,6 +9,7 @@ export interface User {
   password: string;
   phone: string;
   mercadoPagoToken: string;
+  bankAccount?: [UserBankAccount];
 }
 export interface LogInUser {
   email: string;
@@ -51,10 +52,24 @@ export interface PlanStatus {
   status: string;
   value: number;
 }
+export interface UserPlan {
+  status: string;
+  type: string;
+  expirationDate?: Date;
+}
 
+export interface UserBankAccount {
+  bank?: string;
+  cbu?: string;
+  alias?: string;
+  accountNumber?: string;
+  descriptiveName?: string;
+}
 export interface EditUser {
   name?: string;
   password?: string;
   phone?: string;
   mercadoPagoToken?: string;
+  plan?: UserPlan;
+  bankAccount?: [UserBankAccount];
 }

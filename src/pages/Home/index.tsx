@@ -1,8 +1,6 @@
 import { Box } from "@mui/material";
 import Title from "../../components/Title";
 import { useEffect, useState } from "react";
-import MercadoPagoBrick from "../../components/MercadoPagoBrick";
-import BookingSteps from "../../components/BookingSteps";
 
 const Home = () => {
   useEffect(() => {

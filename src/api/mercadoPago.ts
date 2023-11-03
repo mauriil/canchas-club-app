@@ -61,6 +61,21 @@ export const createSubscription = async (payload: object) => {
     }
 }
 
+export const createOwnerPayment = async (payload: any) => {
+    payload.tenantId = userId;
+    try {
+        const response = await fetch(`${BASE_API_URL}/payments/owner`, {
+            method: "POST",
+            headers,
+            body: JSON.stringify(payload),
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching getUser:", error);
+        throw error;
+    }
+}
+
 export const getMercadoPagoPayment = async (id: string) => {
     try {
         const response = await fetch(`${BASE_API_URL}/payments/mercadopago/getPayment/${id}`, {
