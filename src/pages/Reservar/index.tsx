@@ -152,7 +152,7 @@ const Home = () => {
   const [mercadoPagoBrickIsOpen, setMercadoPagoBrickIsOpen] = useState(true);
   const handleSuccessfulBooking = async (bookingId: string) => {
     const preBookingId = window.location.pathname.split('/')[2];
-    await cancelBooking(preBookingId);
+    void cancelBooking(preBookingId);
     setMercadoPagoBrickIsOpen(false);
     setTimeout(() => {
       navigate(`/dashboard/detalleReserva/${bookingId}`);

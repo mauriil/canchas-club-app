@@ -17,12 +17,13 @@ interface MercadoPagoBrickProps {
     tenantName: string;
     tenantEmail: string;
     amount: number;
+    fieldPrice: number;
     title: string;
     reservationMode: string;
     onSuccessfulPayment: (paymentId: string, status: string) => void;
 }
 
-const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ isOpen, ownerId, tenantId, tenantName, tenantEmail, onSuccessfulPayment, amount, title, reservationMode }) => {
+const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ isOpen, ownerId, tenantId, tenantName, tenantEmail, onSuccessfulPayment, amount, fieldPrice, title, reservationMode }) => {
     initMercadoPago(import.meta.env.VITE_MERCADO_PAGO_ACCESS_TOKEN);
     amount = reservationMode === "full" ? (amount + amount * 0.05) : reservationMode === "partial" ? (amount / 2 + amount * 0.05) : 0;
     const initialization = {
@@ -35,7 +36,7 @@ const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ isOpen, ownerId, te
     };
 
     const onSubmit = async (formData: any) => {
-        const paymentPayload = { ...formData.formData, ownerId, tenantId, amount, title, reservationMode }
+        const paymentPayload = { ...formData.formData, ownerId, tenantId, amount, fieldPrice, title, reservationMode }
         const payment = await createPayment(paymentPayload);
         void onSuccessfulPayment(payment.paymentId, payment.status)
     }

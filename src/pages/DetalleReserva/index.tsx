@@ -123,6 +123,15 @@ const BookingDetails = () => {
 
     }
 
+    const handleFailedBooking = () => {
+        setSnackBarMessage("Hubo un error al crear la reserva");
+        setSnackBarSeverity("error");
+        setSnackBarOpen(true);
+        setTimeout(() => {
+          navigate(`/dashboard/home`);
+        }, 3000);
+      }
+
     return (
         <>
             <TopBar />
@@ -285,6 +294,7 @@ const BookingDetails = () => {
             />
 
             <BookingSteps
+                onFailedBooking={handleFailedBooking}
                 onSuccessfulBooking={handleSuccessfulBooking}
                 isOpen={mercadoPagoBrickIsOpen}
                 tenantId={booking.tenantId?._id}

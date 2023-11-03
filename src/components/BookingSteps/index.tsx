@@ -62,8 +62,8 @@ const BookingSteps: React.FC<BookingStepsProps> = ({
     const [tenantIdForBooking, setTenantId] = useState(tenantId);
 
     const handleConfirm = () => {
-        setOpenDialog(false);
         onSuccessfulBooking(bookingId);
+        setOpenDialog(false);
     }
 
     const fetchFieldData = async (fieldId: string) => {
@@ -208,6 +208,7 @@ const BookingSteps: React.FC<BookingStepsProps> = ({
                 isOpen={mercadoPagoBrikIsOpen}
                 onSuccessfulPayment={handleSimpleBooking}
                 amount={amount}
+                fieldPrice={amount}
                 tenantId={tenantIdForBooking}
                 tenantEmail={tenantData.email}
                 tenantName={tenantData.name}

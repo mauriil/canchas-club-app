@@ -9,7 +9,7 @@ export interface User {
   password: string;
   phone: string;
   mercadoPagoToken: string;
-  bankAccount?: [UserBankAccount];
+  bankAccount?: UserBankAccount;
 }
 export interface LogInUser {
   email: string;
@@ -71,5 +71,5 @@ export interface EditUser {
   phone?: string;
   mercadoPagoToken?: string;
   plan?: UserPlan;
-  bankAccount?: [UserBankAccount];
+  bankAccount?: UserBankAccount;
 }

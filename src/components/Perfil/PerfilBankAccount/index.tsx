@@ -24,23 +24,23 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
 
 
     const [formData, setFormData] = useState<EditUser>({
-        bankAccount: [{
+        bankAccount: {
             bank: '',
             cbu: '',
             alias: '',
-        }]
+        },
     });
 
     const getUserData = async () => {
         try {
             const user = await getUser();
             setFormData({
-                bankAccount: [{
-                    bank: user.bankAccount[0]?.bank,
-                    cbu: user.bankAccount[0]?.cbu,
-                    alias: user.bankAccount[0]?.alias,
-                    descriptiveName: user.bankAccount[0]?.descriptiveName,
-                }],
+                bankAccount: {
+                    bank: user.bankAccount?.bank,
+                    cbu: user.bankAccount?.cbu,
+                    alias: user.bankAccount?.alias,
+                    descriptiveName: user.bankAccount?.descriptiveName,
+                },
             });
             setIsLoading(false);
         } catch (error) {
@@ -52,10 +52,10 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         setFormData({
             ...formData,
-            bankAccount: [{
-                ...formData.bankAccount[0],
+            bankAccount: {
+                ...formData.bankAccount,
                 [event.target.name]: event.target.value,
-            }]
+            },
         });
     };
 
@@ -136,7 +136,7 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
                                         fullWidth
                                         label="Nombre descriptivo"
                                         name="descriptiveName"
-                                        value={formData.bankAccount[0].descriptiveName}
+                                        value={formData.bankAccount.descriptiveName}
                                         onChange={handleInputChange}
                                     />
                                 </Grid>
@@ -145,7 +145,7 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
                                         fullWidth
                                         label="alias"
                                         name="alias"
-                                        value={formData.bankAccount[0].alias}
+                                        value={formData.bankAccount.alias}
                                         onChange={handleInputChange}
                                     />
                                 </Grid>

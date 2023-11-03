@@ -1,25 +1,72 @@
-import { Box } from "@mui/material";
+import { Box, Button, Grid, Paper, Typography } from "@mui/material";
+import { useEffect } from "react";
 import Title from "../../components/Title";
-import { useEffect, useState } from "react";
+import { useAuth } from "../../customHooks/useAuth";
 
 const Home = () => {
+  const { user } = useAuth();
   useEffect(() => {
-    // reload to prevent bug in login
+    // Recargar para evitar errores en el inicio de sesión
     if (localStorage.getItem("dashboardFirstLoad") === "true") return;
     window.location.reload();
     localStorage.setItem("dashboardFirstLoad", "true");
   }, []);
 
   return (
+    <>
+    <Box padding={2}>
+      <Title firtLineTitle="Bienvenid@" secondLineTitle={user?.userName}/>
+    </Box>
     <Box
       display="flex"
       alignItems="center"
       justifyContent="center"
       width="100%"
-      height="100%"
+      padding={2}
+      flexDirection={{ xs: "column", sm: "row" }}
     >
-      <Title firtLineTitle="HOME" />
-    </Box>
+        <Paper elevation={3} sx={{
+          padding: 2, textAlign: "center", marginBottom: { xs: 2, sm: 0 }, flex: 1, width: {
+            xs: "100%",
+            sm: "auto"
+          }
+        }}>
+          <Typography variant="h6">Reservas en Curso</Typography>
+          <Typography variant="h4">5</Typography>
+        </Paper>
+
+        <Paper elevation={3} sx={{
+          padding: 2, textAlign: "center", marginLeft: { xs: 0, sm: 2 }, flex: 1, width: {
+            xs: "100%",
+            sm: "auto"
+          }
+        }}>
+          <Typography variant="h6">Dinero Disponible</Typography>
+          <Typography variant="h4">$1000</Typography>
+          <Button variant="outlined" color="primary">
+            Retirar
+          </Button>
+        </Paper>
+
+        <Paper elevation={3} sx={{ padding: 2, textAlign: "center", marginLeft: { xs: 0, sm: 2 }, marginTop: 2, width: { xs: "100%", sm: "auto" } }}>
+          <Typography variant="h6">Reservas Totales</Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={4} sm={4}>
+              <Typography variant="h6">Canceladas</Typography>
+              <Typography variant="h4">2</Typography>
+            </Grid>
+            <Grid item xs={4} sm={4}>
+              <Typography variant="h6">Concretadas</Typography>
+              <Typography variant="h4">10</Typography>
+            </Grid>
+            <Grid item xs={4} sm={4}>
+              <Typography variant="h6">En Curso</Typography>
+              <Typography variant="h4">3</Typography>
+            </Grid>
+          </Grid>
+        </Paper>
+      </Box>
+      </>
   );
 };
 
