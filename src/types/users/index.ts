@@ -64,6 +64,9 @@ export interface UserBankAccount {
   alias?: string;
   accountNumber?: string;
   descriptiveName?: string;
+  availableMoney?: number;
+  ownerName?: string;
+  withdrawProcessingMoney?: number;
 }
 export interface EditUser {
   name?: string;

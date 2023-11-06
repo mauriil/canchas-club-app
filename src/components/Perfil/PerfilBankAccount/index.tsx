@@ -28,6 +28,8 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
             bank: '',
             cbu: '',
             alias: '',
+            descriptiveName: '',
+            ownerName: '',
         },
     });
 
@@ -40,6 +42,7 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
                     cbu: user.bankAccount?.cbu,
                     alias: user.bankAccount?.alias,
                     descriptiveName: user.bankAccount?.descriptiveName,
+                    ownerName: user.bankAccount?.ownerName,
                 },
             });
             setIsLoading(false);
@@ -146,6 +149,15 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
                                         label="alias"
                                         name="alias"
                                         value={formData.bankAccount.alias}
+                                        onChange={handleInputChange}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        fullWidth
+                                        label="Nombre del titular"
+                                        name="ownerName"
+                                        value={formData.bankAccount?.ownerName}
                                         onChange={handleInputChange}
                                     />
                                 </Grid>

@@ -100,3 +100,16 @@ export const createPremiumSubscription = async (typeOfPlan: string): Promise<{pa
         throw error;
     }
 }
+
+export const withdrawMoney = async (amount: number): Promise<{statusCode: number, message: string}> => {
+    try {
+        const response = await fetch(`${BASE_API_URL}/users/${userId}/withdraw/${amount}`, {
+            method: "GET",
+            headers,
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching withdrawMoney:", error);
+        throw error;
+    }
+}
