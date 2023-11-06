@@ -29,7 +29,7 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
             cbu: '',
             alias: '',
             descriptiveName: '',
-            ownerName: '',
+            ownerName: ' ',
         },
     });
 
