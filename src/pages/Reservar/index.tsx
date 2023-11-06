@@ -53,6 +53,7 @@ const Home = () => {
 
   useEffect(() => {
     const bookingId = window.location.pathname.split('/')[2];
+    console.log("🚀 ~ file: index.tsx:56 ~ useEffect ~ bookingId:", bookingId)
 
     getBooking(bookingId)
       .then((bookingData) => {
@@ -90,10 +91,24 @@ const Home = () => {
             setLoading(false);
           })
           .catch((error) => {
+            setSnackBarMessage('Error al obtener los datos del campo');
+        setSnackBarSeverity('error');
+        setSnackBarOpen(true);
+        setTimeout(() => {
+          navigate(`/dashboard/home`);
+        }, 3000);
+        return;
             console.error('Error al obtener los datos del campo:', error);
           });
       })
       .catch((error) => {
+        setSnackBarMessage('Error al obtener los datos de la reserva');
+        setSnackBarSeverity('error');
+        setSnackBarOpen(true);
+        setTimeout(() => {
+          navigate(`/dashboard/home`);
+        }, 3000);
+        return;
         console.error('Error al obtener los datos de la reserva:', error);
       });
 
