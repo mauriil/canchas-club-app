@@ -113,3 +113,16 @@ export const withdrawMoney = async (amount: number): Promise<{statusCode: number
         throw error;
     }
 }
+
+export const getUserStats = async (): Promise<{statusCode: number, message: string, data: [{count: number, status: string}]}> => {
+    try {
+        const response = await fetch(`${BASE_API_URL}/users/home/stats/${userId}`, {
+            method: "GET",
+            headers,
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching getUserStats:", error);
+        throw error;
+    }
+}

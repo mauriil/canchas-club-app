@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Alert, AlertColor, Box, Button, Grid, Modal, Paper, Snackbar, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import Title from "../../components/Title";
 import { useAuth } from "../../customHooks/useAuth";
-import { getPlanStatus, getUser, withdrawMoney } from "../../api/users";
+import { getPlanStatus, getUser, getUserStats, withdrawMoney } from "../../api/users";
 import CanchasClubLoader from "../../components/Loader";
 import { EditUser } from "../../types/users";
 
@@ -16,6 +18,19 @@ const Home = () => {
   }, []);
 
   const [isPremium, setIsPremium] = useState(false);
+  const [userStats, setUserStats] = useState({
+    reservationsInProgress: 0,
+    reservationsCanceled: 0,
+    reservationsCompleted: 0,
+  });
+
+  const parseUsersStats = (stats: any) => {
+    setUserStats({
+      reservationsInProgress: stats.filter((stat: any) => stat.status === "approved - accredited").length > 0 ? stats.filter((stat: any) => stat.status === "approved - accredited")[0].count : 0,
+      reservationsCanceled: stats.filter((stat: any) => stat.status === "canceled").length > 0 ? stats.filter((stat: any) => stat.status === "canceled")[0].count : 0,
+      reservationsCompleted: stats.filter((stat: any) => stat.status === "completed").length > 0 ? stats.filter((stat: any) => stat.status === "completed")[0].count : 0,
+    });
+  }
 
   const checkPremium = async () => {
     const planStatus = await getPlanStatus();
@@ -32,6 +47,8 @@ const Home = () => {
         withdrawProcessingMoney: user.bankAccount?.withdrawProcessingMoney,
       },
     });
+    const userStats = await getUserStats();
+    parseUsersStats(userStats);
   };
   useEffect(() => {
     void checkPremium();
@@ -98,8 +115,8 @@ const Home = () => {
             sm: "auto"
           }
         }}>
-          <Typography variant="h6">Reservas en Curso</Typography>
-          <Typography variant="h4">5</Typography>
+          <Typography variant="h2">Reservas en Curso</Typography>
+          <Typography variant="h4">{userStats.reservationsInProgress}</Typography>
         </Paper>
 
         {isPremium && (
@@ -109,7 +126,7 @@ const Home = () => {
               sm: "auto"
             }
           }}>
-            <Typography variant="h6">Dinero Disponible</Typography>
+            <Typography variant="h2">Dinero Disponible</Typography>
             <Typography variant="h4">${formData.bankAccount?.availableMoney - formData.bankAccount?.withdrawProcessingMoney}</Typography>
             {formData.bankAccount?.withdrawProcessingMoney > 0 && (
               <Typography variant="body1" color="info">*Hay un retiro de dinero en proceso por ${formData.bankAccount?.withdrawProcessingMoney}</Typography>
@@ -121,19 +138,15 @@ const Home = () => {
         )}
 
         <Paper elevation={3} sx={{ padding: 2, textAlign: "center", marginLeft: { xs: 0, sm: 2 }, marginTop: 2, width: { xs: "100%", sm: "auto" } }}>
-          <Typography variant="h6">Reservas Totales</Typography>
+          <Typography variant="h2">Reservas Totales</Typography>
           <Grid container spacing={2}>
-            <Grid item xs={4} sm={4}>
-              <Typography variant="h6">Canceladas</Typography>
-              <Typography variant="h4">2</Typography>
+            <Grid item xs={6} sm={6}>
+              <Typography variant="h3">Canceladas</Typography>
+              <Typography variant="h4">{userStats.reservationsCanceled}</Typography>
             </Grid>
-            <Grid item xs={4} sm={4}>
-              <Typography variant="h6">Concretadas</Typography>
-              <Typography variant="h4">10</Typography>
-            </Grid>
-            <Grid item xs={4} sm={4}>
-              <Typography variant="h6">En Curso</Typography>
-              <Typography variant="h4">3</Typography>
+            <Grid item xs={6} sm={6}>
+              <Typography variant="h3">Concretadas</Typography>
+              <Typography variant="h4">{userStats.reservationsCompleted}</Typography>
             </Grid>
           </Grid>
         </Paper>
