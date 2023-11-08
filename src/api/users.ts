@@ -34,7 +34,6 @@ export const getUser = async (userIdToGet: string = userId): Promise<User> => {
 }
 
 export const updateUser = async (user: EditUser): Promise<User> => {
-    console.log("🚀 ~ file: users.ts:37 ~ updateUser ~ user:", user)
     try {
         const response = await fetch(`${BASE_API_URL}/users/${userId}`, {
             method: "PATCH",

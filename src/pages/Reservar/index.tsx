@@ -53,7 +53,6 @@ const Home = () => {
 
   useEffect(() => {
     const bookingId = window.location.pathname.split('/')[2];
-    console.log("🚀 ~ file: index.tsx:56 ~ useEffect ~ bookingId:", bookingId)
 
     getBooking(bookingId)
       .then((bookingData) => {
