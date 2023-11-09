@@ -57,7 +57,7 @@ const Home = () => {
     getBooking(bookingId)
       .then((bookingData) => {
         if (bookingData.statusCode >= 400) {
-          setSnackBarMessage('Algo salió mal, por favor intente nuevamente')');
+          setSnackBarMessage('Algo salió mal, por favor intente nuevamente');
           setSnackBarSeverity('error');
           setSnackBarOpen(true);
           setTimeout(() => {
