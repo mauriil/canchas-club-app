@@ -57,11 +57,11 @@ const Home = () => {
     getBooking(bookingId)
       .then((bookingData) => {
         if (bookingData.statusCode >= 400) {
-          setSnackBarMessage(bookingData.message);
+          setSnackBarMessage('Algo salió mal, por favor intente nuevamente')');
           setSnackBarSeverity('error');
           setSnackBarOpen(true);
           setTimeout(() => {
-            navigate(`/dashboard/home`);
+            window.location.reload();
           }, 3000);
           return;
         }
@@ -153,7 +153,7 @@ const Home = () => {
     setSnackBarSeverity("error");
     setSnackBarOpen(true);
     setTimeout(() => {
-      navigate(`/dashboard/home`);
+      window.location.reload();
     }, 3000);
   }
 

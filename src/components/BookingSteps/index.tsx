@@ -119,7 +119,7 @@ const BookingSteps: React.FC<BookingStepsProps> = ({
 
         if (bookingReq.statusCode >= 400) {
             await refundPayment(paymentId);
-            setSnackBarMessage(bookingReq.message);
+            setSnackBarMessage('Algo salió mal, por favor intenta nuevamente');
             setSnackBarSeverity('error');
             setSnackBarOpen(true);
             setIsLoading(false);
