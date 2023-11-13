@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
@@ -6,10 +7,11 @@
 import React, { useEffect } from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import { initMercadoPago, CardPayment, Payment } from '@mercadopago/sdk-react';
-import { createPayment } from '../../api/mercadoPago';
+import { initMercadoPago, Payment, Wallet } from '@mercadopago/sdk-react';
+import { createPayment, createPreference } from '../../api/mercadoPago';
 
 interface MercadoPagoBrickProps {
+    walletBookingId?: string;
     isOpen: boolean;
     // onClose: () => void;
     ownerId: string;
@@ -23,7 +25,7 @@ interface MercadoPagoBrickProps {
     onSuccessfulPayment: (paymentId: string, status: string) => void;
 }
 
-const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ isOpen, ownerId, tenantId, tenantName, tenantEmail, onSuccessfulPayment, amount, fieldPrice, title, reservationMode }) => {
+const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ walletBookingId, isOpen, ownerId, tenantId, tenantName, tenantEmail, onSuccessfulPayment, amount, fieldPrice, title, reservationMode }) => {
     initMercadoPago(import.meta.env.VITE_MERCADO_PAGO_ACCESS_TOKEN);
     amount = reservationMode === "full" ? (amount + amount * 0.05) : reservationMode === "partial" ? (amount / 2 + amount * 0.05) : 0;
     const initialization = {
@@ -41,6 +43,17 @@ const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ isOpen, ownerId, te
         void onSuccessfulPayment(payment.paymentId, payment.status)
     }
 
+    const onSubmitWallet = async () => {
+        const preference = await createPreference({
+                    title,
+                    amount,
+                    email: tenantEmail,
+                    external_reference: walletBookingId,
+        });
+
+        return preference.body.id;
+    }
+
     const onError = async (error) => {
         // callback called for all Brick error cases
         console.log(error);
@@ -55,9 +68,33 @@ const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ isOpen, ownerId, te
     };
 
     const handleNoBoostPayment = async () => {
-        const paymentPayload = { ownerId, tenantId, amount, title, reservationMode }
-        const payment = await createPayment(paymentPayload);
-        void onSuccessfulPayment(payment.paymentId, payment.status)
+        return new Promise((resolve, reject) => {
+            fetch('/create_preference', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    items: [
+                        {
+                            id: '202809963',
+                            title: 'Dummy title',
+                            description: 'Dummy description',
+                            quantity: 1,
+                            unit_price: 10,
+                        },
+                    ],
+                    purpose: 'wallet_purchase',
+                }),
+            })
+                .then((response) => response.json())
+                .then((response) => {
+                    resolve(response.preference_id);
+                })
+                .catch((error) => {
+                    reject();
+                });
+        });
     }
 
     if (isOpen && reservationMode === "withoutGuarantee") {
@@ -85,6 +122,12 @@ const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ isOpen, ownerId, te
                     WebkitOverflowScrolling: 'touch',
                 }}
             >
+                <Wallet
+                    onSubmit={onSubmitWallet}
+                    onReady={onReady}
+                    onError={onError}
+                    locale='es-AR'
+                />
                 <Payment
                     initialization={initialization}
                     onSubmit={onSubmit}
@@ -95,7 +138,7 @@ const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ isOpen, ownerId, te
                         paymentMethods: {
                             creditCard: "all",
                             debitCard: "all",
-                            mercadoPago: "all",
+                            mercadoPago: ['onboarding_credits', 'wallet_purchase'],
                         }
                     }}
                 />

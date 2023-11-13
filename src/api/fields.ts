@@ -64,6 +64,7 @@ export const deleteField = async (fieldId: string | undefined) => {
 
 export const getFieldById = async (fieldId: string | undefined): Promise<Field> => {
     try {
+        if (fieldId === undefined) return {} as Field;
         const response = await fetch(`${BASE_API_URL}/fields/${fieldId}`, {
             method: "GET",
             headers: { ...headers, "Authorization": `Bearer ${token}` },

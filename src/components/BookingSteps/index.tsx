@@ -18,6 +18,7 @@ import NewUserModal from '../NewUserAccount';
 import { parseDate } from '../../helpers/dates/parseDate';
 
 interface BookingStepsProps {
+    walletBookingId?: string;
     isOpen: boolean;
     tenantId: string;
     fieldId: string;
@@ -34,6 +35,7 @@ interface BookingStepsProps {
 }
 
 const BookingSteps: React.FC<BookingStepsProps> = ({
+    walletBookingId,
     isOpen,
     tenantId,
     amount,
@@ -205,6 +207,7 @@ const BookingSteps: React.FC<BookingStepsProps> = ({
             </Modal>
 
             <MercadoPagoBrick
+                walletBookingId={walletBookingId}
                 isOpen={mercadoPagoBrikIsOpen}
                 onSuccessfulPayment={handleSimpleBooking}
                 amount={amount}

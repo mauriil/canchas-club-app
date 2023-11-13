@@ -34,6 +34,7 @@ function App() {
           </Route>
           <Route path="/reserva" element={<BackGround />}>
               <Route path="/reserva/:bookingId" element={<Reservar />} />
+              <Route path="/reserva/callback/preference" element={<DetalleReserva />} />
           </Route>
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />}>

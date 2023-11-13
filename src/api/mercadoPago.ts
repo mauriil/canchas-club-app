@@ -47,6 +47,33 @@ export const createPayment = async (payload: unknown) => {
     }
 }
 
+export const createPreference = async (payload: unknown) => {
+    try {
+        const response = await fetch(`${BASE_API_URL}/payments/mercadopago/createPreference`, {
+            method: "POST",
+            headers,
+            body: JSON.stringify(payload),
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching getUser:", error);
+        throw error;
+    }
+}
+
+export const getPreference = async (id: string) => {
+    try {
+        const response = await fetch(`${BASE_API_URL}/payments/mercadopago/getPreference/${id}`, {
+            method: "GET",
+            headers,
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching getUser:", error);
+        throw error;
+    }
+}
+
 export const createSubscription = async (payload: object) => {
     try {
         const response = await fetch(`${BASE_API_URL}/payments`, {

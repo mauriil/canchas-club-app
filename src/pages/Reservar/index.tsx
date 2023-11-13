@@ -187,6 +187,7 @@ const Home = () => {
       ) :
         (
           <BookingSteps
+            walletBookingId={window.location.pathname.split('/')[2]}
             onSuccessfulBooking={handleSuccessfulBooking}
             onFailedBooking={() => { handleFailedBooking }}
             isOpen={mercadoPagoBrickIsOpen}

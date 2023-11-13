@@ -46,6 +46,19 @@ export const getBooking = async (bookingId: string) => {
     }
 }
 
+export const checkWalletBooking = async (queryString: string) => {
+    try {
+        const response = await fetch(`${BASE_API_URL}/bookings/check/byWallet${queryString}`, {
+            method: "GET",
+            headers: { ...headers },
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error getting bookings by user:", error);
+        throw error;
+    }
+}
+
 export const createBooking = async (values: Booking) => {
     try {
         const response = await fetch(`${BASE_API_URL}/bookings`, {

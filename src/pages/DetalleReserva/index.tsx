@@ -14,7 +14,7 @@ import {
     Box,
 } from '@mui/material';
 import { Booking } from '../../types/booking';
-import { cancelBooking, checkAvailability, getBooking } from '../../api/bookings';
+import { cancelBooking, checkAvailability, checkWalletBooking, getBooking } from '../../api/bookings';
 import TopBar from '../../components/TopBar';
 import { useNavigate } from 'react-router-dom';
 import ConfirmationDialog from '../../components/ConfirmationDialog';
@@ -22,6 +22,7 @@ import CanchasClubLoader from '../../components/Loader';
 import RoomIcon from "@mui/icons-material/Room";
 import { parseDate } from '../../helpers/dates/parseDate';
 import BookingSteps from '../../components/BookingSteps';
+import { refundPayment } from '../../api/mercadoPago';
 
 
 const BookingDetails = () => {
@@ -41,7 +42,7 @@ const BookingDetails = () => {
         if (localStorage.getItem("dashboardFirstLoad") === "true") return;
         window.location.reload();
         localStorage.setItem("dashboardFirstLoad", "true");
-      }, []);
+    }, []);
 
     const handleSuccessfulBooking = (bookingId: string) => {
         setMercadoPagoBrickIsOpen(false);
@@ -50,12 +51,26 @@ const BookingDetails = () => {
         }, 1000);
     }
 
+    const refundPayment = async (paymentId: string) => {
+        void await refundPayment(paymentId);
+    }
+
     useEffect(() => {
-        const bookingId = window.location.pathname.split('/')[3];
-        void getBooking(bookingId).then((bookingData) => {
-            setBooking(bookingData);
-            setLoading(false);
-        });
+        if (window.location.pathname.split('/')[2] === 'callback') {
+            const queryString = window.location.search;
+
+            void checkWalletBooking(queryString).then((bookingData) => {
+                setBooking(bookingData);
+                setLoading(false);
+            });
+        } else {
+            const bookingId = window.location.pathname.split('/')[3];
+            void getBooking(bookingId).then((bookingData) => {
+                setBooking(bookingData);
+                setLoading(false);
+            });
+        }
+
     }, []);
 
     const cancelBookingRequest = async () => {
@@ -128,9 +143,9 @@ const BookingDetails = () => {
         setSnackBarSeverity("error");
         setSnackBarOpen(true);
         setTimeout(() => {
-          navigate(`/dashboard/home`);
+            navigate(`/dashboard/home`);
         }, 3000);
-      }
+    }
 
     return (
         <>
