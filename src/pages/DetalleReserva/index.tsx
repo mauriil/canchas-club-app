@@ -149,7 +149,7 @@ const BookingDetails = () => {
 
     return (
         <>
-            <TopBar />
+            <TopBar backUrl='/dashboard/misReservas'/>
 
             {loading ?
                 <Box
