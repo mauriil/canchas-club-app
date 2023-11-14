@@ -14,7 +14,7 @@ const MisReservas = () => {
       setIsLoading(true);
       const response = await getAllBookingsByUser();
       const data: Booking[] = await response.json();
-      setBookings(data[0]);
+      setBookings(data);
     } catch (error) {
       console.error("Error fetching bookings:", error);
     } finally {
