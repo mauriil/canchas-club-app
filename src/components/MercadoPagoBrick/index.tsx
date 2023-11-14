@@ -49,6 +49,8 @@ const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ walletBookingId, is
                     amount,
                     email: tenantEmail,
                     external_reference: walletBookingId,
+                    tenantId,
+                    ownerId,
         });
 
         return preference.body.id;
