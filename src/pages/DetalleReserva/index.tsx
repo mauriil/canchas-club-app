@@ -58,8 +58,10 @@ const BookingDetails = () => {
     useEffect(() => {
         if (window.location.pathname.split('/')[2] === 'callback') {
             const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            const bookingId = urlParams.get('external_reference');
 
-            void checkWalletBooking(queryString).then((bookingData) => {
+            void getBooking(bookingId as string).then((bookingData) => {
                 setBooking(bookingData);
                 setLoading(false);
             });
