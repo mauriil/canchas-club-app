@@ -12,7 +12,6 @@ interface AvatarProps {
   logo: string;
   colors: {
     primary: string;
-    secondary: string;
   };
 }
 
@@ -28,9 +27,9 @@ const ClubAvatar = (props: AvatarProps) => {
       }
       void fetchLogo();
     } else {
-      setLogoUrl(`https://ui-avatars.com/api/?name=${props.title}&background=${props.colors.primary}&color=${props.colors.secondary}`);
+      setLogoUrl(`https://ui-avatars.com/api/?name=${props.title}&color=${props.colors.primary}`);
     }
-  }, [props.logo, props.title, props.colors.primary, props.colors.secondary]);
+  }, [props.logo, props.title, props.colors.primary]);
 
   return (
     <Box textAlign="center">
@@ -43,7 +42,7 @@ const ClubAvatar = (props: AvatarProps) => {
           fontSize: "15rem",
           cursor: "pointer",
           backgroundColor: props.colors.primary,
-          borderColor: props.colors.secondary,
+          borderColor: props.colors.primary,
           borderWidth: "0.5rem",
           borderStyle: "solid",
         }}

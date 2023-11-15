@@ -398,13 +398,15 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                                     borderRadius: "10px",
                                     padding: "20px",
                                 }}>
-                                <Typography variant="h6" sx={{ marginBottom: 2 }}>Colores y logo:</Typography>
+                                <Typography variant="h1" sx={{ marginBottom: 2 }}>Colores y logo:</Typography>
+
                                 <Box
                                     sx={{
                                         display: "flex",
                                         alignItems: "center",
                                         justifyContent: "center",
                                         marginBottom: 3,
+                                        marginTop: 2,
                                     }}
                                 >
                                     {isLoadingImage ? (
@@ -426,11 +428,13 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                                     ) : (
                                         <div {...getRootProps()}>
                                             <input {...getInputProps()} />
+                                            <Button variant="outlined" color="primary" fullWidth sx={{ marginBottom: 2 }}>
+                                                Subir logo
+                                            </Button>
                                             <ClubAvatar
                                                 logo={clubData.logo}
                                                 colors={{
                                                     primary: clubData.colors.primary,
-                                                    secondary: clubData.colors.secondary
                                                 }}
                                                 title={clubData.name}
                                                 width="130px"
@@ -453,17 +457,10 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                                     }}
                                 >
                                     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                                        <Typography variant="subtitle1">Color primario:</Typography>
+                                        <Typography variant="h3" sx={{ marginBottom: 2 }}>Color de énfasis:</Typography>
                                         <CirclePicker
                                             color={clubData.colors.primary}
                                             onChange={handlePrimaryColorChange}
-                                        />
-                                    </Box>
-                                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                                        <Typography variant="subtitle1">Color secundario:</Typography>
-                                        <CirclePicker
-                                            color={clubData.colors.secondary}
-                                            onChange={handleSecondaryColorChange}
                                         />
                                     </Box>
                                 </Box>
