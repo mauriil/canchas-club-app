@@ -52,7 +52,7 @@ async function uploadFileToS3(folder: string, fileName: string, file, onProgress
             throw new Error('Error al subir el archivo');
         }
 
-        return `${userId}/${folder}/${fileName}`;
+        return `${userId}/${folder}/${sanitizeFileName(fileName)}`;
     } catch (error) {
         console.error('Error al cargar el archivo:', error);
         throw error;
