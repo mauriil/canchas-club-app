@@ -127,7 +127,12 @@ const Home = () => {
             }
           }}>
             <Typography variant="h2">Dinero Disponible</Typography>
-            <Typography variant="h4">${formData.bankAccount?.availableMoney - formData.bankAccount?.withdrawProcessingMoney}</Typography>
+            <Typography variant="h4">
+              ${(
+                (formData.bankAccount?.availableMoney ?? 0) -
+                (formData.bankAccount?.withdrawProcessingMoney ?? 0)
+              )}
+            </Typography>
             {formData.bankAccount?.withdrawProcessingMoney > 0 && (
               <Typography variant="body1" color="info">*Hay un retiro de dinero en proceso por ${formData.bankAccount?.withdrawProcessingMoney}</Typography>
             )}
@@ -178,7 +183,7 @@ const Home = () => {
               <Typography variant="body1" gutterBottom>
                 <strong>Cuenta destino :</strong> {formData.bankAccount?.descriptiveName}
               </Typography>
-              <Typography variant="body1" gutterBottom sx={{mb: 2}}>
+              <Typography variant="body1" gutterBottom sx={{ mb: 2 }}>
                 <strong>Titular :</strong> {formData.bankAccount?.ownerName}
               </Typography>
               <TextField
