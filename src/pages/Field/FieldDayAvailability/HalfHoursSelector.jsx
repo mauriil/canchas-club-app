@@ -10,6 +10,7 @@ const HalfHourTimeSelector = ({ label, value, onChange }) => {
             halfHourOptions.push(`${formattedHour}:${formattedMinute}`);
         }
     }
+    halfHourOptions.push('24:00');
 
     return (
         <FormControl fullWidth>
