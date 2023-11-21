@@ -91,12 +91,12 @@ const Home = () => {
           })
           .catch((error) => {
             setSnackBarMessage('Error al obtener los datos del campo');
-        setSnackBarSeverity('error');
-        setSnackBarOpen(true);
-        setTimeout(() => {
-          navigate(`/dashboard/home`);
-        }, 3000);
-        return;
+            setSnackBarSeverity('error');
+            setSnackBarOpen(true);
+            setTimeout(() => {
+              navigate(`/dashboard/home`);
+            }, 3000);
+            return;
             console.error('Error al obtener los datos del campo:', error);
           });
       })
@@ -130,6 +130,11 @@ const Home = () => {
         const horaCierre = new Date(day + " " + horario.closeHour);
         const horaInicioDate = new Date(day + " " + from);
         const horaFinDate = new Date(day + " " + to);
+
+        // Fix for when the hour is 23:59
+        if (to === "23:59") {
+          horaFinDate.setHours(24, 0, 0, 0);
+        }
 
         if (horaInicioDate >= horaApertura && horaFinDate <= horaCierre) {
           // multiply price by amount of hours

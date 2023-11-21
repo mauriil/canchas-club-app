@@ -177,14 +177,14 @@ const BookingSteps: React.FC<BookingStepsProps> = ({
                                 <strong>Hora:</strong> de {time.from} a {time.to} hs
                             </Typography>
                             <Typography variant="body1" gutterBottom>
-                                <strong>Valor del turno:</strong> ${amount}
+                                <strong>Valor del turno:</strong> ${parseFloat(amount.toFixed(2))}
                             </Typography>
                             <Typography variant="body1" gutterBottom>
-                                <strong>Servicio de plataforma:</strong> ${amount * 0.05}
+                                <strong>Servicio de plataforma:</strong> ${parseFloat((amount * 0.05).toFixed(2))}
                             </Typography>
                             {reservationMode === 'partial' && (
                                 <Typography variant="body1" gutterBottom>
-                                    <strong>Total a pagar: </strong> ${amount / 2 + amount * 0.05}
+                                    <strong>Total a pagar: </strong> ${parseFloat((amount / 2 + amount * 0.05).toFixed(2))}
                                     Este club solicita el pago de la mitad del turno para confirmar la reserva.
                                 </Typography>
                             )}
