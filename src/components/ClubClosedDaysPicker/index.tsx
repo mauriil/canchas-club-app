@@ -48,6 +48,7 @@ const ClosedDaysPicker = ({ selectedDays, onChange }) => {
 
   const handleClearSelectedDates = () => {
     setSelectedDates([]);
+    onChange([]);
   };
 
   const tileContent = ({ date }) => {
