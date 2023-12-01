@@ -107,16 +107,6 @@ const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
       justifyContent: 'space-between',
       minHeight: '20rem',
     }}>
-      <Typography variant="body1" color="textSecondary" fontFamily="museo300" fontSize="1.5rem" sx={{
-        textAlign: 'center',
-        fontWeight: 'bold',
-        color: 'primary.main',
-        fontFamily: 'museo700',
-        fontSize: '2rem',
-        minHeight: '4rem',
-      }} >
-        {title}
-      </Typography>
       <Card variant="outlined" sx={{
         borderRadius: 2,
         display: 'flex',
@@ -125,6 +115,10 @@ const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
         justifyContent: 'space-between',
         height: '100%',
         overflowY: 'auto',
+        backgroundColor: 'white',
+        boxShadow: '0px 0px 5px 1px rgb(0,0,0)',
+        width: '100%',
+        maxWidth: { xs: '340px', sm: '100%' },
       }}>
         <Box sx={{
           width: '100%',
@@ -132,8 +126,19 @@ const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
+          flexDirection: 'column',
           marginTop: '1rem',
         }}>
+          <Typography variant="body1" color="textSecondary" fontFamily="museo300" fontSize="1.5rem" sx={{
+            textAlign: 'center',
+            fontWeight: 'bold',
+            color: 'primary.main',
+            fontFamily: 'museo700',
+            fontSize: '2rem',
+            minHeight: '4rem',
+          }} >
+            {title}
+          </Typography>
           <img src={logoUrl} alt={icon} width={'50px'} />
         </Box>
         <CardContent>
@@ -148,10 +153,11 @@ const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
           </ul>
         </CardContent>
         <CardContent>
-          <Typography variant="h6" fontFamily="museo700" fontSize="2rem" sx={{
+          <Typography variant="h1" fontFamily="museo700" fontSize="2rem" sx={{
             fontWeight: 'bold',
             color: 'primary.main',
             textAlign: 'center',
+            marginBottom: '1rem',
           }}>
             ${price}
           </Typography>

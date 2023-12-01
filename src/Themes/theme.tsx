@@ -31,7 +31,7 @@ export const theme = createTheme({
         {
           props: { color: "primary" },
           style: {
-            color: "black",
+            color: "white",
             borderRadius: `15px`,
             fontSize: "1.2rem",
             ":hover": {
@@ -86,7 +86,7 @@ export const theme = createTheme({
           props: { color: "success" },
           style: {
             backgroundColor: "#4caf50",
-            color: "black",
+            color: "white",
             borderRadius: `15px`,
             fontSize: "1.2rem",
             ":hover": {

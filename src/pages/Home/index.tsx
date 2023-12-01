@@ -108,50 +108,62 @@ const Home = () => {
         width="100%"
         padding={2}
         flexDirection={{ xs: "column", sm: "row" }}
+        gap={2}
       >
         <Paper elevation={3} sx={{
-          padding: 2, textAlign: "center", marginBottom: { xs: 2, sm: 0 }, flex: 1, width: {
+          padding: 2, textAlign: "center", flex: 1, width: {
             xs: "100%",
             sm: "auto"
-          }
+          },
+          backgroundColor: 'white',
+          height: '170px',
         }}>
-          <Typography variant="h2">Reservas en Curso</Typography>
-          <Typography variant="h4">{userStats.reservationsInProgress}</Typography>
+          <Typography variant="h2" sx={{ marginBottom: { sm: '40px', xs: '10px' } }}>Reservas en Curso</Typography>
+          <Typography variant="h1">{userStats.reservationsInProgress}</Typography>
         </Paper>
 
         {isPremium && (
           <Paper elevation={3} sx={{
-            padding: 2, textAlign: "center", marginLeft: { xs: 0, sm: 2 }, flex: 1, width: {
+            padding: 2, textAlign: "center", flex: 1, width: {
               xs: "100%",
               sm: "auto"
-            }
+            },
+            backgroundColor: 'white',
+            height: '170px',
           }}>
             <Typography variant="h2">Dinero Disponible</Typography>
-            <Typography variant="h4">
+            <Typography variant="h1">
               ${(
                 (formData.bankAccount?.availableMoney ?? 0) -
                 (formData.bankAccount?.withdrawProcessingMoney ?? 0)
               )}
             </Typography>
             {formData.bankAccount?.withdrawProcessingMoney > 0 && (
-              <Typography variant="body1" color="info">*Hay un retiro de dinero en proceso por ${formData.bankAccount?.withdrawProcessingMoney}</Typography>
+              <Typography variant="body1" color="info" sx={{
+                textAlign: 'center',
+                fontSize: '12px',
+                marginTop: '10px',
+                marginBottom: '10px'
+              }}>
+                *Hay un retiro de dinero en proceso por ${formData.bankAccount?.withdrawProcessingMoney}
+                </Typography>
             )}
-            <Button variant="outlined" color="primary" onClick={() => setIsOpen(true)}>
+            <Button variant="outlined" color="primary" onClick={() => setIsOpen(true)} sx={{marginTop: '5px'}}>
               Retirar
             </Button>
           </Paper>
         )}
 
-        <Paper elevation={3} sx={{ padding: 2, textAlign: "center", marginLeft: { xs: 0, sm: 2 }, marginTop: 2, width: { xs: "100%", sm: "auto" } }}>
-          <Typography variant="h2">Reservas Totales</Typography>
+        <Paper elevation={3} sx={{ padding: 2, textAlign: "center", flex: 1, width: { xs: "100%", sm: "auto" }, backgroundColor: 'white', height: '170px' }}>
+          <Typography variant="h2" sx={{ marginBottom: { sm: '40px', xs: '15px' } }}>Reservas Totales</Typography>
           <Grid container spacing={2}>
             <Grid item xs={6} sm={6}>
               <Typography variant="h3">Canceladas</Typography>
-              <Typography variant="h4">{userStats.reservationsCanceled}</Typography>
+              <Typography variant="h1">{userStats.reservationsCanceled}</Typography>
             </Grid>
             <Grid item xs={6} sm={6}>
               <Typography variant="h3">Concretadas</Typography>
-              <Typography variant="h4">{userStats.reservationsCompleted}</Typography>
+              <Typography variant="h1">{userStats.reservationsCompleted}</Typography>
             </Grid>
           </Grid>
         </Paper>

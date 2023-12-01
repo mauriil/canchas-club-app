@@ -114,7 +114,6 @@ const BookingDetails = () => {
     }
 
     const repeatBookingRequest = async () => {
-        setLoading(true);
         setOpenRepeatDialog(false);
         const newBookingDay = getNextSameBookingDay();
 
@@ -147,6 +146,15 @@ const BookingDetails = () => {
         setTimeout(() => {
             navigate(`/dashboard/home`);
         }, 3000);
+    }
+
+    const handleCancelBooking = () => {
+        setSnackBarMessage("Se canceló repetir la reserva");
+        setSnackBarSeverity("info");
+        setSnackBarOpen(true);
+        setOpenRepeatDialog(false);
+        setMercadoPagoBrickIsOpen(false);
+        setLoading(false);
     }
 
     return (
@@ -313,6 +321,7 @@ const BookingDetails = () => {
             <BookingSteps
                 onFailedBooking={handleFailedBooking}
                 onSuccessfulBooking={handleSuccessfulBooking}
+                onCancelBooking={handleCancelBooking}
                 isOpen={mercadoPagoBrickIsOpen}
                 tenantId={booking.tenantId?._id}
                 ownerId={booking.fieldId?.clubId.userId._id}

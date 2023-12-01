@@ -61,13 +61,18 @@ const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
       icono: "Avanzado",
       nombre: "Dueño de club",
       items: [
-        "Administra un número ilimitado de canchas",
-        "Plataforma avanzada de gestión y promoción",
-        "Visibilidad premium y destacada en la plataforma",
-        "Asistencia personalizada y orientación estratégica",
-        "Pago único"
+        "Gestiona todas tus canchas desde una única plataforma de manera eficiente.",
+        "Añade, edita y actualiza la información de tus instalaciones con facilidad.",
+        "Utiliza herramientas avanzadas para promocionar tus canchas y llegar a un público más amplio.",
+        "Optimiza tus horarios y maximiza la ocupación con nuestras funciones inteligentes.",
+        "Aumenta tu visibilidad frente a posibles clientes.",
+        "Destaca entre la competencia con una presencia premium en la plataforma.",
+        "Recibe asesoramiento personalizado para impulsar tu negocio.",
+        "Accede a orientación estratégica para mejorar tus operaciones y atraer a más clientes.",
+        "Sin tarifas mensuales recurrentes.",
+        "Realiza un único pago y disfruta de todas las ventajas de la suscripción premium.",
       ],
-      precio: 100,
+      precio: import.meta.env.VITE_PREMIUM_PASS_PRICE,
     },
   ];
 

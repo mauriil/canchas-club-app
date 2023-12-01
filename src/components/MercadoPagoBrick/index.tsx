@@ -13,7 +13,7 @@ import { createPayment, createPreference } from '../../api/mercadoPago';
 interface MercadoPagoBrickProps {
     walletBookingId?: string;
     isOpen: boolean;
-    // onClose: () => void;
+    onClose: () => void;
     ownerId: string;
     tenantId: string;
     tenantName: string;
@@ -25,7 +25,7 @@ interface MercadoPagoBrickProps {
     onSuccessfulPayment: (paymentId: string, status: string) => void;
 }
 
-const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ walletBookingId, isOpen, ownerId, tenantId, tenantName, tenantEmail, onSuccessfulPayment, amount, fieldPrice, title, reservationMode }) => {
+const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ walletBookingId, isOpen, ownerId, tenantId, tenantName, tenantEmail, onSuccessfulPayment, amount, fieldPrice, title, reservationMode, onClose }) => {
     initMercadoPago(import.meta.env.VITE_MERCADO_PAGO_ACCESS_TOKEN);
     amount = reservationMode === "full" ? (amount + amount * 0.05) : reservationMode === "partial" ? (amount / 2 + amount * 0.05) : 0;
     const initialization = {
@@ -106,7 +106,7 @@ const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ walletBookingId, is
     return (
         <Modal
             open={isOpen && reservationMode !== "withoutGuarantee"}
-        //onClose={onClose}
+            onClose={onClose}
         >
             <Box
                 sx={{

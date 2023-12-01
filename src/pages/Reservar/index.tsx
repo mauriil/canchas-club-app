@@ -96,8 +96,8 @@ const Home = () => {
             setTimeout(() => {
               navigate(`/dashboard/home`);
             }, 3000);
-            return;
             console.error('Error al obtener los datos del campo:', error);
+            return;
           });
       })
       .catch((error) => {
@@ -162,6 +162,15 @@ const Home = () => {
     }, 3000);
   }
 
+  const handleCancelBooking = () => {
+    setSnackBarMessage("Se canceló la reserva");
+    setSnackBarSeverity("info");
+    setSnackBarOpen(true);
+    setTimeout(() => {
+      navigate(`/dashboard/home`);
+    }, 3000);
+  }
+
   const cookies: {
     [key: string]: string;
   } = Cookies.get();
@@ -195,6 +204,7 @@ const Home = () => {
             walletBookingId={window.location.pathname.split('/')[2]}
             onSuccessfulBooking={handleSuccessfulBooking}
             onFailedBooking={() => { handleFailedBooking }}
+            onCancelBooking={handleCancelBooking}
             isOpen={mercadoPagoBrickIsOpen}
             tenantId={tenantId}
             ownerId={ownerId}

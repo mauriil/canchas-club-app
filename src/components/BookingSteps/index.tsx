@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import { FormControl, InputLabel, MenuItem, Select, Typography, Button, Menu, Snackbar, Alert, AlertColor } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, Typography, Button, Menu, Snackbar, Alert, AlertColor, IconButton } from '@mui/material';
 import { createSubscription, refundPayment, returnPayment } from '../../api/mercadoPago';
 import { Field } from '../../types/fields';
 import { getFieldById } from '../../api/fields';
@@ -16,6 +16,7 @@ import ConfirmationDialog from '../ConfirmationDialog';
 import MercadoPagoBrick from '../MercadoPagoBrick';
 import NewUserModal from '../NewUserAccount';
 import { parseDate } from '../../helpers/dates/parseDate';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface BookingStepsProps {
     walletBookingId?: string;
@@ -31,6 +32,7 @@ interface BookingStepsProps {
     ownerId: string;
     onSuccessfulBooking: (bookingId: string) => void;
     onFailedBooking: () => void;
+    onCancelBooking: () => void;
     reservationMode: string;
 }
 
@@ -42,6 +44,7 @@ const BookingSteps: React.FC<BookingStepsProps> = ({
     fieldId,
     onSuccessfulBooking,
     onFailedBooking,
+    onCancelBooking,
     time,
     ownerId,
     reservationMode,
@@ -103,8 +106,9 @@ const BookingSteps: React.FC<BookingStepsProps> = ({
     }, [tenantId]);
 
     const closeModal = () => {
-        // Agrega lógica para cerrar el modal si es necesario
-        // Ejemplo: onClose();
+        setOpenDialog(false);
+        setMercadoPagoBrikIsOpen(false);
+        onCancelBooking();
     };
 
     const handleSimpleBooking = async (paymentId: string, status: string) => {
@@ -145,6 +149,11 @@ const BookingSteps: React.FC<BookingStepsProps> = ({
         setMercadoPagoBrikIsOpen(true)
     };
 
+    const handleMercadoPagoBrickClose = () => {
+        setMercadoPagoBrikIsOpen(false);
+        setIsLoading(false);
+    }
+
     return (
         <>
             <Modal open={isOpen} onClose={closeModal}>
@@ -163,6 +172,16 @@ const BookingSteps: React.FC<BookingStepsProps> = ({
                         textAlign: 'center', // Alineación del contenido
                     }}
                 >
+                    <IconButton
+                        sx={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                        }}
+                        onClick={closeModal}
+                    >
+                        <CloseIcon />
+                    </IconButton>
                     {isLoading ? (
                         <CanchasClubLoader width="10%" />
                     ) : (
@@ -217,7 +236,9 @@ const BookingSteps: React.FC<BookingStepsProps> = ({
                 tenantName={tenantData.name}
                 ownerId={ownerId}
                 reservationMode={reservationMode}
-                title={`Reserva ${fieldData?.name}`} />
+                title={`Reserva ${fieldData?.name}`}
+                onClose={handleMercadoPagoBrickClose}
+            />
 
             <ConfirmationDialog
                 open={openDialog}
