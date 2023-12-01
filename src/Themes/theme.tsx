@@ -42,6 +42,19 @@ export const theme = createTheme({
           },
         },
         {
+          props: { color: "primary", variant: "outlined" },
+          style: {
+            color: "black",
+            borderRadius: `15px`,
+            fontSize: "1.2rem",
+            ":hover": {
+              backgroundColor: "#00a6c0",
+              boxShadow: "0px 0px 25px 1px rgb(0,0,0)",
+              color: "#ffffff",
+            },
+          },
+        },
+        {
           props: { color: "secondary", variant: "outlined" },
           style: {
             color: "black",
