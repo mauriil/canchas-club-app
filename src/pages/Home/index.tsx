@@ -12,9 +12,9 @@ const Home = () => {
   const { user } = useAuth();
   useEffect(() => {
     // Recargar para evitar errores en el inicio de sesión
-    if (localStorage.getItem("dashboardFirstLoad") === "true") return;
+    if (sessionStorage.getItem("dashboardFirstLoad") === "true") return;
     window.location.reload();
-    localStorage.setItem("dashboardFirstLoad", "true");
+    sessionStorage.setItem("dashboardFirstLoad", "true");
   }, []);
 
   const [isPremium, setIsPremium] = useState(false);

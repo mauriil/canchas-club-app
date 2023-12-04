@@ -32,9 +32,9 @@ const Home = () => {
 
   useEffect(() => {
     // reload to prevent bug in login
-    if (localStorage.getItem("dashboardFirstLoad") === "true") return;
+    if (sessionStorage.getItem("reservarFirstLoad") === "true") return;
     window.location.reload();
-    localStorage.setItem("dashboardFirstLoad", "true");
+    sessionStorage.setItem("reservarFirstLoad", "true");
 
   }, []);
 

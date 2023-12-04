@@ -39,9 +39,9 @@ const BookingDetails = () => {
 
     useEffect(() => {
         // reload to prevent bug in login
-        if (localStorage.getItem("dashboardFirstLoad") === "true") return;
+        if (sessionStorage.getItem("detalleReservaFirstLoad") === "true") return;
         window.location.reload();
-        localStorage.setItem("dashboardFirstLoad", "true");
+        sessionStorage.setItem("detalleReservaFirstLoad", "true");
     }, []);
 
     const handleSuccessfulBooking = (bookingId: string) => {
