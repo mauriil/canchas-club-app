@@ -12,6 +12,7 @@ import { EditUser } from '../../../types/users';
 import CanchasClubLoader from '../../Loader';
 import ChangePasswordDialog from '../ChangePasswordDialog';
 import { Lock } from '@mui/icons-material';
+import { useAuth } from '../../../customHooks/useAuth';
 
 interface UserProfileEditProps {
     onItemClick: (option: string) => void;
@@ -26,6 +27,7 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [isChangePasswordDialogOpen, setChangePasswordDialogOpen] = useState(false);
+    const { user, setUser } = useAuth();
 
 
     const handleOpenChangePasswordDialog = () => {
@@ -65,12 +67,16 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
 
     const getUserData = async () => {
         try {
-            const user = await getUser();
+            const userData = await getUser();
             setFormData({
-                name: user.name,
+                name: userData.name,
                 password: '',
-                phone: user.phone,
+                phone: userData.phone,
             });
+            setUser({
+                userId: user?.userId as string,
+                userName: userData.name,
+            })
             setIsLoading(false);
         } catch (error) {
             console.error("Error fetching plan status:", error);
@@ -85,10 +91,8 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
         await updateUser(formData);
         setSnackBarMessage('Datos actualizados');
         setSnackBarSeverity('success');
+        await getUserData();
         setSnackBarOpen(true);
-        setTimeout(() => {
-            window.location.reload();
-        }, 1500);
     };
 
     useEffect(() => {

@@ -7,6 +7,8 @@ import { useAuth } from "../../customHooks/useAuth";
 import { getPlanStatus, getUser, getUserStats, withdrawMoney } from "../../api/users";
 import CanchasClubLoader from "../../components/Loader";
 import { EditUser } from "../../types/users";
+import { set } from "date-fns";
+import { LineWave } from "react-loader-spinner";
 
 const Home = () => {
   const { user } = useAuth();
@@ -23,6 +25,7 @@ const Home = () => {
     reservationsCanceled: 0,
     reservationsCompleted: 0,
   });
+  const [loadingUserStats, setLoadingUserStats] = useState(false);
 
   const parseUsersStats = (stats: any) => {
     setUserStats({
@@ -33,6 +36,7 @@ const Home = () => {
   }
 
   const checkPremium = async () => {
+    setLoadingUserStats(true);
     const planStatus = await getPlanStatus();
     setIsPremium(planStatus.type !== "free" && planStatus.status === "active");
     const user = await getUser();
@@ -49,6 +53,7 @@ const Home = () => {
     });
     const userStats = await getUserStats();
     parseUsersStats(userStats);
+    setLoadingUserStats(false);
   };
   useEffect(() => {
     void checkPremium();
@@ -117,9 +122,29 @@ const Home = () => {
           },
           backgroundColor: 'white',
           height: '170px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center'
         }}>
-          <Typography variant="h2" sx={{ marginBottom: { sm: '40px', xs: '10px' } }}>Reservas en Curso</Typography>
-          <Typography variant="h1">{userStats.reservationsInProgress}</Typography>
+          <Typography variant="h2">Reservas en Curso</Typography>
+          <Typography variant="h1" sx={{ marginTop: { sm: loadingUserStats ? 0 : '40px', xs: loadingUserStats ? 0 : '15px' } }}>{
+            loadingUserStats ?
+              <LineWave
+                height="100"
+                width="100"
+                color="#32d9cb"
+                ariaLabel="line-wave"
+                wrapperStyle={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBotton: '10px'
+                }}
+                visible={true}
+              /> :
+              userStats.reservationsInProgress
+          }</Typography>
         </Paper>
 
         {isPremium && (
@@ -146,24 +171,60 @@ const Home = () => {
                 marginBottom: '10px'
               }}>
                 *Hay un retiro de dinero en proceso por ${formData.bankAccount?.withdrawProcessingMoney}
-                </Typography>
+              </Typography>
             )}
-            <Button variant="outlined" color="primary" onClick={() => setIsOpen(true)} sx={{marginTop: '5px'}}>
+            <Button variant="outlined" color="primary" onClick={() => setIsOpen(true)} sx={{ marginTop: '5px' }}>
               Retirar
             </Button>
           </Paper>
         )}
 
-        <Paper elevation={3} sx={{ padding: 2, textAlign: "center", flex: 1, width: { xs: "100%", sm: "auto" }, backgroundColor: 'white', height: '170px' }}>
-          <Typography variant="h2" sx={{ marginBottom: { sm: '40px', xs: '15px' } }}>Reservas Totales</Typography>
+        <Paper elevation={3} sx={{
+          padding: 2, textAlign: "center", flex: 1, width: { xs: "100%", sm: "auto" }, backgroundColor: 'white', height: '170px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center'
+          }}>
+          <Typography variant="h2" sx={{ marginBottom: { sm: '30px', xs: '10px' }, marginTop: { xs: '10px' } }}>Reservas Totales</Typography>
           <Grid container spacing={2}>
             <Grid item xs={6} sm={6}>
               <Typography variant="h3">Canceladas</Typography>
-              <Typography variant="h1">{userStats.reservationsCanceled}</Typography>
+              <Typography variant="h1">{
+                loadingUserStats ?
+                <LineWave
+                  height="100"
+                  width="100"
+                  color="#32d9cb"
+                  ariaLabel="line-wave"
+                  wrapperStyle={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  visible={true}
+                /> :
+                userStats.reservationsCanceled
+            }</Typography>
             </Grid>
             <Grid item xs={6} sm={6}>
               <Typography variant="h3">Concretadas</Typography>
-              <Typography variant="h1">{userStats.reservationsCompleted}</Typography>
+              <Typography variant="h1">{
+                loadingUserStats ?
+                <LineWave
+                  height="100"
+                  width="100"
+                  color="#32d9cb"
+                  ariaLabel="line-wave"
+                  wrapperStyle={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  visible={true}
+                /> :
+                userStats.reservationsCompleted
+            }</Typography>
             </Grid>
           </Grid>
         </Paper>

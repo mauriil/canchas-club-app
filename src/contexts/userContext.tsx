@@ -27,6 +27,7 @@ interface AuthContextType {
   forgotPassword: (user: ForgotPasswordRequestBody) => Promise<boolean>;
   logOut: () => void;
   user: UserResp | null;
+  setUser: React.Dispatch<React.SetStateAction<UserResp | null>>;
   isAuthenticated: boolean;
   errors: string[];
 }
@@ -96,6 +97,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logOut = (): void => {
     Cookies.remove("access-token", import.meta.env.VITE_ENV === "development" ? {} : { path: "/", domain: import.meta.env.VITE_COOKIE_DOMAIN });
+    sessionStorage.clear();
     navigate("/index/login");
   };
 
@@ -148,6 +150,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         forgotPassword,
         logOut,
         user,
+        setUser,
         isAuthenticated,
         errors,
       }}
