@@ -32,7 +32,15 @@ const ClubAvatar = (props: AvatarProps) => {
   }, [props.logo, props.title, props.colors.primary]);
 
   return (
-    <Box textAlign="center">
+    <Box sx={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      width: "150px",
+      padding: "1rem",
+      backgroundColor: "background.paper",
+    }}>
       <Avatar
         alt={props.title}
         src={logoUrl}
@@ -45,9 +53,10 @@ const ClubAvatar = (props: AvatarProps) => {
           borderColor: props.colors.primary,
           borderWidth: "0.5rem",
           borderStyle: "solid",
+          boxShadow: "0px 0px 10px 0.5px rgb(0,0,0)",
         }}
       />
-      <div
+      <Box
         style={{
           fontSize: screenWidth < 900 ? "1.5rem" : "2rem",
           fontWeight: "bold",
@@ -55,10 +64,11 @@ const ClubAvatar = (props: AvatarProps) => {
           color: "primary.main",
           marginTop: "0.5rem",
           marginBottom: "1.5rem",
+          textAlign: "center",
         }}
       >
         {props.title}
-      </div>
+      </Box>
     </Box>
   );
 };

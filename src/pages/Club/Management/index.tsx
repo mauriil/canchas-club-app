@@ -95,7 +95,7 @@ const ClubManagement = () => {
 
     if (isLoading) {
         return (
-            <CanchasClubLoader width="10%" />
+            <CanchasClubLoader width="30%" />
         );
     }
 
@@ -171,6 +171,7 @@ const ClubManagement = () => {
                             "& > *": {
                                 marginLeft: "1.5rem",
                             },
+                            gap: "1rem",
                         }}
                     >
                         <>
@@ -199,9 +200,15 @@ const ClubManagement = () => {
                             <AccordionSummary>
                                 <Box display="flex" alignItems="center">
                                     <Box ml={2}> {/* Espacio entre la imagen y el título */}
-                                        <img src={`https://canchas-club.s3.amazonaws.com/${field.photos[0]}`} alt="Cancha" width="60px" height="60px" />
+                                        <img src={`https://canchas-club.s3.amazonaws.com/${field.photos[0]}`} alt="Cancha" width="60px" height="60px" style={
+                                            {
+                                                borderRadius: "10%",
+                                                border: "1px solid #000",
+                                                objectFit: "cover",
+                                            }
+                                        }/>
                                     </Box>
-                                    <Typography>{field.name}</Typography>
+                                    <Typography sx={{ marginLeft: "2rem", }}>{field.name}</Typography>
                                 </Box>
                             </AccordionSummary>
                             <AccordionDetails>

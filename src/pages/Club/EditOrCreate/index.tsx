@@ -321,6 +321,7 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                                     sx={{ marginBottom: 2, }}
                                     error={clubData.name === '' && buttonNextClicked}
                                     helperText={clubData.name === '' && buttonNextClicked ? 'Campo requerido' : ''}
+                                    inputProps={{ maxLength: 50 }}
                                 />
                                 <TextField
                                     label="Descripción"

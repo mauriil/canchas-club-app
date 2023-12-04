@@ -82,6 +82,7 @@ const MiClub = () => {
         width="100%"
         flexGrow={1}
         overflow="auto"
+        gap={2}
       >
         {isLoading ? (
           <CanchasClubLoader width="80%" />
