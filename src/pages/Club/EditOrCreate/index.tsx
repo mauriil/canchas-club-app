@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useEffect, useState } from 'react';
-import { createClub, deleteClub, editClub, getClubById } from '../../../api/clubs';
+import { checkAlias, createClub, deleteClub, editClub, getClubById } from '../../../api/clubs';
 import { useDropzone } from 'react-dropzone';
 import uploadFileToS3 from '../../../api/uploadFileToS3';
 import TopBar from '../../../components/TopBar';
@@ -89,7 +89,11 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
         }
     }
 
-    const handleNext = () => {
+    const checkAliasFunction = async (alias: string) => {
+        return await checkAlias(alias) as boolean;
+    }
+
+    const handleNext = async () => {
         if (activeStep === 0) {
             setButtonNextClicked(true);
             if (clubData.name === ''
@@ -99,6 +103,19 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
                 || clubData.description === ''
                 || clubData.alias === '') {
                 setSnackBarMessage('Por favor completa todos los campos');
+                setSnackBarSeverity('warning');
+                setSnackBarOpen(true);
+                return;
+            }
+            if (clubData.alias.includes(' ' || '/')) {
+                setSnackBarMessage('El alias no puede contener espacios ni barras');
+                setSnackBarSeverity('warning');
+                setSnackBarOpen(true);
+                return;
+            }
+            const validAlias = await checkAliasFunction(clubData.alias);
+            if (!validAlias) {
+                setSnackBarMessage('El alias ya existe, por favor elige otro');
                 setSnackBarSeverity('warning');
                 setSnackBarOpen(true);
                 return;
@@ -127,7 +144,14 @@ const EditOrCreateClub = ({ editMode = false }: EditOrCreateClubProps) => {
         clubData.location.coordinates.push(parseFloat(clubData.longitude), parseFloat(clubData.latitude));
         if (editMode) {
             try {
-                await editClub(clubData, clubData._id);
+                const req = await editClub(clubData, clubData._id);
+                const request = await req.json();
+                if (request.statusCode >= 400) {
+                    setSnackBarMessage(request.message);
+                    setSnackBarSeverity('error');
+                    setSnackBarOpen(true);
+                    return;
+                }
                 setSnackBarMessage('Club editado correctamente');
                 setSnackBarSeverity('success');
                 setSnackBarOpen(true);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -83,6 +84,19 @@ export const getClubById = async (clubId:  string | undefined) => {
         return response;
     } catch (error) {
         console.error("Error getting clubs by user:", error);
+        throw error;
+    }
+}
+
+export const checkAlias = async (alias: string) => {
+    try {
+        const response = await fetch(`${BASE_API_URL}/clubs/alias/check/${alias}`, {
+            method: "GET",
+            headers: { ...headers, "Authorization": `Bearer ${token}` },
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error checking alias:", error);
         throw error;
     }
 }
