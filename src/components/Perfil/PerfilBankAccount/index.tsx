@@ -9,8 +9,6 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { getUser, updateUser } from '../../../api/users';
 import { EditUser } from '../../../types/users';
 import CanchasClubLoader from '../../Loader';
-import { useAuth } from '../../../customHooks/useAuth';
-import { set } from 'date-fns';
 
 interface UserProfileEditProps {
     onItemClick: (option: string) => void;
@@ -23,7 +21,6 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
         setSnackBarOpen(false);
     }
     const [isLoading, setIsLoading] = useState(true);
-    const { user, setUser } = useAuth();
 
 
     const [formData, setFormData] = useState<EditUser>({
@@ -38,22 +35,16 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
 
     const getUserData = async () => {
         try {
-            const userData = await getUser();
+            const user = await getUser();
             setFormData({
                 bankAccount: {
-                    bank: userData.bankAccount?.bank,
-                    cbu: userData.bankAccount?.cbu,
-                    alias: userData.bankAccount?.alias,
-                    descriptiveName: userData.bankAccount?.descriptiveName,
-                    ownerName: userData.bankAccount?.ownerName,
+                    bank: user.bankAccount?.bank,
+                    cbu: user.bankAccount?.cbu,
+                    alias: user.bankAccount?.alias,
+                    descriptiveName: user.bankAccount?.descriptiveName,
+                    ownerName: user.bankAccount?.ownerName,
                 },
             });
-            console.log("🚀 ~ file: index.tsx:52 ~ getUserData ~ user:", user)
-            setUser({
-                userId: user?.userId as string,
-                userName: userData.name,
-            })
-            console.log("🚀 ~ file: index.tsx:53 ~ getUserData ~ user:", user)
             setIsLoading(false);
         } catch (error) {
             console.error("Error fetching plan status:", error);
@@ -78,7 +69,6 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
         setSnackBarMessage('Datos actualizados');
         setSnackBarSeverity('success');
         setSnackBarOpen(true);
-        await getUserData();
         setTimeout(() => {
             window.location.reload();
         }, 1500);
