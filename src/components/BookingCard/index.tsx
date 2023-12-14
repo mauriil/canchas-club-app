@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Alert, Box, Divider } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -7,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import RoomIcon from "@mui/icons-material/Room";
 import { parseDate } from "../../helpers/dates/parseDate";
 
-const BookingCard = ({ booking }) => {
+const BookingCard = ({ booking, styles = { marginRight: 0 } }) => {
   const image = booking.fieldId.photos[0];
 
   const navigateToBookingDetail = (bookingId: string) => {
@@ -26,6 +27,7 @@ const BookingCard = ({ booking }) => {
         borderWidth: "0.5rem",
         borderColor: "#00a6c0",
         backgroundColor: "white",
+        marginRight: styles.marginRight ? styles.marginRight : "0rem",
       }}
       onClick={() => navigateToBookingDetail(booking._id)}
       onMouseOver={() => {
@@ -91,15 +93,17 @@ const BookingCard = ({ booking }) => {
             variant="contained"
             color={booking.status === 'pending' ? 'primary' :
               booking.status === 'approved - accredited' ? 'success' :
-                booking.status === 'completed' ? 'success' :
-                  booking.status === 'no-show' ? 'warning' :
-                    booking.status === 'cancelled' ? 'error' : 'primary'}
+                booking.status === 'internal_booking' ? 'success' :
+                  booking.status === 'completed' ? 'success' :
+                    booking.status === 'no-show' ? 'warning' :
+                      booking.status === 'cancelled' ? 'error' : 'primary'}
           >
             {booking.status === 'pending' ? 'Pendiente' :
               booking.status === 'approved - accredited' ? 'Confirmado' :
-                booking.status === 'completed' ? 'Completado' :
-                  booking.status === 'no-show' ? 'No se presento' :
-                    booking.status === 'cancelled' ? 'Cancelado' : ''}
+                booking.status === 'internal_booking' ? 'Confirmado' :
+                  booking.status === 'completed' ? 'Completado' :
+                    booking.status === 'no-show' ? 'No se presento' :
+                      booking.status === 'cancelled' ? 'Cancelado' : ''}
           </Button>
         </CardActions>
       </Box>

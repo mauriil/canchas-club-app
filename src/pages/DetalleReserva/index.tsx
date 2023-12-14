@@ -159,7 +159,7 @@ const BookingDetails = () => {
 
     return (
         <>
-            <TopBar backUrl='/dashboard/misReservas'/>
+            <TopBar backUrl='/dashboard/misReservas' />
 
             {loading ?
                 <Box
@@ -204,18 +204,20 @@ const BookingDetails = () => {
                                 <Alert severity={
                                     booking.status === 'pending' ? 'info' :
                                         booking.status === 'approved - accredited' ? 'success' :
-                                            booking.status === 'completed' ? 'success' :
-                                                booking.status === 'no-show' ? 'warning' :
-                                                    booking.status === 'cancelled' ? 'error' : 'info'
+                                            booking.status === 'internal_booking' ? 'success' :
+                                                booking.status === 'completed' ? 'success' :
+                                                    booking.status === 'no-show' ? 'warning' :
+                                                        booking.status === 'cancelled' ? 'error' : 'info'
                                 } sx={{
                                     width: '100%',
                                     '& .MuiAlert-message': { textAlign: "center", width: "inherit" }
                                 }}>
                                     {booking.status === 'pending' ? 'Pendiente' :
                                         booking.status === 'approved - accredited' ? 'Confirmado' :
-                                            booking.status === 'completed' ? 'Completado' :
-                                                booking.status === 'no-show' ? 'No se presento' :
-                                                    booking.status === 'cancelled' ? 'Cancelado' : ''}
+                                            booking.status === 'internal_booking' ? 'Confirmado (reserva en club)' :
+                                                booking.status === 'completed' ? 'Completado' :
+                                                    booking.status === 'no-show' ? 'No se presento' :
+                                                        booking.status === 'cancelled' ? 'Cancelado' : ''}
                                 </Alert>
                             </Paper>
                         </Grid>

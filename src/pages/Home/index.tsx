@@ -9,6 +9,11 @@ import CanchasClubLoader from "../../components/Loader";
 import { EditUser } from "../../types/users";
 import { set } from "date-fns";
 import { LineWave } from "react-loader-spinner";
+import BookingCard from "../../components/BookingCard";
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import useScreenSize from "../../customHooks/screenSize";
 
 const Home = () => {
   const { user } = useAuth();
@@ -24,14 +29,16 @@ const Home = () => {
     reservationsInProgress: 0,
     reservationsCanceled: 0,
     reservationsCompleted: 0,
+    nextBookings: [],
   });
   const [loadingUserStats, setLoadingUserStats] = useState(false);
 
   const parseUsersStats = (stats: any) => {
     setUserStats({
-      reservationsInProgress: stats.filter((stat: any) => stat.status === "approved - accredited").length > 0 ? stats.filter((stat: any) => stat.status === "approved - accredited")[0].count : 0,
-      reservationsCanceled: stats.filter((stat: any) => stat.status === "canceled").length > 0 ? stats.filter((stat: any) => stat.status === "canceled")[0].count : 0,
-      reservationsCompleted: stats.filter((stat: any) => stat.status === "completed").length > 0 ? stats.filter((stat: any) => stat.status === "completed")[0].count : 0,
+      reservationsInProgress: stats.bookingStats.filter((stat: any) => stat.status === "approved - accredited").length > 0 ? stats.bookingStats.filter((stat: any) => stat.status === "approved - accredited")[0].count : 0,
+      reservationsCanceled: stats.bookingStats.filter((stat: any) => stat.status === "canceled").length > 0 ? stats.bookingStats.filter((stat: any) => stat.status === "canceled")[0].count : 0,
+      reservationsCompleted: stats.bookingStats.filter((stat: any) => stat.status === "completed").length > 0 ? stats.bookingStats.filter((stat: any) => stat.status === "completed")[0].count : 0,
+      nextBookings: stats.nextBookings,
     });
   }
 
@@ -100,6 +107,16 @@ const Home = () => {
     }, 1500);
     return;
   }
+
+  const screenWidth = useScreenSize().width;
+  const nextBookingsSliderSettings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: screenWidth < 900 ? 1 : screenWidth < 1200 ? 2 : 3,
+    slidesToScroll: 1,
+    className: "center",
+  };
 
   return (
     <>
@@ -185,46 +202,46 @@ const Home = () => {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center'
-          }}>
+        }}>
           <Typography variant="h2" sx={{ marginBottom: { sm: '30px', xs: '10px' }, marginTop: { xs: '10px' } }}>Reservas Totales</Typography>
           <Grid container spacing={2}>
             <Grid item xs={6} sm={6}>
               <Typography variant="h3">Canceladas</Typography>
               <Typography variant="h1">{
                 loadingUserStats ?
-                <LineWave
-                  height="100"
-                  width="100"
-                  color="#32d9cb"
-                  ariaLabel="line-wave"
-                  wrapperStyle={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                  visible={true}
-                /> :
-                userStats.reservationsCanceled
-            }</Typography>
+                  <LineWave
+                    height="100"
+                    width="100"
+                    color="#32d9cb"
+                    ariaLabel="line-wave"
+                    wrapperStyle={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                    visible={true}
+                  /> :
+                  userStats.reservationsCanceled
+              }</Typography>
             </Grid>
             <Grid item xs={6} sm={6}>
               <Typography variant="h3">Concretadas</Typography>
               <Typography variant="h1">{
                 loadingUserStats ?
-                <LineWave
-                  height="100"
-                  width="100"
-                  color="#32d9cb"
-                  ariaLabel="line-wave"
-                  wrapperStyle={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                  visible={true}
-                /> :
-                userStats.reservationsCompleted
-            }</Typography>
+                  <LineWave
+                    height="100"
+                    width="100"
+                    color="#32d9cb"
+                    ariaLabel="line-wave"
+                    wrapperStyle={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                    visible={true}
+                  /> :
+                  userStats.reservationsCompleted
+              }</Typography>
             </Grid>
           </Grid>
         </Paper>
@@ -299,6 +316,53 @@ const Home = () => {
           )}
         </Box>
       </Modal>
+
+      <Box display="flex"
+        alignItems="center"
+        justifyContent="center"
+        width="100%"
+        padding={2}
+        flexDirection={{ xs: "column", sm: "row" }}>
+        <Paper elevation={3} sx={{
+          padding: 2, textAlign: "center", width: {
+            xs: "100%",
+            sm: "100%"
+          },
+          backgroundColor: 'white',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+          <Typography variant="h2" sx={{ marginBottom: '15px' }}>Próximos eventos</Typography>
+          {
+            loadingUserStats ?
+              <LineWave
+                height="100"
+                width="100"
+                color="#32d9cb"
+                ariaLabel="line-wave"
+                wrapperStyle={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBotton: '10px'
+                }}
+                visible={true}
+              /> :
+              userStats.nextBookings?.length > 0 ? (
+                <Box sx={{ padding: 1, marginBottom: 2 }}>
+                  <Slider {...nextBookingsSliderSettings} >
+                    {userStats.nextBookings.map((booking) => <Box> <BookingCard booking={booking} /> </Box>)}
+                  </Slider>
+                </Box>
+              )
+                :
+                <Typography variant="h4" color="primary">
+                  No hay turnos reservados
+                </Typography>
+          }
+        </Paper>
+      </Box>
+
       <Snackbar open={snackBarOpen} autoHideDuration={5000} onClick={handelSnackClose} onClose={handelSnackClose}>
         <Alert severity={snackBarSeverity as AlertColor} sx={{ width: '100%', fontSize: '15px' }} onClose={handelSnackClose}>
           {snackBarMessage}

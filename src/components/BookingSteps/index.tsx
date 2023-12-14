@@ -132,7 +132,7 @@ const BookingSteps: React.FC<BookingStepsProps> = ({
             onFailedBooking();
             return;
         }
-        if (status === 'approved - accredited') {
+        if (status === 'approved - accredited' || status === 'internal_booking') {
             setBookingId(bookingReq._id);
             setOpenDialog(true);
             setDialogTitle('Reserva creada');

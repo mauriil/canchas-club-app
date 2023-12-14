@@ -16,13 +16,13 @@
     url("./assets/fonts/Museo-700.ttf") format("truetype");
 }
 
-*{
+* {
   box-sizing: border-box;
   margin: 0px;
   padding: 0px;
 }
 
-html{
+html {
   background-color: #445251;
   background-image: url("./assets/images/background.jpg");
   background-size: cover;
@@ -33,7 +33,7 @@ html{
   animation: background 10s linear infinite;
 }
 
-/* FIXME: zoom in and out the background image */ 
+/* FIXME: zoom in and out the background image */
 /* @keyframes background{
   0%{
     transform: scale(1);
@@ -46,7 +46,18 @@ html{
   }
 } */
 
-a{
+a {
   text-decoration: none;
   color: black;
+}
+
+.slick-dots li button:before {
+  background-color: #00a6c0;
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  padding: 0;
+  border: none;
+  border-radius: 100%;
+  text-indent: -9999px;
 }
