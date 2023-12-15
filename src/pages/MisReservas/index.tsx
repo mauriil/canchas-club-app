@@ -25,18 +25,20 @@ const localizer = dateFnsLocalizer({
   locales
 });
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import { useNavigate } from "react-router-dom";
 
 
 const MisReservas = () => {
   const [bookings, setBookings] = useState<BookingDetail[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const fetchBookings = async () => {
     try {
       setIsLoading(true);
       const response = await getAllBookingsByUser();
       const data: BookingDetail[] = await response.json();
-      setBookings(data);
+      setBookings(data.filter((booking) => booking.status !== "cancelled"));
     } catch (error) {
       console.error("Error fetching bookings:", error);
     } finally {
@@ -139,6 +141,11 @@ const MisReservas = () => {
                   </Button>
               ),
             },
+          }}
+          onSelectEvent={(event) => {
+            console.log("event", event.start, event.end);
+            const booking = bookings.find((booking) => booking.time.day === moment(event.start).format("YYYY-MM-DD") && booking.time.from === moment(event.start).format("HH:mm") && booking.time.to === moment(event.end).format("HH:mm"));
+            navigate(`/dashboard/detalleReserva/${booking?._id}`);
           }}
         />
       ) : (

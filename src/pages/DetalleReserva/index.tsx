@@ -93,7 +93,7 @@ const BookingDetails = () => {
         setSnackBarOpen(true);
         setTimeout(() => {
             navigate(`/dashboard/detalleReserva/${window.location.pathname.split('/')[3]}`);
-        }, 1500);
+        }, 2500);
         return;
     }
 
@@ -173,6 +173,13 @@ const BookingDetails = () => {
                 </Box>
                 :
                 <>
+                <Box sx={{
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    padding: '1.5rem',
+                }}>
                     <Grid container spacing={3} sx={{ mt: 1 }}>
                         <Grid item xs={12} sm={6}>
                             <Paper elevation={3} sx={{
@@ -278,7 +285,7 @@ const BookingDetails = () => {
                                 </Typography>
                             </Paper>
                         </Grid>
-                        {booking.status === 'pending' || booking.status === 'approved - accredited' || booking.status === 'completed' ?
+                        {booking.status === 'pending' || booking.status === 'approved - accredited' || booking.status === 'internal_booking' || booking.status === 'completed' ?
                             <Grid item xs={12}>
                                 <Button variant="contained" sx={{ width: "100%", marginBottom: "2rem" }}
                                     size="large"
@@ -298,6 +305,7 @@ const BookingDetails = () => {
                         }
 
                     </Grid>
+                </Box>
                 </>}
 
 
