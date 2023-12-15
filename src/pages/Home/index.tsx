@@ -120,9 +120,9 @@ const Home = () => {
 
   return (
     <>
-      <Box padding={2}>
-        <Title firtLineTitle="Bienvenid@" secondLineTitle={user?.userName} />
-      </Box>
+      {/* <Box padding={2}>
+        <Title firtLineTitle="Hola de nuevo" secondLineTitle={user?.userName} />
+      </Box> */}
       <Box
         display="flex"
         alignItems="center"
@@ -142,7 +142,8 @@ const Home = () => {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          alignItems: 'center'
+          alignItems: 'center',
+          borderRadius: '8px',
         }}>
           <Typography variant="h2">Reservas en Curso</Typography>
           <Typography variant="h1" sx={{ marginTop: { sm: loadingUserStats ? 0 : '40px', xs: loadingUserStats ? 0 : '15px' } }}>{
@@ -172,6 +173,7 @@ const Home = () => {
             },
             backgroundColor: 'white',
             height: '170px',
+            borderRadius: '8px',
           }}>
             <Typography variant="h2">Dinero Disponible</Typography>
             <Typography variant="h1">
@@ -201,7 +203,8 @@ const Home = () => {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          alignItems: 'center'
+          alignItems: 'center',
+          borderRadius: '8px',
         }}>
           <Typography variant="h2" sx={{ marginBottom: { sm: '30px', xs: '10px' }, marginTop: { xs: '10px' } }}>Reservas Totales</Typography>
           <Grid container spacing={2}>
@@ -331,6 +334,7 @@ const Home = () => {
           backgroundColor: 'white',
           justifyContent: 'center',
           alignItems: 'center',
+          borderRadius: '8px',
         }}>
           <Typography variant="h2" sx={{ marginBottom: '15px' }}>Próximos eventos</Typography>
           {
