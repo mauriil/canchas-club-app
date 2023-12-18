@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Alert, AlertColor, Box, Button, Grid, Modal, Paper, Snackbar, TextField, Typography } from "@mui/material";
@@ -14,6 +15,8 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import useScreenSize from "../../customHooks/screenSize";
+import { PieChart, Pie, Sector, ResponsiveContainer } from 'recharts';
+import UserStatsCharts from "./charts";
 
 const Home = () => {
   const { user } = useAuth();
@@ -30,6 +33,7 @@ const Home = () => {
     reservationsCanceled: 0,
     reservationsCompleted: 0,
     nextBookings: [],
+    chartData: {}
   });
   const [loadingUserStats, setLoadingUserStats] = useState(false);
 
@@ -39,6 +43,7 @@ const Home = () => {
       reservationsCanceled: stats.bookingStats.filter((stat: any) => stat.status === "canceled").length > 0 ? stats.bookingStats.filter((stat: any) => stat.status === "canceled")[0].count : 0,
       reservationsCompleted: stats.bookingStats.filter((stat: any) => stat.status === "completed").length > 0 ? stats.bookingStats.filter((stat: any) => stat.status === "completed")[0].count : 0,
       nextBookings: stats.nextBookings,
+      chartData: stats.chartData,
     });
   }
 
@@ -120,9 +125,6 @@ const Home = () => {
 
   return (
     <>
-      {/* <Box padding={2}>
-        <Title firtLineTitle="Hola de nuevo" secondLineTitle={user?.userName} />
-      </Box> */}
       <Box
         display="flex"
         alignItems="center"
@@ -366,6 +368,10 @@ const Home = () => {
           }
         </Paper>
       </Box>
+
+      {isPremium && Object.keys(userStats.chartData).length !== 0 && (
+        <UserStatsCharts loadingUserStats={loadingUserStats} userStats={userStats} />
+      )}
 
       <Snackbar open={snackBarOpen} autoHideDuration={5000} onClick={handelSnackClose} onClose={handelSnackClose}>
         <Alert severity={snackBarSeverity as AlertColor} sx={{ width: '100%', fontSize: '15px' }} onClose={handelSnackClose}>
