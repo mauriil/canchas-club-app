@@ -9,6 +9,7 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import { initMercadoPago, Payment, Wallet } from '@mercadopago/sdk-react';
 import { createPayment, createPreference } from '../../api/mercadoPago';
+import { Button } from '@mui/material';
 
 interface MercadoPagoBrickProps {
     walletBookingId?: string;
@@ -144,6 +145,19 @@ const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ walletBookingId, is
                         }
                     }}
                 />
+                {ownerId === tenantId &&
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={onSubmit}
+                    sx={{
+                        marginTop: 2,
+                        width: '100%',
+                    }}
+                >
+                    Pago en efectivo
+                </Button>
+                }
             </Box>
         </Modal>
     );
