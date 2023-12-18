@@ -39,7 +39,7 @@ const Home = () => {
 
   const parseUsersStats = (stats: any) => {
     setUserStats({
-      reservationsInProgress: stats.bookingStats.filter((stat: any) => stat.status === "approved - accredited").length > 0 ? stats.bookingStats.filter((stat: any) => stat.status === "approved - accredited")[0].count : 0,
+      reservationsInProgress: stats.bookingStats.filter((stat: any) => stat.status === "approved - accredited" || stat.status === "internal_booking").length > 0 ? stats.bookingStats.filter((stat: any) => stat.status === "approved - accredited" || stat.status === "internal_booking")[0].count : 0,
       reservationsCanceled: stats.bookingStats.filter((stat: any) => stat.status === "canceled").length > 0 ? stats.bookingStats.filter((stat: any) => stat.status === "canceled")[0].count : 0,
       reservationsCompleted: stats.bookingStats.filter((stat: any) => stat.status === "completed").length > 0 ? stats.bookingStats.filter((stat: any) => stat.status === "completed")[0].count : 0,
       nextBookings: stats.nextBookings,
@@ -147,7 +147,7 @@ const Home = () => {
           alignItems: 'center',
           borderRadius: '8px',
         }}>
-          <Typography variant="h2">Reservas en Curso</Typography>
+          <Typography variant="h2">Reservas en curso</Typography>
           <Typography variant="h1" sx={{ marginTop: { sm: loadingUserStats ? 0 : '40px', xs: loadingUserStats ? 0 : '15px' } }}>{
             loadingUserStats ?
               <LineWave
