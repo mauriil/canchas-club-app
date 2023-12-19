@@ -14,6 +14,7 @@ import BallotIcon from "@mui/icons-material/Ballot";
 import HomeIcon from "@mui/icons-material/Home";
 import { NavLink } from "react-router-dom";
 import { getPlanStatus } from "../../api/users";
+import canchasClubLogo from "../../assets/images/canchasCubLogo.png";
 
 type Anchor = "left";
 
@@ -69,6 +70,20 @@ export default function TemporaryDrawer() {
                 <EventIcon />
               </ListItemIcon>
               <ListItemText primary="Mis reservas" />
+            </ListItemButton>
+          </ListItem>
+        </NavLink>
+        <NavLink to="findField">
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <img
+                  src={canchasClubLogo}
+                  alt="Logo Canchas Club"
+                  style={{ width: "18px" }}
+                />
+              </ListItemIcon>
+              <ListItemText primary="Buscar canchas" />
             </ListItemButton>
           </ListItem>
         </NavLink>

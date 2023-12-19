@@ -99,3 +99,17 @@ export const checkAvailability = async (values: any) => {
         throw error;
     }
 }
+
+export const preBooking = async (values: any) => {
+    try {
+        const response = await fetch(`${BASE_API_URL}/bookings/prebooking`, {
+            method: "POST",
+            headers,
+            body: JSON.stringify(values)
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error creating club:", error);
+        throw error;
+    }
+}

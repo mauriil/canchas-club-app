@@ -62,7 +62,7 @@ export default function SimpleBottomNavigation() {
         />
         <BottomNavigationAction
           icon={
-            <NavLink to="home">
+            <NavLink to="findField">
               <Box
                 height="50px"
                 component="img"

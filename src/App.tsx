@@ -18,6 +18,7 @@ import ClubManagement from "./pages/Club/Management";
 import EditOrCreateClub from "./pages/Club/EditOrCreate";
 import EditOrCreateField from "./pages/Field/EditOrCreate";
 import BackGround from "./pages/Reservar/background";
+import FindFields from "./pages/FindFields";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
               <Route index element={<Navigate to="home" />} />
               <Route path="home" element={<Home />} />
               <Route path="misReservas" element={<MisReservas />} />
+              <Route path="findField" element={<FindFields />} />
               <Route path="detalleReserva/:bookingId" element={<DetalleReserva />} />
               <Route path="miClub" element={<MiClub />} />
               <Route path="/dashboard/miClub/new" element={<EditOrCreateClub />} />

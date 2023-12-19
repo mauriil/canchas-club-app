@@ -88,3 +88,16 @@ export const getAllByClubId = async (clubId: string | undefined) => {
         throw error;
     }
 }
+
+export const getAll = async (filters: string) => {
+    try {
+        const response = await fetch(`${BASE_API_URL}/fields?${filters}`, {
+            method: "GET",
+            headers: { ...headers, "Authorization": `Bearer ${token}` },
+        });
+        return response;
+    } catch (error) {
+        console.error("Error getting clubs by user:", error);
+        throw error;
+    }
+}

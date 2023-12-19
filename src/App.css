@@ -61,3 +61,44 @@ a {
   border-radius: 100%;
   text-indent: -9999px;
 }
+
+
+.react-calendar__month-view__days__day--neighboringMonth {
+	color: #ccc;
+}
+
+.react-calendar__month-view__days__day--weekend {
+	color: #000 !important;
+}
+
+.available-day {
+	background-color: #4ebedd !important;
+}
+.available-day {
+	color: #ffffff !important;
+	transition: background-color 0.2s;
+}
+
+.available-day:hover {
+	color: #000;
+	background-color: #3a7da4;
+}
+
+.unavailable-day {
+	background-color: rgb(146, 149, 151) !important;
+	color: rgb(0, 0, 0);
+}
+
+.react-calendar__tile--hover {
+	background-color: #3a7da4;
+}
+
+.react-calendar__tile--active,
+.react-calendar__tile--focus {
+	background-color: #3a7da4;
+}
+
+.available-hours:hover {
+	background-color: #3a7da4;
+	color: #fff;
+}

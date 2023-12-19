@@ -1,0 +1,29 @@
+{
+  "sports": {
+    "football": "Fútbol",
+    "football5": "Fútbol 5",
+    "football7": "Fútbol 7",
+    "football9": "Fútbol 9",
+    "football11": "Fútbol 11",
+    "basketball": "Baloncesto",
+    "tennis": "Tenis",
+    "paddle": "Pádel",
+    "volleyball": "Voleibol",
+    "handball": "Balonmano",
+    "hockey": "Hockey",
+    "rugby": "Rugby",
+    "other": "Otros"
+  },
+  "fieldType": {
+    "indoor": "Cubierta",
+    "outdoor": "Descubierta"
+  },
+  "floorType": {
+    "grass": "Césped",
+    "syntheticGrass": "Césped sintético",
+    "concrete": "Cemento",
+    "parquet": "Parquet",
+    "tar": "Asfalto",
+    "other": "Otro"
+  }
+}
