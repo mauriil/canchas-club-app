@@ -22,3 +22,8 @@ export interface Field {
     },
     clubId: string,
 }
+
+export interface FieldResponse {
+  fields: Field[];
+  totalPages: number;
+}

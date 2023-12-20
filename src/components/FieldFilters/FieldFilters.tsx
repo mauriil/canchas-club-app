@@ -50,6 +50,9 @@ export default function FieldFilters({ onFilterChange }: FieldFiltersProps) {
         <Accordion sx={{
             backgroundColor: "#F5F5F5",
             marginBottom: "1rem",
+            position: "sticky",
+            top: "50px",
+            zIndex: "100",
         }}>
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
