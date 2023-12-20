@@ -124,7 +124,7 @@ export default function FieldFilters({ onFilterChange }: FieldFiltersProps) {
                             >
                                 <option value="">Todos</option>
                                 <option value="grass">Césped natural</option>
-                                <option value="natural">Césped sintético</option>
+                                <option value="syntheticGrass">Césped sintético</option>
                                 <option value="concrete">Cemento alisado</option>
                                 <option value="parquet">Parquet</option>
                                 <option value="tar">Asfalto</option>
