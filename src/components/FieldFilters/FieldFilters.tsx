@@ -26,7 +26,6 @@ export default function FieldFilters({ onFilterChange }: FieldFiltersProps) {
 
     const [departments, setDepartments] = React.useState([]);
     const searchDepartments = (province: string) => {
-        console.log("🚀 ~ file: FieldFilters.tsx:22 ~ searchDepartments ~ province:", province)
         if (!province) return;
         const departments = localidades.filter((objeto) => {
             return objeto.provincia.nombre.toLowerCase() === province.toLowerCase();
