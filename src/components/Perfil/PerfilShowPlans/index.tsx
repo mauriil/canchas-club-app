@@ -138,8 +138,8 @@ const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
                       title={servicio.nombre}
                       items={servicio.items}
                       price={servicio.precio}
-                      onSubscribeResolve={(buyStatus) => {
-                        buySubscription();
+                      onSubscribeResolve={() => {
+                        void buySubscription();
                       }}
                     />
                   </Grid2>
@@ -159,7 +159,7 @@ const PerfiilShowPlans = ({ onItemClick }: PerfiilShowPlansProps) => {
             </p>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleDialogClose} color="primary">
+            <Button onClick={handleDialogClose} color="primary" variant="outlined">
               Cerrar
             </Button>
           </DialogActions>

@@ -54,6 +54,10 @@ const SubscriptionPriceCard: React.FC<SubscriptionPriceProps> = ({
   };
 
   const handleBuyClick = () => {
+    if (parseInt(price) === 0) {
+      onSubscribeResolve(true);
+      return;
+    }
     setMercadoPagoBrikOpen(true);
   };
 
