@@ -76,9 +76,9 @@ export const getFieldById = async (fieldId: string | undefined): Promise<Field> 
     }
 }
 
-export const getAllByClubId = async (clubId: string | undefined) => {
+export const getAllByClubId = async (clubId: string | undefined, page: number) => {
     try {
-        const response = await fetch(`${BASE_API_URL}/fields?clubId=${clubId}`, {
+        const response = await fetch(`${BASE_API_URL}/fields?clubId=${clubId}&page=${page}`, {
             method: "GET",
             headers: { ...headers, "Authorization": `Bearer ${token}` },
         });

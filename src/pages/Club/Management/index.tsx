@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { useEffect, useState } from "react";
-import { Box, Typography, Button, Accordion, AccordionSummary, AccordionDetails, Avatar, Snackbar, Alert, AlertColor } from "@mui/material";
+import { Box, Typography, Button, Accordion, AccordionSummary, AccordionDetails, Avatar, Snackbar, Alert, AlertColor, Pagination } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import { Club } from "../../../types/clubs";
 import { useNavigate, useParams } from "react-router-dom";
 import { deleteField, getAllByClubId } from "../../../api/fields";
-import { Field } from "../../../types/fields";
+import { Field, FieldResponse } from "../../../types/fields";
 import { getClubById } from "../../../api/clubs";
 import TopBar from "../../../components/TopBar";
 import { Share } from "@mui/icons-material";
@@ -16,8 +16,10 @@ import CanchasClubLoader from "../../../components/Loader";
 import { PlanStatus } from "../../../types/users";
 import { getPlanStatus } from "../../../api/users";
 import ConfirmationDialog from "../../../components/ConfirmationDialog";
+import useScreenSize from "../../../customHooks/screenSize";
 
 const ClubManagement = () => {
+    const screenWidth = useScreenSize().width;
     const navigate = useNavigate();
     const { clubId } = useParams();
     const [clubData, setClubData] = useState<Club>(
@@ -64,17 +66,23 @@ const ClubManagement = () => {
                 console.error("Error al copiar la URL:", error);
             });
     }
+    const [totalPages, setTotalPages] = useState(1);
 
-    async function fetchClubData() {
+    const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+        void fetchClubData(value);
+      }
+
+    async function fetchClubData(page = 1) {
         try {
             setIsLoading(true);
             const clubInfo = await getClubById(clubId);
-            const fieldsOfClubInfo = await getAllByClubId(clubId);
+            const fieldsOfClubInfo = await getAllByClubId(clubId, page);
             if (fieldsOfClubInfo.ok && clubInfo.ok) {
                 const clubData = await clubInfo.json() as Club
                 setClubData(clubData);
-                const fields = await fieldsOfClubInfo.json() as Field[];
-                setFields(fields);
+                const fields = await fieldsOfClubInfo.json() as FieldResponse;
+                setFields(fields.fields);
+                setTotalPages(fields.totalPages);
                 setIsLoading(false);
             } else {
                 console.error("Error fetching club data:", fieldsOfClubInfo.statusText, clubInfo.statusText);
@@ -95,7 +103,7 @@ const ClubManagement = () => {
 
     if (isLoading) {
         return (
-            <CanchasClubLoader width="30%" />
+            <CanchasClubLoader width={screenWidth < 900 ? '30%' : '10%'} />
         );
     }
 
@@ -206,7 +214,7 @@ const ClubManagement = () => {
                                                 border: "1px solid #000",
                                                 objectFit: "cover",
                                             }
-                                        }/>
+                                        } />
                                     </Box>
                                     <Typography sx={{ marginLeft: "2rem", }}>{field.name}</Typography>
                                 </Box>
@@ -224,10 +232,10 @@ const ClubManagement = () => {
                                     justifyContent: "space-around",
                                     marginTop: "1rem",
                                 }}>
-                                    <Button sx={{ width: '40%' }} variant="outlined" color="primary" startIcon={<EditIcon />} onClick={() => handleEditField(field._id) }>
+                                    <Button sx={{ width: '40%' }} variant="outlined" color="primary" startIcon={<EditIcon />} onClick={() => handleEditField(field._id)}>
                                         Editar
                                     </Button>
-                                    <Button sx={{ width: '40%' }} variant="outlined" color="error" startIcon={<DeleteIcon />} onClick={() => {setOpenDeleteDialog(true); setFieldToDelete(field._id)}}>
+                                    <Button sx={{ width: '40%' }} variant="outlined" color="error" startIcon={<DeleteIcon />} onClick={() => { setOpenDeleteDialog(true); setFieldToDelete(field._id) }}>
                                         Eliminar
                                     </Button>
                                 </Box>
@@ -240,6 +248,23 @@ const ClubManagement = () => {
                             No hay canchas registradas
                         </Typography>
                     )}
+
+                {fields.length > 0 && (
+                    <Box
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                        width="100%"
+                        sx={{
+                            backgroundColor: 'white',
+                            padding: '1rem',
+                            marginBottom: screenWidth < 900 ? '5rem' : '0px'
+                        }}
+                    >
+                        <Pagination count={totalPages} color="primary" variant="outlined" siblingCount={0} onChange={handlePageChange} />
+                    </Box>
+                )}
+
 
 
                 <ConfirmationDialog
