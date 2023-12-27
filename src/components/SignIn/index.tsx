@@ -64,6 +64,8 @@ export default function SignIn() {
       setSnackBarMessage(registerResponse.errors[0]);
       setSnackBarSeverity("error");
       setSnackBarOpen(true);
+      setLoading(false);
+      return
     }
     setSnackBarMessage('Bienvenido a Canchas Club!');
     setSnackBarSeverity("success");
