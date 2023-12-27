@@ -92,7 +92,7 @@ const BookingDetails = () => {
         setSnackBarSeverity('success');
         setSnackBarOpen(true);
         setTimeout(() => {
-            navigate(`/dashboard/detalleReserva/${window.location.pathname.split('/')[3]}`);
+            navigate(`/dashboard/misReservas`);
         }, 2500);
         return;
     }
