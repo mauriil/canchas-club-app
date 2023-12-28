@@ -36,6 +36,7 @@ const Home = () => {
     chartData: {}
   });
   const [loadingUserStats, setLoadingUserStats] = useState(false);
+  const [openBankAccountMissingModal, setOpenBankAccountMissingModal] = useState(false);
 
   const parseUsersStats = (stats: any) => {
     setUserStats({
@@ -61,6 +62,7 @@ const Home = () => {
         availableMoney: user.bankAccount?.availableMoney,
         ownerName: user.bankAccount?.ownerName,
         withdrawProcessingMoney: user.bankAccount?.withdrawProcessingMoney,
+        isBankAccountDefaultModified: user.bankAccount?.isBankAccountDefaultModified,
       },
     });
     const userStats = await getUserStats();
@@ -89,6 +91,7 @@ const Home = () => {
       availableMoney: 0,
       ownerName: '',
       withdrawProcessingMoney: 0,
+      isBankAccountDefaultModified: false,
     },
   });
   const closeModal = () => {
@@ -122,6 +125,17 @@ const Home = () => {
     slidesToScroll: 1,
     className: "center",
   };
+
+  const checkBankAccount = () => {
+    if (!formData.bankAccount?.isBankAccountDefaultModified) {
+      setOpenBankAccountMissingModal(true);
+      return
+    }
+    setIsOpen(true);
+  }
+  const handleBankAccountMissingModalClose = () => {
+    setOpenBankAccountMissingModal(false);
+  }
 
   return (
     <>
@@ -194,7 +208,7 @@ const Home = () => {
                 *Hay un retiro de dinero en proceso por ${formData.bankAccount?.withdrawProcessingMoney}
               </Typography>
             )}
-            <Button variant="outlined" color="primary" onClick={() => setIsOpen(true)} sx={{ marginTop: '5px' }}>
+            <Button variant="outlined" color="primary" onClick={() => checkBankAccount()} sx={{ marginTop: '5px' }}>
               Retirar
             </Button>
           </Paper>
@@ -278,8 +292,11 @@ const Home = () => {
               <Typography variant="body1" gutterBottom>
                 <strong>Cuenta destino :</strong> {formData.bankAccount?.descriptiveName}
               </Typography>
-              <Typography variant="body1" gutterBottom sx={{ mb: 2 }}>
+              <Typography variant="body1">
                 <strong>Titular :</strong> {formData.bankAccount?.ownerName}
+              </Typography>
+              <Typography variant="body1" gutterBottom sx={{ mb: 2 }}>
+                <strong>Disponible para retirar :</strong> ${formData.bankAccount?.availableMoney - formData.bankAccount?.withdrawProcessingMoney}
               </Typography>
               <TextField
                 fullWidth
@@ -319,6 +336,41 @@ const Home = () => {
               </Button>
             </>
           )}
+        </Box>
+      </Modal>
+
+      <Modal open={openBankAccountMissingModal} onClose={handleBankAccountMissingModalClose}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '80%',
+            maxWidth: 400,
+            bgcolor: 'background.paper',
+            borderRadius: 2,
+            boxShadow: 24,
+            p: 4,
+            textAlign: 'center',
+          }}
+        >
+          <Typography variant="h2" color="primary" gutterBottom>
+            Cuenta bancaria
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            Por favor tené en cuenta que como este es tu primer retiro, tenés que asegurarte de proporcionar tus datos bancarios, para hacerlo tenés que ir a perfil y completar los datos de la cuenta bancaria en la opción <b> Datos bancarios </b>.
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2, width: '100%' }}
+            onClick={() => {
+              window.location.href = '/dashboard/miPerfil';
+            }}
+          >
+            Ir a perfil
+          </Button>
         </Box>
       </Modal>
 

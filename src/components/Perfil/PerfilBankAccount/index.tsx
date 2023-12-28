@@ -123,14 +123,21 @@ const UserProfileEdit = ({ onItemClick }: UserProfileEditProps) => {
             ) : (
                 <Card>
                     <CardContent>
-                        <Typography variant="h5" component="div" gutterBottom sx={{
-                            fontWeight: 'bold',
-                            fontSize: '1.5rem',
+                        <Typography variant="h3" sx={{
                             justifyContent: 'center',
                             display: 'flex',
                             margin: '1rem',
                         }}>
                             Editar Información Bancaria de Usuario
+                        </Typography>
+                        <Typography variant="h6" sx={{
+                            fontWeight: 'normal',
+                            fontSize: '1.2rem',
+                            justifyContent: 'center',
+                            display: 'flex',
+                            margin: '1rem',
+                        }}>
+                            Sé cuidadoso al ingresar los datos y chequeá que todo este correcto, ya que los mismos se van a usar para realizar las transferencias.   
                         </Typography>
                         <form onSubmit={handleSubmit}>
                             <Grid container spacing={2}>

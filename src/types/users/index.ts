@@ -67,6 +67,7 @@ export interface UserBankAccount {
   availableMoney?: number;
   ownerName?: string;
   withdrawProcessingMoney?: number;
+  isBankAccountDefaultModified?: boolean;
 }
 export interface EditUser {
   name?: string;
