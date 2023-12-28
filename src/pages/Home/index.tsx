@@ -1,21 +1,37 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { Alert, AlertColor, Box, Button, Grid, Modal, Paper, Snackbar, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  AlertColor,
+  Box,
+  Button,
+  Grid,
+  Modal,
+  Paper,
+  Snackbar,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import Title from "../../components/Title";
 import { useAuth } from "../../customHooks/useAuth";
-import { getPlanStatus, getUser, getUserStats, withdrawMoney } from "../../api/users";
+import {
+  getPlanStatus,
+  getUser,
+  getUserStats,
+  withdrawMoney,
+} from "../../api/users";
 import CanchasClubLoader from "../../components/Loader";
 import { EditUser } from "../../types/users";
 import { set } from "date-fns";
-import { LineWave } from "react-loader-spinner";
+import { Bars } from "react-loader-spinner";
 import BookingCard from "../../components/BookingCard";
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import useScreenSize from "../../customHooks/screenSize";
-import { PieChart, Pie, Sector, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Sector, ResponsiveContainer } from "recharts";
 import UserStatsCharts from "./charts";
 
 const Home = () => {
@@ -33,20 +49,43 @@ const Home = () => {
     reservationsCanceled: 0,
     reservationsCompleted: 0,
     nextBookings: [],
-    chartData: {}
+    chartData: {},
   });
   const [loadingUserStats, setLoadingUserStats] = useState(false);
   const [openBankAccountMissingModal, setOpenBankAccountMissingModal] = useState(false);
 
   const parseUsersStats = (stats: any) => {
     setUserStats({
-      reservationsInProgress: stats.bookingStats.filter((stat: any) => stat.status === "approved - accredited" || stat.status === "internal_booking").length > 0 ? stats.bookingStats.filter((stat: any) => stat.status === "approved - accredited" || stat.status === "internal_booking")[0].count : 0,
-      reservationsCanceled: stats.bookingStats.filter((stat: any) => stat.status === "canceled").length > 0 ? stats.bookingStats.filter((stat: any) => stat.status === "canceled")[0].count : 0,
-      reservationsCompleted: stats.bookingStats.filter((stat: any) => stat.status === "completed").length > 0 ? stats.bookingStats.filter((stat: any) => stat.status === "completed")[0].count : 0,
+      reservationsInProgress:
+        stats.bookingStats.filter(
+          (stat: any) =>
+            stat.status === "approved - accredited" ||
+            stat.status === "internal_booking"
+        ).length > 0
+          ? stats.bookingStats.filter(
+              (stat: any) =>
+                stat.status === "approved - accredited" ||
+                stat.status === "internal_booking"
+            )[0].count
+          : 0,
+      reservationsCanceled:
+        stats.bookingStats.filter((stat: any) => stat.status === "canceled")
+          .length > 0
+          ? stats.bookingStats.filter(
+              (stat: any) => stat.status === "canceled"
+            )[0].count
+          : 0,
+      reservationsCompleted:
+        stats.bookingStats.filter((stat: any) => stat.status === "completed")
+          .length > 0
+          ? stats.bookingStats.filter(
+              (stat: any) => stat.status === "completed"
+            )[0].count
+          : 0,
       nextBookings: stats.nextBookings,
       chartData: stats.chartData,
     });
-  }
+  };
 
   const checkPremium = async () => {
     setLoadingUserStats(true);
@@ -78,43 +117,43 @@ const Home = () => {
   const [snackBarSeverity, setSnackBarSeverity] = useState("success");
   const handelSnackClose = () => {
     setSnackBarOpen(false);
-  }
+  };
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [withdrawalAmount, setWithdrawalAmount] = useState(0);
   const [formData, setFormData] = useState<EditUser>({
     bankAccount: {
-      bank: '',
-      cbu: '',
-      alias: '',
-      descriptiveName: '',
+      bank: "",
+      cbu: "",
+      alias: "",
+      descriptiveName: "",
       availableMoney: 0,
-      ownerName: '',
+      ownerName: "",
       withdrawProcessingMoney: 0,
       isBankAccountDefaultModified: false,
     },
   });
   const closeModal = () => {
     setIsOpen(false);
-  }
+  };
 
   const handleWithdrawal = async () => {
     setIsLoading(true);
     const req = await withdrawMoney(withdrawalAmount);
     if (req.statusCode >= 400) {
       setSnackBarMessage(req.message);
-      setSnackBarSeverity('error');
+      setSnackBarSeverity("error");
       setSnackBarOpen(true);
       return;
     }
-    setSnackBarMessage('Solicitud de retiro realizada con éxito')
-    setSnackBarSeverity('success');
+    setSnackBarMessage("Solicitud de retiro realizada con éxito");
+    setSnackBarSeverity("success");
     setSnackBarOpen(true);
     setTimeout(() => {
       window.location.reload();
     }, 1500);
     return;
-  }
+  };
 
   const screenWidth = useScreenSize().width;
   const nextBookingsSliderSettings = {
@@ -148,119 +187,170 @@ const Home = () => {
         flexDirection={{ xs: "column", sm: "row" }}
         gap={2}
       >
-        <Paper elevation={3} sx={{
-          padding: 2, textAlign: "center", flex: 1, width: {
-            xs: "100%",
-            sm: "auto"
-          },
-          backgroundColor: 'white',
-          height: '170px',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          borderRadius: '8px',
-        }}>
+        <Paper
+          elevation={3}
+          sx={{
+            padding: 2,
+            textAlign: "center",
+            flex: 1,
+            width: {
+              xs: "100%",
+              sm: "auto",
+            },
+            backgroundColor: "white",
+            height: "170px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: "8px",
+          }}
+        >
           <Typography variant="h2">Reservas en curso</Typography>
-          <Typography variant="h1" sx={{ marginTop: { sm: loadingUserStats ? 0 : '40px', xs: loadingUserStats ? 0 : '15px' } }}>{
-            loadingUserStats ?
-              <LineWave
-                height="100"
-                width="100"
+          <Typography
+            variant="h1"
+            sx={{
+              marginTop: {
+                sm: loadingUserStats ? 0 : "40px",
+                xs: loadingUserStats ? 0 : "15px",
+              },
+            }}
+          >
+            {loadingUserStats ? (
+              <Bars
+                height="50"
+                width="50"
                 color="#32d9cb"
-                ariaLabel="line-wave"
+                ariaLabel="bars-loading"
                 wrapperStyle={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginBotton: '10px'
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBotton: "10px",
                 }}
                 visible={true}
-              /> :
+              />
+            ) : (
               userStats.reservationsInProgress
-          }</Typography>
+            )}
+          </Typography>
         </Paper>
 
         {isPremium && (
-          <Paper elevation={3} sx={{
-            padding: 2, textAlign: "center", flex: 1, width: {
-              xs: "100%",
-              sm: "auto"
-            },
-            backgroundColor: 'white',
-            height: '170px',
-            borderRadius: '8px',
-          }}>
+          <Paper
+            elevation={3}
+            sx={{
+              padding: 2,
+              textAlign: "center",
+              flex: 1,
+              width: {
+                xs: "100%",
+                sm: "auto",
+              },
+              backgroundColor: "white",
+              height: "170px",
+              borderRadius: "8px",
+            }}
+          >
             <Typography variant="h2">Dinero Disponible</Typography>
             <Typography variant="h1">
-              ${(
-                (formData.bankAccount?.availableMoney ?? 0) -
-                (formData.bankAccount?.withdrawProcessingMoney ?? 0)
-              )}
+              $
+              {(formData.bankAccount?.availableMoney ?? 0) -
+                (formData.bankAccount?.withdrawProcessingMoney ?? 0)}
             </Typography>
             {formData.bankAccount?.withdrawProcessingMoney > 0 && (
-              <Typography variant="body1" color="info" sx={{
-                textAlign: 'center',
-                fontSize: '12px',
-                marginTop: '10px',
-                marginBottom: '10px'
-              }}>
-                *Hay un retiro de dinero en proceso por ${formData.bankAccount?.withdrawProcessingMoney}
+              <Typography
+                variant="body1"
+                color="info"
+                sx={{
+                  textAlign: "center",
+                  fontSize: "12px",
+                  marginTop: "10px",
+                  marginBottom: "10px",
+                }}
+              >
+                *Hay un retiro de dinero en proceso por $
+                {formData.bankAccount?.withdrawProcessingMoney}
               </Typography>
             )}
-            <Button variant="outlined" color="primary" onClick={() => checkBankAccount()} sx={{ marginTop: '5px' }}>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => checkBankAccount()}
+              sx={{ marginTop: "5px" }}
+            >
               Retirar
             </Button>
           </Paper>
         )}
 
-        <Paper elevation={3} sx={{
-          padding: 2, textAlign: "center", flex: 1, width: { xs: "100%", sm: "auto" }, backgroundColor: 'white', height: '170px',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          borderRadius: '8px',
-        }}>
-          <Typography variant="h2" sx={{ marginBottom: { sm: '30px', xs: '10px' }, marginTop: { xs: '10px' } }}>Reservas Totales</Typography>
+        <Paper
+          elevation={3}
+          sx={{
+            padding: 2,
+            textAlign: "center",
+            flex: 1,
+            width: { xs: "100%", sm: "auto" },
+            backgroundColor: "white",
+            height: "170px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: "8px",
+          }}
+        >
+          <Typography
+            variant="h2"
+            sx={{
+              marginBottom: { sm: "30px", xs: "10px" },
+              marginTop: { xs: "10px" },
+            }}
+          >
+            Reservas Totales
+          </Typography>
           <Grid container spacing={2}>
             <Grid item xs={6} sm={6}>
               <Typography variant="h3">Canceladas</Typography>
-              <Typography variant="h1">{
-                loadingUserStats ?
-                  <LineWave
-                    height="100"
-                    width="100"
+              <Typography variant="h1">
+                {loadingUserStats ? (
+                  <Bars
+                    height="50"
+                    width="50"
                     color="#32d9cb"
-                    ariaLabel="line-wave"
+                    ariaLabel="bars-loading"
                     wrapperStyle={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
                     visible={true}
-                  /> :
+                  />
+                ) : (
                   userStats.reservationsCanceled
-              }</Typography>
+                )}
+              </Typography>
             </Grid>
             <Grid item xs={6} sm={6}>
               <Typography variant="h3">Concretadas</Typography>
-              <Typography variant="h1">{
-                loadingUserStats ?
-                  <LineWave
-                    height="100"
-                    width="100"
+              <Typography variant="h1">
+                {loadingUserStats ? (
+                  <Bars
+                    height="50"
+                    width="50"
                     color="#32d9cb"
-                    ariaLabel="line-wave"
+                    ariaLabel="bars-loading"
                     wrapperStyle={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
                     visible={true}
-                  /> :
+                  />
+                ) : (
                   userStats.reservationsCompleted
-              }</Typography>
+                )}
+              </Typography>
             </Grid>
           </Grid>
         </Paper>
@@ -269,17 +359,17 @@ const Home = () => {
       <Modal open={isOpen} onClose={closeModal}>
         <Box
           sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: '80%',
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "80%",
             maxWidth: 400,
-            bgcolor: 'background.paper',
+            bgcolor: "background.paper",
             borderRadius: 2,
             boxShadow: 24,
             p: 4,
-            textAlign: 'center',
+            textAlign: "center",
           }}
         >
           {isLoading ? (
@@ -290,7 +380,8 @@ const Home = () => {
                 Retiro de dinero
               </Typography>
               <Typography variant="body1" gutterBottom>
-                <strong>Cuenta destino :</strong> {formData.bankAccount?.descriptiveName}
+                <strong>Cuenta destino :</strong>{" "}
+                {formData.bankAccount?.descriptiveName}
               </Typography>
               <Typography variant="body1">
                 <strong>Titular :</strong> {formData.bankAccount?.ownerName}
@@ -308,7 +399,9 @@ const Home = () => {
                 InputProps={{
                   inputProps: {
                     min: 0,
-                    max: formData.bankAccount?.availableMoney - formData.bankAccount?.withdrawProcessingMoney,
+                    max:
+                      formData.bankAccount?.availableMoney -
+                      formData.bankAccount?.withdrawProcessingMoney,
                   },
                 }}
                 onChange={(e) => {
@@ -318,19 +411,31 @@ const Home = () => {
                     setWithdrawalAmount(parseFloat(inputValue));
                   }
                 }}
-                error={withdrawalAmount > formData.bankAccount?.availableMoney - formData.bankAccount?.withdrawProcessingMoney}
+                error={
+                  withdrawalAmount >
+                  formData.bankAccount?.availableMoney -
+                    formData.bankAccount?.withdrawProcessingMoney
+                }
                 helperText={
-                  withdrawalAmount > formData.bankAccount?.availableMoney - formData.bankAccount?.withdrawProcessingMoney
-                    ? 'No puede retirar más dinero del que tiene disponible'
-                    : ''
+                  withdrawalAmount >
+                  formData.bankAccount?.availableMoney -
+                    formData.bankAccount?.withdrawProcessingMoney
+                    ? "No puede retirar más dinero del que tiene disponible"
+                    : ""
                 }
               />
               <Button
                 variant="contained"
                 color="primary"
-                sx={{ mt: 2, width: '100%' }}
+                sx={{ mt: 2, width: "100%" }}
                 onClick={handleWithdrawal}
-                disabled={withdrawalAmount > formData.bankAccount?.availableMoney - formData.bankAccount?.withdrawProcessingMoney || isNaN(withdrawalAmount) || withdrawalAmount === 0}
+                disabled={
+                  withdrawalAmount >
+                    formData.bankAccount?.availableMoney -
+                      formData.bankAccount?.withdrawProcessingMoney ||
+                  isNaN(withdrawalAmount) ||
+                  withdrawalAmount === 0
+                }
               >
                 Confirmar Retiro
               </Button>
@@ -374,59 +479,118 @@ const Home = () => {
         </Box>
       </Modal>
 
-      <Box display="flex"
+      <Modal open={openBankAccountMissingModal} onClose={handleBankAccountMissingModalClose}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '80%',
+            maxWidth: 400,
+            bgcolor: 'background.paper',
+            borderRadius: 2,
+            boxShadow: 24,
+            p: 4,
+            textAlign: 'center',
+          }}
+        >
+          <Typography variant="h2" color="primary" gutterBottom>
+            Cuenta bancaria
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            Por favor tené en cuenta que como este es tu primer retiro, tenés que asegurarte de proporcionar tus datos bancarios, para hacerlo tenés que ir a perfil y completar los datos de la cuenta bancaria en la opción <b> Datos bancarios </b>.
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2, width: '100%' }}
+            onClick={() => {
+              window.location.href = '/dashboard/miPerfil';
+            }}
+          >
+            Ir a perfil
+          </Button>
+        </Box>
+      </Modal>
+
+      <Box
+              display="flex"
         alignItems="center"
         justifyContent="center"
         width="100%"
         padding={2}
-        flexDirection={{ xs: "column", sm: "row" }}>
-        <Paper elevation={3} sx={{
-          padding: 2, textAlign: "center", width: {
-            xs: "100%",
-            sm: "100%"
-          },
-          backgroundColor: 'white',
-          justifyContent: 'center',
-          alignItems: 'center',
-          borderRadius: '8px',
-        }}>
-          <Typography variant="h2" sx={{ marginBottom: '15px' }}>Próximos eventos</Typography>
-          {
-            loadingUserStats ?
-              <LineWave
-                height="100"
-                width="100"
-                color="#32d9cb"
-                ariaLabel="line-wave"
-                wrapperStyle={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginBotton: '10px'
-                }}
-                visible={true}
-              /> :
-              userStats.nextBookings?.length > 0 ? (
-                <Box sx={{ padding: 1, marginBottom: 2 }}>
-                  <Slider {...nextBookingsSliderSettings} >
-                    {userStats.nextBookings.map((booking) => <Box> <BookingCard booking={booking} /> </Box>)}
-                  </Slider>
-                </Box>
-              )
-                :
-                <Typography variant="h4" color="primary">
-                  No hay turnos reservados
-                </Typography>
-          }
+        flexDirection={{ xs: "column", sm: "row" }}
+      >
+        <Paper
+          elevation={3}
+          sx={{
+            padding: 2,
+            textAlign: "center",
+            width: {
+              xs: "100%",
+              sm: "100%",
+            },
+            backgroundColor: "white",
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: "8px",
+          }}
+        >
+          <Typography variant="h2" sx={{ marginBottom: "15px" }}>
+            Próximos eventos
+          </Typography>
+          {loadingUserStats ? (
+            <Bars
+              height="50"
+              width="50"
+              color="#32d9cb"
+              ariaLabel="bars-loading"
+              wrapperStyle={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginBotton: "10px",
+              }}
+              visible={true}
+            />
+          ) : userStats.nextBookings?.length > 0 ? (
+            <Box sx={{ padding: 1, marginBottom: 2 }}>
+              <Slider {...nextBookingsSliderSettings}>
+                {userStats.nextBookings.map((booking) => (
+                  <Box>
+                    {" "}
+                    <BookingCard booking={booking} />{" "}
+                  </Box>
+                ))}
+              </Slider>
+            </Box>
+          ) : (
+            <Typography variant="h4" color="primary">
+              No hay turnos reservados
+            </Typography>
+          )}
         </Paper>
       </Box>
 
       {isPremium && Object.keys(userStats.chartData).length !== 0 && (
-        <UserStatsCharts loadingUserStats={loadingUserStats} userStats={userStats} />
+        <UserStatsCharts
+          loadingUserStats={loadingUserStats}
+          userStats={userStats}
+        />
       )}
 
-      <Snackbar open={snackBarOpen} autoHideDuration={5000} onClick={handelSnackClose} onClose={handelSnackClose}>
-        <Alert severity={snackBarSeverity as AlertColor} sx={{ width: '100%', fontSize: '15px' }} onClose={handelSnackClose}>
+      <Snackbar
+        open={snackBarOpen}
+        autoHideDuration={5000}
+        onClick={handelSnackClose}
+        onClose={handelSnackClose}
+      >
+        <Alert
+          severity={snackBarSeverity as AlertColor}
+          sx={{ width: "100%", fontSize: "15px" }}
+          onClose={handelSnackClose}
+        >
           {snackBarMessage}
         </Alert>
       </Snackbar>
