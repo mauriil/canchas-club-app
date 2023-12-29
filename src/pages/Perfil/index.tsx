@@ -13,6 +13,7 @@ import CanchasClubLoader from "../../components/Loader";
 import fondoDeportesDesktop from "../../assets/images/canchasClubFondoDeportesDesktop.jpg";
 import fondoDeportesMobile from "../../assets/images/canchasClubFondoDeportesMobile.jpg";
 import PerfilBankAccount from "../../components/Perfil/PerfilBankAccount";
+import BalanceSummary from "../../components/Perfil/BalanceSummary";
 
 const Perfil = () => {
   const { user } = useAuth();
@@ -124,7 +125,10 @@ const Perfil = () => {
             <MercadoPagoToken onItemClick={handleItemClick} />
           ) : selectedOption === "myAccountSettings" ? (
             <PerfilBankAccount onItemClick={handleItemClick} />
-          ) : null}
+          ) : selectedOption === "balanceSummary" ? (
+            <BalanceSummary onItemClick={handleItemClick} />
+          ) :
+          null}
         </Box>
       </Box>
     </Box>

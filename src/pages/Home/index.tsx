@@ -369,14 +369,13 @@ const Home = () => {
             borderRadius: 2,
             boxShadow: 24,
             p: 4,
-            textAlign: "center",
           }}
         >
           {isLoading ? (
             <CanchasClubLoader width="10%" />
           ) : (
             <>
-              <Typography variant="h2" color="primary" gutterBottom>
+              <Typography variant="h2" color="primary" gutterBottom sx={{ textAlign: 'center' }}>
                 Retiro de dinero
               </Typography>
               <Typography variant="body1" gutterBottom>
@@ -424,6 +423,13 @@ const Home = () => {
                     : ""
                 }
               />
+              <Typography variant="body1" >
+                <strong>Comisión servicio de plataforma :</strong> 3%
+              </Typography>
+              <Typography variant="body1" >
+                <strong>Monto a recibir :</strong> $
+                {isNaN(withdrawalAmount) ? 0 : withdrawalAmount - withdrawalAmount * 0.03}
+              </Typography>
               <Button
                 variant="contained"
                 color="primary"

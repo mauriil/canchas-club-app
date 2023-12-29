@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import PerfilButton from "../PerfilButton";
 import { useAuth } from "../../../customHooks/useAuth";
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
 interface UserProfileOptionsProps {
   isPremium: boolean;
@@ -50,8 +52,13 @@ const UserProfileOptions = ({
           />
           <PerfilButton
             text="Datos bancarios"
-            icon={<AccountBalanceWalletIcon />}
+            icon={<AccountBalanceIcon />}
             onClick={() => onItemClick("myAccountSettings")}
+          />
+          <PerfilButton
+            text="Ver resumen de cuenta"
+            icon={<AttachMoneyIcon />}
+            onClick={() => onItemClick("balanceSummary")}
           />
           {/* <PerfilButton
             text="Mercado Pago token"

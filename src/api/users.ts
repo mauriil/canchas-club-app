@@ -125,3 +125,24 @@ export const getUserStats = async (): Promise<{statusCode: number, message: stri
         throw error;
     }
 }
+
+export const getAccountBalance = async (page: number, rowsPerPage: number): Promise<{statusCode: number, message: string, data: {
+    payments : [{
+    amount: number,
+    createdAt: string,
+    status: string,
+    type: string,
+    }],
+    total: number,
+}}> => {
+    try {
+        const response = await fetch(`${BASE_API_URL}/payments/history/${userId}?page=${page}&rowsPerPage=${rowsPerPage}`, {
+            method: "GET",
+            headers,
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching getAccountBalance:", error);
+        throw error;
+    }
+}
