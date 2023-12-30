@@ -155,7 +155,7 @@ const MercadoPagoBrick: React.FC<MercadoPagoBrickProps> = ({ walletBookingId, is
                         width: '100%',
                     }}
                 >
-                    Pago en efectivo
+                    Pago en club
                 </Button>
                 }
             </Box>

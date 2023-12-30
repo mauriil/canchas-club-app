@@ -33,7 +33,7 @@ const dictionary = {
         requested: 'Solicitado',
         completed: 'Completado',
         'approved - accredited': 'Acreditado',
-        'internal_booking': 'Reserva interna',
+        'internal_booking': 'Pago en club',
         'refunded - refunded': 'Reembolsado',
     },
 };
@@ -100,7 +100,7 @@ export default function BalanceTable() {
             if (item.type === 'withdraw') {
                 totalBalance -= item.amount;
             } else {
-                if (item.status !== 'refunded - refunded') {
+                if (item.status !== 'refunded - refunded' && item.status !== 'internal_booking') {
                     totalBalance += item.amount;
                 }
             }
@@ -115,8 +115,6 @@ export default function BalanceTable() {
 
             formattedBalance.unshift(formattedItem);
         }
-
-        console.log("🚀 ~ file: BalanceTable.tsx:141 ~ formatBalanceData ~ formattedBalance", formattedBalance);
 
         setFormattedBalanceData(formattedBalance);
     };
@@ -133,7 +131,6 @@ export default function BalanceTable() {
                 setLoading(false);
                 return;
             }
-            console.log("🚀 ~ file: BalanceTable.tsx:107 ~ getBalanceData ~ balanceQuery:", balanceQuery)
             setBalanceData(balanceQuery.payments as unknown as React.SetStateAction<[{ amount: number; createdAt: string; status: string; type: string; }]>);
             formatBalanceData(balanceQuery.payments as unknown as React.SetStateAction<[{ amount: number; createdAt: string; status: string; type: string; }]>);
             setTotalItems(balanceQuery.total);
