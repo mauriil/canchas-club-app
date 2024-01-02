@@ -81,6 +81,7 @@ export default function BalanceTable() {
         createdAt: string;
         status: string;
         type: string;
+        fieldPrice: number;
     }>) => {
         let totalBalance = 0;
 
@@ -101,7 +102,7 @@ export default function BalanceTable() {
                 totalBalance -= item.amount;
             } else {
                 if (item.status !== 'refunded - refunded' && item.status !== 'internal_booking') {
-                    totalBalance += item.amount;
+                    totalBalance += item.fieldPrice;
                 }
             }
 
@@ -109,7 +110,7 @@ export default function BalanceTable() {
                 fecha: formattedDate,
                 tipo: item.type === 'withdraw' ? 'Retiro' : 'Ingreso',
                 estado: dictionary.status[item.status],
-                monto: item.amount,
+                monto: item.type === 'withdraw' ? item.amount : item.fieldPrice,
                 saldo: totalBalance,
             };
 
