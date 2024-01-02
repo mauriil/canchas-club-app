@@ -173,139 +173,141 @@ const BookingDetails = () => {
                 </Box>
                 :
                 <>
-                <Box sx={{
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    padding: '1.5rem',
-                }}>
-                    <Grid container spacing={3} sx={{ mt: 1 }}>
-                        <Grid item xs={12} sm={6}>
-                            <Paper elevation={3} sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                backgroundColor: '#f5f5f5',
-                            }}>
-                                <Typography variant="h3" gutterBottom>
-                                    Detalles
-                                </Typography>
-                                <Divider sx={{
-                                    width: '100%',
-                                    marginBottom: '1rem',
-                                }} />
-                                <Typography variant="body1" gutterBottom>
-                                    {parseDate(booking.time?.day)}
-                                </Typography>
-                                <Typography variant="body1" gutterBottom>
-                                    De {booking.time?.from} a {booking.time?.to}
-                                </Typography>
-                                <Typography variant="body1" gutterBottom>
-                                    {booking.fieldId?.name}
-                                </Typography>
-                                <Typography variant="body1" gutterBottom>
-                                    Precio: ${booking.paymentId?.amount}
-                                </Typography>
-                                <Alert severity={
-                                    booking.status === 'pending' ? 'info' :
-                                        booking.status === 'approved - accredited' ? 'success' :
-                                            booking.status === 'internal_booking' ? 'success' :
-                                                booking.status === 'completed' ? 'success' :
-                                                    booking.status === 'no-show' ? 'warning' :
-                                                        booking.status === 'cancelled' ? 'error' : 'info'
-                                } sx={{
-                                    width: '100%',
-                                    '& .MuiAlert-message': { textAlign: "center", width: "inherit" }
+                    <Box sx={{
+                        width: '100%',
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        padding: '1.5rem',
+                    }}>
+                        <Grid container spacing={3} sx={{ mt: 1 }}>
+                            <Grid item xs={12} sm={6}>
+                                <Paper elevation={3} sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    backgroundColor: '#f5f5f5',
                                 }}>
-                                    {booking.status === 'pending' ? 'Pendiente' :
-                                        booking.status === 'approved - accredited' ? 'Confirmado' :
-                                            booking.status === 'internal_booking' ? 'Confirmado (reserva en club)' :
-                                                booking.status === 'completed' ? 'Completado' :
-                                                    booking.status === 'no-show' ? 'No se presento' :
-                                                        booking.status === 'cancelled' ? 'Cancelado' : ''}
-                                </Alert>
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Paper elevation={3} sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                marginBottom: '1rem',
-                                backgroundColor: '#f5f5f5',
-                            }}>
-                                <Typography variant="h3" gutterBottom>
-                                    Cliente
-                                </Typography>
-                                <Divider sx={{
-                                    width: '100%',
-                                    marginBottom: '1rem',
-                                }} />
-                                <Typography variant="body1" gutterBottom>
-                                    {booking.tenantId?.name}
-                                </Typography>
-                                <Typography variant="body1" gutterBottom>
-                                    {booking.tenantId?.email}
-                                </Typography>
-                            </Paper>
-
-                            <Paper elevation={3} sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                margin: '0 auto',
-                                marginBottom: '1rem',
-                                backgroundColor: '#f5f5f5',
-                            }}>
-                                <Typography variant="h3" gutterBottom>
-                                    Club
-                                </Typography>
-                                <Divider sx={{
-                                    width: '100%',
-                                    marginBottom: '1rem',
-                                }} />
-                                <Typography variant="body1" gutterBottom>
-                                    {booking.fieldId?.clubId.name}
-                                </Typography>
-                                <Typography variant="body1" gutterBottom color='primary' fontWeight='bold'
-                                    onMouseOver={(e) => {
-                                        e.currentTarget.style.cursor = 'pointer';
-                                    }}
-                                    onClick={() => {
-                                        window.open(`https://www.google.com/maps/search/?api=1&query=${booking.fieldId?.clubId.location.coordinates[1]},${booking.fieldId?.clubId.location.coordinates[0]}`, '_blank');
-                                    }}
-                                    sx={{
-                                        textAlign: 'center',
+                                    <Typography variant="h3" gutterBottom>
+                                        Detalles
+                                    </Typography>
+                                    <Divider sx={{
+                                        width: '100%',
+                                        marginBottom: '1rem',
+                                    }} />
+                                    <Typography variant="body1" gutterBottom>
+                                        {parseDate(booking.time?.day)}
+                                    </Typography>
+                                    <Typography variant="body1" gutterBottom>
+                                        De {booking.time?.from} a {booking.time?.to}
+                                    </Typography>
+                                    <Typography variant="body1" gutterBottom>
+                                        {booking.fieldId?.name}
+                                    </Typography>
+                                    <Typography variant="body1" gutterBottom>
+                                        Precio: ${booking.paymentId?.amount}
+                                    </Typography>
+                                    <Alert severity={
+                                        booking.status === 'pending' ? 'info' :
+                                            booking.status === 'started' ? 'info' :
+                                                booking.status === 'approved - accredited' ? 'success' :
+                                                    booking.status === 'internal_booking' ? 'success' :
+                                                        booking.status === 'completed' ? 'success' :
+                                                            booking.status === 'no-show' ? 'warning' :
+                                                                booking.status === 'cancelled' ? 'error' : 'info'
+                                    } sx={{
+                                        width: '100%',
+                                        '& .MuiAlert-message': { textAlign: "center", width: "inherit" }
                                     }}>
-                                    <RoomIcon fontSize="small" color="primary" /> {booking.fieldId?.clubId.address}
-                                </Typography>
-                            </Paper>
-                        </Grid>
-                        {booking.status === 'pending' || booking.status === 'approved - accredited' || booking.status === 'internal_booking' || booking.status === 'completed' ?
-                            <Grid item xs={12}>
-                                <Button variant="contained" sx={{ width: "100%", marginBottom: "2rem" }}
-                                    size="large"
-                                    color={booking.status === 'completed' ? 'success' : 'error'}
-                                    onClick={() => {
-                                        if (booking.status === 'completed') {
-                                            setOpenRepeatDialog(true);
-                                            return;
-                                        }
-                                        setOpenDeleteDialog(true);
-                                    }}>
-                                    {booking.status === 'completed' ? 'repetir turno' : 'cancelar'}
-                                </Button>
+                                        {booking.status === 'pending' ? 'Pendiente' :
+                                            booking.status === 'started' ? 'En curso' :
+                                                booking.status === 'approved - accredited' ? 'Confirmado' :
+                                                    booking.status === 'internal_booking' ? 'Confirmado (reserva en club)' :
+                                                        booking.status === 'completed' ? 'Completado' :
+                                                            booking.status === 'no-show' ? 'No se presento' :
+                                                                booking.status === 'cancelled' ? 'Cancelado' : ''}
+                                    </Alert>
+                                </Paper>
                             </Grid>
-                            :
-                            <></>
-                        }
+                            <Grid item xs={12} sm={6}>
+                                <Paper elevation={3} sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginBottom: '1rem',
+                                    backgroundColor: '#f5f5f5',
+                                }}>
+                                    <Typography variant="h3" gutterBottom>
+                                        Cliente
+                                    </Typography>
+                                    <Divider sx={{
+                                        width: '100%',
+                                        marginBottom: '1rem',
+                                    }} />
+                                    <Typography variant="body1" gutterBottom>
+                                        {booking.tenantId?.name}
+                                    </Typography>
+                                    <Typography variant="body1" gutterBottom>
+                                        {booking.tenantId?.email}
+                                    </Typography>
+                                </Paper>
 
-                    </Grid>
-                </Box>
+                                <Paper elevation={3} sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    margin: '0 auto',
+                                    marginBottom: '1rem',
+                                    backgroundColor: '#f5f5f5',
+                                }}>
+                                    <Typography variant="h3" gutterBottom>
+                                        Club
+                                    </Typography>
+                                    <Divider sx={{
+                                        width: '100%',
+                                        marginBottom: '1rem',
+                                    }} />
+                                    <Typography variant="body1" gutterBottom>
+                                        {booking.fieldId?.clubId.name}
+                                    </Typography>
+                                    <Typography variant="body1" gutterBottom color='primary' fontWeight='bold'
+                                        onMouseOver={(e) => {
+                                            e.currentTarget.style.cursor = 'pointer';
+                                        }}
+                                        onClick={() => {
+                                            window.open(`https://www.google.com/maps/search/?api=1&query=${booking.fieldId?.clubId.location.coordinates[1]},${booking.fieldId?.clubId.location.coordinates[0]}`, '_blank');
+                                        }}
+                                        sx={{
+                                            textAlign: 'center',
+                                        }}>
+                                        <RoomIcon fontSize="small" color="primary" /> {booking.fieldId?.clubId.address}
+                                    </Typography>
+                                </Paper>
+                            </Grid>
+                            {booking.status === 'pending' || booking.status === 'approved - accredited' || booking.status === 'internal_booking' || booking.status === 'completed' ?
+                                <Grid item xs={12}>
+                                    <Button variant="contained" sx={{ width: "100%", marginBottom: "2rem" }}
+                                        size="large"
+                                        color={booking.status === 'completed' ? 'success' : 'error'}
+                                        onClick={() => {
+                                            if (booking.status === 'completed') {
+                                                setOpenRepeatDialog(true);
+                                                return;
+                                            }
+                                            setOpenDeleteDialog(true);
+                                        }}>
+                                        {booking.status === 'completed' ? 'repetir turno' : 'cancelar'}
+                                    </Button>
+                                </Grid>
+                                :
+                                <></>
+                            }
+
+                        </Grid>
+                    </Box>
                 </>}
 
 
