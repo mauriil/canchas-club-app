@@ -56,7 +56,7 @@ const ClubManagement = () => {
     const [isLoading, setIsLoading] = useState(false);
     function handleShareClick(): void {
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        navigator.clipboard.writeText(`${import.meta.env.VITE_LANDING_URL}${clubData.alias}`)
+        navigator.clipboard.writeText(`www.${import.meta.env.VITE_LANDING_URL}${clubData.alias}`)
             .then(() => {
                 setSnackBarMessage("URL copiada al portapapeles");
                 setSnackBarSeverity("success");
