@@ -19,9 +19,16 @@ const DepartmentDropdown = ({ province, value, onChange, error }) => {
       return objeto.provincia.nombre.toLowerCase() === province.toLowerCase();
     });
     // make departments an array of strings
-    const departmentsArray = departments.map((department) => {
-      return department.localidad_censal.nombre;
-    });
+    let departmentsArray = [];
+    if (province === 'Ciudad Autónoma de Buenos Aires') {
+      departmentsArray = departments.map((department) => {
+        return `${department.nombre[0].toUpperCase()}${department.nombre.slice(1).toLowerCase()}`;
+      });
+    } else {
+      departmentsArray = departments.map((department) => {
+        return department.departamento.nombre;
+      });
+    }
     // remove duplicates
     const uniqueDepartments = [...new Set(departmentsArray)];
     // order alphabetically
