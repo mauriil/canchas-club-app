@@ -67,7 +67,7 @@ const ClosedDaysPicker = ({ selectedDays, onChange }) => {
         width: "100%",
         marginTop: "1rem",
       }}>
-      <Button
+      {/* <Button
         variant="outlined"
         onClick={async () => {
           const holidays = await fetchArgentinianHolidays();
@@ -83,7 +83,7 @@ const ClosedDaysPicker = ({ selectedDays, onChange }) => {
         sx={{ marginBottom: "1rem" }}
       >
         Tomar feriados argentinos del año en curso ({new Date().getFullYear()})
-      </Button>
+      </Button> */}
 
 
       <Calendar
